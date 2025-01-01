@@ -2,7 +2,7 @@ package com.example.my3dproject.math.geometry;
 
 public class Point2d {
 
-	private double x, y;
+	protected double x, y;
 
 	public Point2d(double x, double y) {
 		this.x = x;

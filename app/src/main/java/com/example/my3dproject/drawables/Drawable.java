@@ -1,4 +1,4 @@
-package com.example.my3dproject;
+package com.example.my3dproject.drawables;
 
 import android.graphics.Canvas;
 

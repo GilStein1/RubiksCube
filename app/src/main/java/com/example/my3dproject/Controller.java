@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.example.my3dproject.drawables.Drawable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

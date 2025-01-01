@@ -1,16 +1,11 @@
 package com.example.my3dproject;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.FrameLayout;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.example.my3dproject.drawables.RubiksCube;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 		if (hasFocused) {
 			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight());
 			controller.addDrawables(
-				new Cube(frameLayout.getWidth(), frameLayout.getHeight(), 0, 0, 100, 50, 50, 50)
+				new RubiksCube(frameLayout.getWidth(), frameLayout.getHeight(), 0, 0, 100, 50)
 			);
 			frameLayout.addView(controller);
 		}
