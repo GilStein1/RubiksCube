@@ -63,7 +63,7 @@ public class Point extends Drawable {
 	}
 
 	public Point2d getLastDrawnPoint() {
-		return new Point2d(drawX, drawY);
+		return new Point2d(getProjectionTranslatedX(), getProjectionTranslatedY());
 	}
 
 	public double getProjectionTranslatedY() {

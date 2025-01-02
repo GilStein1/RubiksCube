@@ -13,6 +13,6 @@ public class Constants {
 
 	}
 
-	public static final int IDEAL_SCREEN_WIDTH =480;
+	public static final int IDEAL_SCREEN_WIDTH = 480;
 
 }
