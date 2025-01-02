@@ -22,16 +22,24 @@ public class Polygon extends Drawable {
 	private final int color;
 	private final List<Point> points;
 	private Path pathOfPolygon;
-	private Paint paint;
+	private Path pathOfLines;
+	private Paint paintOfFilledShape;
 	private Vec3D normalVector;
+	private boolean isSelected;
 
 	public Polygon(double screenWidth, double screenHeight, @ColorInt int color, Point... points) {
 		super(screenWidth, screenHeight);
 		this.color = color;
 		this.points = Arrays.asList(points);
 		this.pathOfPolygon = new Path();
-		this.paint = new Paint();
+		this.pathOfLines = new Path();
+		this.paintOfFilledShape = new Paint();
 		this.normalVector = updateNormalVector();
+		this.isSelected = false;
+	}
+
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
 	}
 
 	public boolean isPointingToPlayer() {
@@ -41,6 +49,26 @@ public class Polygon extends Drawable {
 		playerDirection.normalize();
 		Vec3D normalVector = updateNormalVector();
 		return playerDirection.dotProduct(normalVector) > -0.1;
+	}
+
+	public boolean isPointInPolygon(Point2d point) {
+		int intersections = 0;
+		int n = points.size();
+		for (int i = 0; i < n; i++) {
+			Point2d p1 = points.get(i).getLastDrawnPoint();
+			Point2d p2 = points.get((i + 1) % n).getLastDrawnPoint();
+			if ((point.getY() > Math.min(p1.getY(), p2.getY())) &&
+				(point.getY() <= Math.max(p1.getY(), p2.getY())) &&
+				(point.getX() <= Math.max(p1.getX(), p2.getX()))) {
+				double xIntersection = p1.getX() + (point.getY() - p1.getY()) *
+					(p2.getX() - p1.getX()) / (p2.getY() - p1.getY());
+
+				if (xIntersection > point.getX()) {
+					intersections++;
+				}
+			}
+		}
+		return (intersections % 2 != 0);
 	}
 
 	public double getDistanceFromPlayer() {
@@ -76,13 +104,17 @@ public class Polygon extends Drawable {
 	@Override
 	public void update(double deltaTime, Point2d pointOfClick, int event) {
 		normalVector = updateNormalVector();
-		paint.setColor(calculateColorWithShade(color));
+		paintOfFilledShape.setColor(calculateColorWithShade(color));
 		pathOfPolygon = new Path();
+		pathOfLines = new Path();
 		pathOfPolygon.moveTo((float) points.get(0).getProjectionTranslatedX(), (float) points.get(0).getProjectionTranslatedY());
+		pathOfLines.moveTo((float) points.get(0).getProjectionTranslatedX(), (float) points.get(0).getProjectionTranslatedY());
 		for (Point dot : points) {
 			pathOfPolygon.lineTo((float) dot.getProjectionTranslatedX(), (float) dot.getProjectionTranslatedY());
+			pathOfLines.lineTo((float) dot.getProjectionTranslatedX(), (float) dot.getProjectionTranslatedY());
 		}
 		pathOfPolygon.close();
+		pathOfLines.close();
 	}
 
 	private int calculateColorWithShade(int color) {
@@ -106,19 +138,14 @@ public class Polygon extends Drawable {
 
 	@Override
 	public void render(Canvas canvas) {
-		paint.setStyle(Paint.Style.FILL);
+		paintOfFilledShape.setStyle(Paint.Style.FILL);
 		Paint paintOfLines = new Paint();
-		paintOfLines.setColor(Color.BLACK);
-		paintOfLines.setStrokeWidth(10);
-		for(int i = 0; i < points.size(); i++) {
-			canvas.drawLine(
-				(float) points.get(i).getProjectionTranslatedX(),
-				(float) points.get(i).getProjectionTranslatedY(),
-				(float) points.get((i + 1)%points.size()).getProjectionTranslatedX(),
-				(float) points.get((i + 1)%points.size()).getProjectionTranslatedY(),
-				paintOfLines
-			);
-		}
-		canvas.drawPath(pathOfPolygon, paint);
+		paintOfLines.setColor(isSelected? Color.LTGRAY : Color.BLACK);
+		paintOfLines.setStrokeWidth(3);
+		paintOfLines.setAntiAlias(true);
+		paintOfLines.setStyle(Paint.Style.STROKE);
+		isSelected = false;
+		canvas.drawPath(pathOfPolygon, paintOfFilledShape);
+		canvas.drawPath(pathOfLines, paintOfLines);
 	}
 }

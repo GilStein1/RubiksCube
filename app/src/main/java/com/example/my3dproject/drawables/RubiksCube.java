@@ -1,18 +1,18 @@
 package com.example.my3dproject.drawables;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 
+import com.example.my3dproject.Constants;
 import com.example.my3dproject.math.geometry.Point2d;
-import com.example.my3dproject.math.geometry.PointUtils;
 import com.example.my3dproject.math.geometry.Quaternion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class RubiksCube extends Drawable {
@@ -23,9 +23,10 @@ public class RubiksCube extends Drawable {
 	private final List<Point> points3d;
 	private final List<Point> points3dToDraw;
 	private final List<Polygon> polygons;
+	private Optional<Polygon> selectedPolygon;
 	private Quaternion currentRotation;
-	private final double fl = 600;
-	private final float rotationScale = 0.5f;
+	private final double fl = 450;
+	private final float rotationScale = 0.3f;
 	private final float rotationalVelocityScale = 0.25f;
 	private Point2d lastPointOfClick;
 	private double xRotationalVelocity;
@@ -42,6 +43,7 @@ public class RubiksCube extends Drawable {
 		this.points3d = new ArrayList<>();
 		this.points3dToDraw = new ArrayList<>();
 		this.polygons = new ArrayList<>();
+		this.selectedPolygon = Optional.empty();
 		this.cubes = new ArrayList<>();
 		double sizeOfSmallCubes = size/3;
 		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
@@ -107,23 +109,27 @@ public class RubiksCube extends Drawable {
 		}
 	}
 
+	private double getScreenSizeRatio() {
+		return Math.min(screenWidth, screenHeight) / Constants.IDEAL_SCREEN_WIDTH;
+	}
+
 	@Override
 	public void update(double deltaTime, Point2d pointOfCLick, int event) {
 		if (lastClicksQueue.remainingCapacity() == 0) {
 			updateByClickInput(pointOfCLick, event);
 			lastClicksQueue.remove();
 		}
-		lastClicksQueue.add(pointOfCLick);
+		lastClicksQueue.add(pointOfCLick.times(getScreenSizeRatio()));
 		double scaledTime = deltaTime * 100;
 		if (!isScreenPressed) {
 			updateRotationsFromDecreasingVelocity(scaledTime);
 		}
 		rotate(Math.toRadians(xRotation), Math.toRadians(yRotation), 0);
-		updateAllDots(deltaTime, pointOfCLick, event);
+		updateAllDots(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
 		for(Cube cube : cubes) {
-			cube.update(deltaTime, pointOfCLick, event);
+			cube.update(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
 		}
-		lastPointOfClick = pointOfCLick;
+		lastPointOfClick = pointOfCLick.times(getScreenSizeRatio());
 	}
 
 	private void updateAllDots(double deltaTime, Point2d pointOfCLick, int event) {
@@ -151,26 +157,44 @@ public class RubiksCube extends Drawable {
 		switch (event) {
 			case MotionEvent.ACTION_DOWN:
 				isScreenPressed = true;
+				if(!selectedPolygon.isPresent()) {
+					selectedPolygon = searchForClickedPolygon(pointOfCLick);
+				}
 				break;
 			case MotionEvent.ACTION_UP:
 				if (!hasNoticedActionUp) {
 					hasNoticedActionUp = true;
 					isScreenPressed = false;
 					xRotationalVelocity =
-						(lastClicksQueue.peek().getY() - pointOfCLick.getY())
+						(lastClicksQueue.peek().getY() - pointOfCLick.times(getScreenSizeRatio()).getY())
 							* rotationScale * rotationalVelocityScale;
 					yRotationalVelocity =
-						(lastClicksQueue.peek().getX() - pointOfCLick.getX())
+						(lastClicksQueue.peek().getX() - pointOfCLick.times(getScreenSizeRatio()).getX())
 							* rotationScale * rotationalVelocityScale;
 				}
+				selectedPolygon = Optional.empty();
 				break;
 			case MotionEvent.ACTION_MOVE:
-				rotateCubeBasedOfNewPointOfClick(pointOfCLick);
+				if(!selectedPolygon.isPresent()) {
+					rotateCubeBasedOfNewPointOfClick(pointOfCLick);
+				}
 				break;
 		}
 		if (event != MotionEvent.ACTION_UP && hasNoticedActionUp) {
 			hasNoticedActionUp = false;
 		}
+	}
+
+	private Optional<Polygon> searchForClickedPolygon(Point2d pointOfClick) {
+		for(int i = polygons.size() - 1; i >= 0; i--) {
+			if(polygons.get(i).isPointingToPlayer()) {
+				if(polygons.get(i).isPointInPolygon(pointOfClick)) {
+					polygons.get(i).setSelected(true);
+					return Optional.of(polygons.get(i));
+				}
+			}
+		}
+		return Optional.empty();
 	}
 
 	private void rotateCubeBasedOfNewPointOfClick(Point2d pointOfCLick) {
@@ -185,6 +209,7 @@ public class RubiksCube extends Drawable {
 	@Override
 	public void render(Canvas canvas) {
 		polygons.sort(Comparator.comparingDouble(p -> -p.getDistanceFromPlayer()));
+		selectedPolygon.ifPresent(polygon -> polygon.setSelected(true));
 		for(Polygon polygon : polygons) {
 			if(polygon.isPointingToPlayer()) {
 				polygon.render(canvas);

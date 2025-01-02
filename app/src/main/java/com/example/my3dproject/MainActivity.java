@@ -1,6 +1,7 @@
 package com.example.my3dproject;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
