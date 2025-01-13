@@ -8,6 +8,7 @@ import android.graphics.Path;
 import androidx.annotation.ColorInt;
 
 import com.example.my3dproject.Constants;
+import com.example.my3dproject.ScreenGeometryManager;
 import com.example.my3dproject.math.Vec3D;
 import com.example.my3dproject.math.geometry.Point2d;
 import com.example.my3dproject.math.geometry.Point3d;
@@ -21,16 +22,18 @@ public class Polygon extends Drawable {
 	@ColorInt
 	private final int color;
 	private final List<Point> points;
+	private final ScreenGeometryManager screenGeometryManager;
 	private Path pathOfPolygon;
 	private Path pathOfLines;
 	private Paint paintOfFilledShape;
 	private Vec3D normalVector;
 	private boolean isSelected;
 
-	public Polygon(double screenWidth, double screenHeight, @ColorInt int color, Point... points) {
-		super(screenWidth, screenHeight);
+	public Polygon(@ColorInt int color, Point... points) {
+		super();
 		this.color = color;
 		this.points = Arrays.asList(points);
+		this.screenGeometryManager = ScreenGeometryManager.getInstance();
 		this.pathOfPolygon = new Path();
 		this.pathOfLines = new Path();
 		this.paintOfFilledShape = new Paint();
@@ -107,11 +110,23 @@ public class Polygon extends Drawable {
 		paintOfFilledShape.setColor(calculateColorWithShade(color));
 		pathOfPolygon = new Path();
 		pathOfLines = new Path();
-		pathOfPolygon.moveTo((float) points.get(0).getProjectionTranslatedX(), (float) points.get(0).getProjectionTranslatedY());
-		pathOfLines.moveTo((float) points.get(0).getProjectionTranslatedX(), (float) points.get(0).getProjectionTranslatedY());
+		pathOfPolygon.moveTo(
+			(float) screenGeometryManager.getProjectionTranslatedX(points.get(0).getPose()),
+			(float) screenGeometryManager.getProjectionTranslatedY(points.get(0).getPose())
+		);
+		pathOfLines.moveTo(
+			(float) screenGeometryManager.getProjectionTranslatedX(points.get(0).getPose()),
+			(float) screenGeometryManager.getProjectionTranslatedY(points.get(0).getPose())
+		);
 		for (Point dot : points) {
-			pathOfPolygon.lineTo((float) dot.getProjectionTranslatedX(), (float) dot.getProjectionTranslatedY());
-			pathOfLines.lineTo((float) dot.getProjectionTranslatedX(), (float) dot.getProjectionTranslatedY());
+			pathOfPolygon.lineTo(
+				(float) screenGeometryManager.getProjectionTranslatedX(dot.getPose()),
+				(float) screenGeometryManager.getProjectionTranslatedY(dot.getPose())
+			);
+			pathOfLines.lineTo(
+				(float) screenGeometryManager.getProjectionTranslatedX(dot.getPose()),
+				(float) screenGeometryManager.getProjectionTranslatedY(dot.getPose())
+			);
 		}
 		pathOfPolygon.close();
 		pathOfLines.close();
@@ -142,7 +157,7 @@ public class Polygon extends Drawable {
 		Paint paintOfLines = new Paint();
 		paintOfLines.setColor(isSelected? Color.LTGRAY : Color.BLACK);
 		paintOfLines.setStrokeWidth(3);
-		paintOfLines.setAntiAlias(true);
+		paintOfLines.setAntiAlias(false);
 		paintOfLines.setStyle(Paint.Style.STROKE);
 		isSelected = false;
 		canvas.drawPath(pathOfPolygon, paintOfFilledShape);

@@ -17,27 +17,27 @@ public class Cube extends Drawable {
 	private final Point[] points3dToDraw;
 	private final List<Polygon> polygons;
 
-	public Cube(double screenWidth, double screenHeight, double x, double y, double z, double size) {
-		super(screenWidth, screenHeight);
+	public Cube(double x, double y, double z, double size) {
+		super();
 		double halfOfSize = size / 2;
 		this.points3d = new Point[]{
-			new Point(screenWidth, screenHeight, x + halfOfSize, y + halfOfSize, z + halfOfSize, 0),
-			new Point(screenWidth, screenHeight, x + halfOfSize, y - halfOfSize, z + halfOfSize, 0),
-			new Point(screenWidth, screenHeight, x - halfOfSize, y + halfOfSize, z + halfOfSize, 0),
-			new Point(screenWidth, screenHeight, x - halfOfSize, y - halfOfSize, z + halfOfSize, 0),
-			new Point(screenWidth, screenHeight, x + halfOfSize, y + halfOfSize, z - halfOfSize, 0),
-			new Point(screenWidth, screenHeight, x + halfOfSize, y - halfOfSize, z - halfOfSize, 0),
-			new Point(screenWidth, screenHeight, x - halfOfSize, y + halfOfSize, z - halfOfSize, 0),
-			new Point(screenWidth, screenHeight, x - halfOfSize, y - halfOfSize, z - halfOfSize, 0)
+			new Point(x + halfOfSize, y + halfOfSize, z + halfOfSize),
+			new Point(x + halfOfSize, y - halfOfSize, z + halfOfSize),
+			new Point(x - halfOfSize, y + halfOfSize, z + halfOfSize),
+			new Point(x - halfOfSize, y - halfOfSize, z + halfOfSize),
+			new Point(x + halfOfSize, y + halfOfSize, z - halfOfSize),
+			new Point(x + halfOfSize, y - halfOfSize, z - halfOfSize),
+			new Point(x - halfOfSize, y + halfOfSize, z - halfOfSize),
+			new Point(x - halfOfSize, y - halfOfSize, z - halfOfSize)
 		};
 		this.points3dToDraw = PointUtils.copyArrayOfPoints(points3d);
 		this.polygons = new ArrayList<>();
-		polygons.add(new Polygon(screenWidth, screenHeight, Color.BLUE, points3dToDraw[0], points3dToDraw[1], points3dToDraw[3], points3dToDraw[2]));
-		polygons.add(new Polygon(screenWidth, screenHeight, Color.BLUE, points3dToDraw[5], points3dToDraw[4], points3dToDraw[6], points3dToDraw[7]));
-		polygons.add(new Polygon(screenWidth, screenHeight, Color.BLUE, points3dToDraw[0], points3dToDraw[4], points3dToDraw[5], points3dToDraw[1]));
-		polygons.add(new Polygon(screenWidth, screenHeight, Color.BLUE, points3dToDraw[3], points3dToDraw[7], points3dToDraw[6], points3dToDraw[2]));
-		polygons.add(new Polygon(screenWidth, screenHeight, Color.BLUE, points3dToDraw[1], points3dToDraw[5], points3dToDraw[7], points3dToDraw[3]));
-		polygons.add(new Polygon(screenWidth, screenHeight, Color.BLUE, points3dToDraw[2], points3dToDraw[6], points3dToDraw[4], points3dToDraw[0]));
+		polygons.add(new Polygon(Color.BLUE, points3dToDraw[0], points3dToDraw[1], points3dToDraw[3], points3dToDraw[2]));
+		polygons.add(new Polygon(Color.BLUE, points3dToDraw[5], points3dToDraw[4], points3dToDraw[6], points3dToDraw[7]));
+		polygons.add(new Polygon(Color.BLUE, points3dToDraw[0], points3dToDraw[4], points3dToDraw[5], points3dToDraw[1]));
+		polygons.add(new Polygon(Color.BLUE, points3dToDraw[3], points3dToDraw[7], points3dToDraw[6], points3dToDraw[2]));
+		polygons.add(new Polygon(Color.BLUE, points3dToDraw[1], points3dToDraw[5], points3dToDraw[7], points3dToDraw[3]));
+		polygons.add(new Polygon(Color.BLUE, points3dToDraw[2], points3dToDraw[6], points3dToDraw[4], points3dToDraw[0]));
 	}
 
 	public Point[] getAll3dPoints() {

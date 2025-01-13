@@ -35,8 +35,7 @@ public class RubiksCube extends Drawable {
 	private boolean isScreenPressed;
 	private boolean hasNoticedActionUp;
 
-	public RubiksCube(int screenWidth, int screenHeight, double x, double y, double z, double size) {
-		super(screenWidth, screenHeight);
+	public RubiksCube(double x, double y, double z, double size) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -46,35 +45,35 @@ public class RubiksCube extends Drawable {
 		this.selectedPolygon = Optional.empty();
 		this.cubes = new ArrayList<>();
 		double sizeOfSmallCubes = size/3;
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
 
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*0, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*0, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*0, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x - sizeOfSmallCubes*0, y + sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*0, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*0, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*0, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes*0, y + sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
 
-		cubes.add(new Cube(screenWidth, screenHeight, x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x + sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x + sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(screenWidth, screenHeight, x + sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
 		for(Cube cube : cubes) {
 			points3d.addAll(Arrays.asList(cube.getAll3dPoints()));
 			points3dToDraw.addAll(Arrays.asList(cube.getAll3dPointsToDraw()));
@@ -134,7 +133,6 @@ public class RubiksCube extends Drawable {
 
 	private void updateAllDots(double deltaTime, Point2d pointOfCLick, int event) {
 		for (int i = 0; i < points3dToDraw.size(); i++) {
-			points3dToDraw.get(i).setFocalLength(fl);
 			points3dToDraw.get(i).update(deltaTime, pointOfCLick, event);
 		}
 	}

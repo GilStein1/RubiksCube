@@ -1,7 +1,6 @@
 package com.example.my3dproject;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 		if (hasFocused && controller == null) {
 			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight());
 			controller.addDrawables(
-				new RubiksCube(frameLayout.getWidth(), frameLayout.getHeight(), 0, 0, 100, 50)
+				new RubiksCube(0, 0, 100, 50)
 			);
 			frameLayout.addView(controller);
 		}
