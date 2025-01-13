@@ -163,12 +163,14 @@ public class RubiksCube extends Drawable {
 				if (!hasNoticedActionUp) {
 					hasNoticedActionUp = true;
 					isScreenPressed = false;
-					xRotationalVelocity =
-						(lastClicksQueue.peek().getY() - pointOfCLick.times(getScreenSizeRatio()).getY())
-							* rotationScale * rotationalVelocityScale;
-					yRotationalVelocity =
-						(lastClicksQueue.peek().getX() - pointOfCLick.times(getScreenSizeRatio()).getX())
-							* rotationScale * rotationalVelocityScale;
+					if(!selectedPolygon.isPresent()) {
+						xRotationalVelocity =
+							(lastClicksQueue.peek().getY() - pointOfCLick.times(getScreenSizeRatio()).getY())
+								* rotationScale * rotationalVelocityScale;
+						yRotationalVelocity =
+							(lastClicksQueue.peek().getX() - pointOfCLick.times(getScreenSizeRatio()).getX())
+								* rotationScale * rotationalVelocityScale;
+					}
 				}
 				selectedPolygon = Optional.empty();
 				break;

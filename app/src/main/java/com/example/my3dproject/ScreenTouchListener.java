@@ -8,7 +8,7 @@ import com.example.my3dproject.math.geometry.Point2d;
 public class ScreenTouchListener implements View.OnTouchListener {
 
 	private static ScreenTouchListener instance;
-	private Point2d pos;
+	private final Point2d pos;
 	private int event;
 
 	private ScreenTouchListener() {
