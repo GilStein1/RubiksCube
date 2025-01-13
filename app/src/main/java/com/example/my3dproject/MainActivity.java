@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	public void onWindowFocusChanged(boolean hasFocused) {
 		super.onWindowFocusChanged(hasFocused);
-		if (hasFocused) {
+		if (hasFocused && controller == null) {
 			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight());
 			controller.addDrawables(
 				new RubiksCube(frameLayout.getWidth(), frameLayout.getHeight(), 0, 0, 100, 50)
