@@ -1,5 +1,7 @@
 package com.example.my3dproject.math.geometry;
 
+import com.example.my3dproject.math.Vec3D;
+
 public class Quaternion {
 	double w, x, y, z;
 
@@ -8,6 +10,10 @@ public class Quaternion {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+
+	public Vec3D getRotationVector() {
+		return new Vec3D(x, y ,z);
 	}
 
 	public static Quaternion fromAxisAngle(double angle, double x, double y, double z) {
@@ -19,6 +25,21 @@ public class Quaternion {
 			y * sinHalfAngle,
 			z * sinHalfAngle
 		);
+	}
+
+	public Quaternion conjugate() {
+		return new Quaternion(w, -x, -y, -z);
+	}
+
+	public double norm() {
+		return Math.sqrt(w * w + x * x + y * y + z * z);
+	}
+
+	public Quaternion inverse() {
+		double normSquared = w * w + x * x + y * y + z * z;
+		Quaternion conjugate = this.conjugate();
+		return new Quaternion(conjugate.w / normSquared, conjugate.x / normSquared,
+			conjugate.y / normSquared, conjugate.z / normSquared);
 	}
 
 	public Quaternion multiply(Quaternion q) {

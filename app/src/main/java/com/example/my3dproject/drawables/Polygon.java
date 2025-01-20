@@ -19,6 +19,7 @@ import java.util.List;
 
 public class Polygon extends Drawable {
 
+	private final Cube parentCube;
 	@ColorInt
 	private final int color;
 	private final List<Point> points;
@@ -29,8 +30,9 @@ public class Polygon extends Drawable {
 	private Vec3D normalVector;
 	private boolean isSelected;
 
-	public Polygon(@ColorInt int color, Point... points) {
+	public Polygon(Cube cube, @ColorInt int color, Point... points) {
 		super();
+		this.parentCube = cube;
 		this.color = color;
 		this.points = Arrays.asList(points);
 		this.screenGeometryManager = ScreenGeometryManager.getInstance();
@@ -39,6 +41,22 @@ public class Polygon extends Drawable {
 		this.paintOfFilledShape = new Paint();
 		this.normalVector = updateNormalVector();
 		this.isSelected = false;
+	}
+
+	public Cube getParentCube() {
+		return parentCube;
+	}
+
+	public boolean isPointingToX() {
+		return Math.abs(points.get(0).getX() - points.get(1).getX()) < 10;
+	}
+
+	public boolean isPointingToY() {
+		return Math.abs(points.get(0).getY() - points.get(1).getY()) < 10;
+	}
+
+	public boolean isPointingToZ() {
+		return Math.abs(points.get(0).getZ() - points.get(1).getZ()) < 10;
 	}
 
 	public void setSelected(boolean isSelected) {

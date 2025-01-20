@@ -5,7 +5,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.my3dproject.Constants;
+import com.example.my3dproject.RotationOperation;
+import com.example.my3dproject.math.Vec3D;
 import com.example.my3dproject.math.geometry.Point2d;
+import com.example.my3dproject.math.geometry.Point3d;
 import com.example.my3dproject.math.geometry.Quaternion;
 
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ public class RubiksCube extends Drawable {
 	private double xRotation, yRotation;
 	private boolean isScreenPressed;
 	private boolean hasNoticedActionUp;
+	private Optional<RotationOperation> currentRotationOperation;
 
 	public RubiksCube(double x, double y, double z, double size) {
 		this.x = x;
@@ -88,6 +92,7 @@ public class RubiksCube extends Drawable {
 		this.yRotation = 0;
 		this.isScreenPressed = false;
 		this.hasNoticedActionUp = false;
+		this.currentRotationOperation = Optional.empty();
 	}
 
 	private void rotate(double xAngle, double yAngle, double zAngle) {
@@ -106,6 +111,16 @@ public class RubiksCube extends Drawable {
 			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
 			points3dToDraw.get(i).moveTo(newX + x, newY + y, newZ + z);
 		}
+		for(Cube cube : cubes) {
+			Point3d p = cube.getPos();
+			double tx = p.getX() - x;
+			double ty = p.getY() - y;
+			double tz = p.getZ() - z;
+			double newX = rotationMatrix[0][0] * tx + rotationMatrix[0][1] * ty + rotationMatrix[0][2] * tz;
+			double newY = rotationMatrix[1][0] * tx + rotationMatrix[1][1] * ty + rotationMatrix[1][2] * tz;
+			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
+			cube.updateDrawnPos(newX + x, newY + y, newZ + z);
+		}
 	}
 
 	private double getScreenSizeRatio() {
@@ -122,6 +137,35 @@ public class RubiksCube extends Drawable {
 		double scaledTime = deltaTime * 100;
 		if (!isScreenPressed) {
 			updateRotationsFromDecreasingVelocity(scaledTime);
+		}
+		else if(selectedPolygon.isPresent() && lastClicksQueue.remainingCapacity() == 0 && !currentRotationOperation.isPresent()) {
+			Cube selectedCube = selectedPolygon.get().getParentCube();
+			Vec3D rotationVector = currentRotation.getRotationVector();
+			if(Math.abs(pointOfCLick.getX() - lastClicksQueue.peek().getX()) >
+				Math.abs(pointOfCLick.getY() - lastClicksQueue.peek().getY())
+			) {
+				currentRotationOperation = Optional.of(new RotationOperation(selectedCube, 1));
+			}
+			else {
+				currentRotationOperation = Optional.of(new RotationOperation(selectedCube, 0));
+			}
+		}
+		if(selectedPolygon.isPresent() && currentRotationOperation.isPresent()) {
+			Log.w("rotatingX", String.valueOf(currentRotationOperation.get().isRotatingX()));
+			Log.w("rotatingY", String.valueOf(currentRotationOperation.get().isRotatingY()));
+			Log.w("rotatingZ", String.valueOf(currentRotationOperation.get().isRotatingZ()));
+
+//			currentRotationOperation = Optional.empty();
+			if(currentRotationOperation.get().isRotatingX()) {
+				currentRotationOperation.get().getInstanceCube().rotateX(Math.toRadians(pointOfCLick.getY() - lastClicksQueue.peek().getY())*deltaTime*50, currentRotation);
+			}
+			else if(currentRotationOperation.get().isRotatingY()) {
+				currentRotationOperation.get().getInstanceCube().rotateY(Math.toRadians(pointOfCLick.getX() - lastClicksQueue.peek().getX())*deltaTime*50, currentRotation);
+			}
+//			else if(currentRotationOperation.get().isRotatingZ()) {
+//				currentRotationOperation.get().getInstanceCube().rotateZ(0.1*deltaTime, currentRotation);
+//			}
+//			currentRotationOperation = Optional.empty();
 		}
 		rotate(Math.toRadians(xRotation), Math.toRadians(yRotation), 0);
 		updateAllDots(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
@@ -163,6 +207,7 @@ public class RubiksCube extends Drawable {
 				if (!hasNoticedActionUp) {
 					hasNoticedActionUp = true;
 					isScreenPressed = false;
+					currentRotationOperation = Optional.empty();
 					if(!selectedPolygon.isPresent()) {
 						xRotationalVelocity =
 							(lastClicksQueue.peek().getY() - pointOfCLick.times(getScreenSizeRatio()).getY())
@@ -215,5 +260,8 @@ public class RubiksCube extends Drawable {
 				polygon.render(canvas);
 			}
 		}
+//		for(Cube c : cubes) {
+//			c.render(canvas);
+//		}
 	}
 }
