@@ -39,35 +39,38 @@ public class Cube extends Drawable {
 		};
 		this.points3dToDraw = PointUtils.copyArrayOfPoints(points3d);
 		this.polygons = new ArrayList<>();
-		polygons.add(new Polygon(this, Color.BLUE, points3dToDraw[0], points3dToDraw[1], points3dToDraw[3], points3dToDraw[2]));
-		polygons.add(new Polygon(this, Color.BLUE, points3dToDraw[5], points3dToDraw[4], points3dToDraw[6], points3dToDraw[7]));
-		polygons.add(new Polygon(this, Color.BLUE, points3dToDraw[0], points3dToDraw[4], points3dToDraw[5], points3dToDraw[1]));
-		polygons.add(new Polygon(this, Color.BLUE, points3dToDraw[3], points3dToDraw[7], points3dToDraw[6], points3dToDraw[2]));
-		polygons.add(new Polygon(this, Color.BLUE, points3dToDraw[1], points3dToDraw[5], points3dToDraw[7], points3dToDraw[3]));
-		polygons.add(new Polygon(this, Color.BLUE, points3dToDraw[2], points3dToDraw[6], points3dToDraw[4], points3dToDraw[0]));
+		int randomColor = Color.rgb((int)(Math.random()*255), (int)(Math.random()*255), (int)(Math.random()*255));
+		polygons.add(new Polygon(this, randomColor, points3dToDraw[0], points3dToDraw[1], points3dToDraw[3], points3dToDraw[2]));
+		polygons.add(new Polygon(this, randomColor, points3dToDraw[5], points3dToDraw[4], points3dToDraw[6], points3dToDraw[7]));
+		polygons.add(new Polygon(this, randomColor, points3dToDraw[0], points3dToDraw[4], points3dToDraw[5], points3dToDraw[1]));
+		polygons.add(new Polygon(this, randomColor, points3dToDraw[3], points3dToDraw[7], points3dToDraw[6], points3dToDraw[2]));
+		polygons.add(new Polygon(this, randomColor, points3dToDraw[1], points3dToDraw[5], points3dToDraw[7], points3dToDraw[3]));
+		polygons.add(new Polygon(this, randomColor, points3dToDraw[2], points3dToDraw[6], points3dToDraw[4], points3dToDraw[0]));
 	}
 
 	public void rotateX(double angle, Quaternion currentRotation) {
 		Quaternion xRotation = Quaternion.fromAxisAngle(angle, 1, 0, 0);
 		double[][] rotationMatrix = xRotation.toRotationMatrix();
 		double[][] inverseRotationMatrix = currentRotation.inverse().toRotationMatrix();
+
 		for (int i = 0; i < points3dToDraw.length; i++) {
 			Point p = points3dToDraw[i];
 			double tx = p.getX() - drawnX;
 			double ty = p.getY() - drawnY;
 			double tz = p.getZ() - drawnZ;
-			double newX = rotationMatrix[0][0] * tx + rotationMatrix[0][1] * ty + rotationMatrix[0][2] * tz + drawnX;
-			double newY = rotationMatrix[1][0] * tx + rotationMatrix[1][1] * ty + rotationMatrix[1][2] * tz + drawnY;
-			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz + drawnZ;
-			double tx2 = newX - drawnX;
-			double ty2 = newY - drawnY;
-			double tz2 = newZ - drawnZ;
-			double newX2 = inverseRotationMatrix[0][0] * tx2 + inverseRotationMatrix[0][1] * ty2 + inverseRotationMatrix[0][2] * tz2;
-			double newY2 = inverseRotationMatrix[1][0] * tx2 + inverseRotationMatrix[1][1] * ty2 + inverseRotationMatrix[1][2] * tz2;
-			double newZ2 = inverseRotationMatrix[2][0] * tx2 + inverseRotationMatrix[2][1] * ty2 + inverseRotationMatrix[2][2] * tz2;
-			points3d[i].moveTo(newX2 + x, newY2 + y, newZ2 + z);
+
+			double rotatedX = rotationMatrix[0][0] * tx + rotationMatrix[0][1] * ty + rotationMatrix[0][2] * tz;
+			double rotatedY = rotationMatrix[1][0] * tx + rotationMatrix[1][1] * ty + rotationMatrix[1][2] * tz;
+			double rotatedZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
+
+			double finalX = inverseRotationMatrix[0][0] * rotatedX + inverseRotationMatrix[0][1] * rotatedY + inverseRotationMatrix[0][2] * rotatedZ + x;
+			double finalY = inverseRotationMatrix[1][0] * rotatedX + inverseRotationMatrix[1][1] * rotatedY + inverseRotationMatrix[1][2] * rotatedZ + y;
+			double finalZ = inverseRotationMatrix[2][0] * rotatedX + inverseRotationMatrix[2][1] * rotatedY + inverseRotationMatrix[2][2] * rotatedZ + z;
+
+			points3d[i].moveTo(finalX, finalY, finalZ);
 		}
 	}
+
 
 	public void rotateY(double angle, Quaternion currentRotation) {
 		Quaternion yRotation = Quaternion.fromAxisAngle(angle, 0, 1, 0);
