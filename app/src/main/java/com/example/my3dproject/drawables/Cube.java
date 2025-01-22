@@ -49,24 +49,24 @@ public class Cube extends Drawable {
 
 	public void rotateX(double angle, Quaternion currentRotation) {
 		Quaternion xRotation = Quaternion.fromAxisAngle(angle, 1, 0, 0);
-		currentRotation = xRotation.multiply(currentRotation.inverse());
-		double[][] rotationMatrix = currentRotation.toRotationMatrix();
-		for (int i = 0; i < points3d.length; i++) {
+		double[][] rotationMatrix = xRotation.toRotationMatrix();
+		double[][] inverseRotationMatrix = currentRotation.inverse().toRotationMatrix();
+		for (int i = 0; i < points3dToDraw.length; i++) {
 			Point p = points3dToDraw[i];
 			double tx = p.getX() - drawnX;
 			double ty = p.getY() - drawnY;
 			double tz = p.getZ() - drawnZ;
-			double newX = rotationMatrix[0][0] * tx + rotationMatrix[0][1] * ty + rotationMatrix[0][2] * tz;
-			double newY = rotationMatrix[1][0] * tx + rotationMatrix[1][1] * ty + rotationMatrix[1][2] * tz;
-			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
-			points3d[i].moveTo(newX + x, newY + y, newZ + z);
+			double newX = rotationMatrix[0][0] * tx + rotationMatrix[0][1] * ty + rotationMatrix[0][2] * tz + drawnX;
+			double newY = rotationMatrix[1][0] * tx + rotationMatrix[1][1] * ty + rotationMatrix[1][2] * tz + drawnY;
+			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz + drawnZ;
+			double tx2 = newX - drawnX;
+			double ty2 = newY - drawnY;
+			double tz2 = newZ - drawnZ;
+			double newX2 = inverseRotationMatrix[0][0] * tx2 + inverseRotationMatrix[0][1] * ty2 + inverseRotationMatrix[0][2] * tz2;
+			double newY2 = inverseRotationMatrix[1][0] * tx2 + inverseRotationMatrix[1][1] * ty2 + inverseRotationMatrix[1][2] * tz2;
+			double newZ2 = inverseRotationMatrix[2][0] * tx2 + inverseRotationMatrix[2][1] * ty2 + inverseRotationMatrix[2][2] * tz2;
+			points3d[i].moveTo(newX2 + x, newY2 + y, newZ2 + z);
 		}
-//		for(Point p : points3d) {
-//			double currentAngle = Math.atan2(p.getY() - y, p.getZ() - z);
-//			currentAngle += angle;
-//			double distance = Math.sqrt(Math.pow(p.getY() - y, 2) + Math.pow(p.getZ() - z, 2));
-//			p.moveTo(p.getX(), Math.sin(currentAngle)*distance + y, Math.cos(currentAngle)*distance + z);
-//		}
 	}
 
 	public void rotateY(double angle, Quaternion currentRotation) {
@@ -83,12 +83,6 @@ public class Cube extends Drawable {
 			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
 			points3d[i].moveTo(newX + x, newY + y, newZ + z);
 		}
-//		for(Point p : points3d) {
-//			double currentAngle = Math.atan2(p.getZ() - z, p.getX() - x);
-//			currentAngle += angle;
-//			double distance = Math.sqrt(Math.pow(p.getX() - x, 2) + Math.pow(p.getZ() - z, 2));
-//			p.moveTo(Math.cos(currentAngle)*distance + x, p.getY(), Math.sin(currentAngle)*distance + z);
-//		}
 	}
 
 	public void rotateZ(double angle, Quaternion currentRotation) {
@@ -105,12 +99,6 @@ public class Cube extends Drawable {
 			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
 			points3d[i].moveTo(newX + x, newY + y, newZ + z);
 		}
-//		for(Point p : points3d) {
-//			double currentAngle = Math.atan2(p.getY() - y, p.getX() - x);
-//			currentAngle += angle;
-//			double distance = Math.sqrt(Math.pow(p.getY() - y, 2) + Math.pow(p.getZ() - z, 2));
-//			p.moveTo(Math.cos(currentAngle)*distance + x, Math.sin(currentAngle)*distance + y, p.getZ());
-//		}
 	}
 
 	public Point[] getAll3dPoints() {

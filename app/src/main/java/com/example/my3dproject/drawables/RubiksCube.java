@@ -160,7 +160,7 @@ public class RubiksCube extends Drawable {
 				currentRotationOperation.get().getInstanceCube().rotateX(Math.toRadians(pointOfCLick.getY() - lastClicksQueue.peek().getY())*deltaTime*50, currentRotation);
 			}
 			else if(currentRotationOperation.get().isRotatingY()) {
-				currentRotationOperation.get().getInstanceCube().rotateY(Math.toRadians(pointOfCLick.getX() - lastClicksQueue.peek().getX())*deltaTime*50, currentRotation);
+//				currentRotationOperation.get().getInstanceCube().rotateY(Math.toRadians(pointOfCLick.getX() - lastClicksQueue.peek().getX())*deltaTime*50, currentRotation);
 			}
 //			else if(currentRotationOperation.get().isRotatingZ()) {
 //				currentRotationOperation.get().getInstanceCube().rotateZ(0.1*deltaTime, currentRotation);
