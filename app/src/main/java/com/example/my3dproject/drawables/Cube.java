@@ -3,11 +3,13 @@ package com.example.my3dproject.drawables;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.example.my3dproject.ScreenGeometryManager;
 import com.example.my3dproject.math.MathUtil;
 import com.example.my3dproject.math.MatrixUtil;
 import com.example.my3dproject.math.Vec3D;
+import com.example.my3dproject.math.geometry.CubeColors;
 import com.example.my3dproject.math.geometry.Point2d;
 import com.example.my3dproject.math.geometry.Point3d;
 import com.example.my3dproject.math.geometry.PointUtils;
@@ -42,13 +44,13 @@ public class Cube extends Drawable {
 		};
 		this.points3dToDraw = PointUtils.copyArrayOfPoints(points3d);
 		this.polygons = new ArrayList<>();
-		int randomColor = Color.rgb((int)(Math.random()*255), (int)(Math.random()*255), (int)(Math.random()*255));
-		polygons.add(new Polygon(this, randomColor, points3dToDraw[0], points3dToDraw[1], points3dToDraw[3], points3dToDraw[2]));
-		polygons.add(new Polygon(this, randomColor, points3dToDraw[5], points3dToDraw[4], points3dToDraw[6], points3dToDraw[7]));
-		polygons.add(new Polygon(this, randomColor, points3dToDraw[0], points3dToDraw[4], points3dToDraw[5], points3dToDraw[1]));
-		polygons.add(new Polygon(this, randomColor, points3dToDraw[3], points3dToDraw[7], points3dToDraw[6], points3dToDraw[2]));
-		polygons.add(new Polygon(this, randomColor, points3dToDraw[1], points3dToDraw[5], points3dToDraw[7], points3dToDraw[3]));
-		polygons.add(new Polygon(this, randomColor, points3dToDraw[2], points3dToDraw[6], points3dToDraw[4], points3dToDraw[0]));
+		CubeColors colors = CubeColors.getColorsFromPos(x, y, z);
+		polygons.add(new Polygon(this, colors.getColors()[5], points3dToDraw[0], points3dToDraw[1], points3dToDraw[3], points3dToDraw[2]));
+		polygons.add(new Polygon(this, colors.getColors()[3], points3dToDraw[5], points3dToDraw[4], points3dToDraw[6], points3dToDraw[7]));
+		polygons.add(new Polygon(this, colors.getColors()[2], points3dToDraw[0], points3dToDraw[4], points3dToDraw[5], points3dToDraw[1]));
+		polygons.add(new Polygon(this, colors.getColors()[4], points3dToDraw[3], points3dToDraw[7], points3dToDraw[6], points3dToDraw[2]));
+		polygons.add(new Polygon(this, colors.getColors()[1], points3dToDraw[1], points3dToDraw[5], points3dToDraw[7], points3dToDraw[3]));
+		polygons.add(new Polygon(this, colors.getColors()[0], points3dToDraw[2], points3dToDraw[6], points3dToDraw[4], points3dToDraw[0]));
 	}
 
 	public void rotateWithMatrix(double[][] matrix, Point3d centerOfRotation) {
@@ -113,7 +115,7 @@ public class Cube extends Drawable {
 
 	@Override
 	public void update(double deltaTime, Point2d pointOfClick, int event) {
-		for(Polygon polygon : polygons) {
+		for (Polygon polygon : polygons) {
 			polygon.update(deltaTime, pointOfClick, event);
 		}
 	}
@@ -123,7 +125,7 @@ public class Cube extends Drawable {
 		Paint paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setTextSize(30);
-		canvas.drawText("(" + ((int)(x*10)/10.0) + "," + ((int)(y*10)/10.0) + "," + ((int)(z*1000)/1000.0) + ")",
+		canvas.drawText("(" + ((int) (x * 10) / 10.0) + "," + ((int) (y * 10) / 10.0) + "," + ((int) (z * 1000) / 1000.0) + ")",
 			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedX(new Point3d(drawnX, drawnY, drawnZ)) - 100,
 			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedY(new Point3d(drawnX, drawnY, drawnZ)),
 			paint

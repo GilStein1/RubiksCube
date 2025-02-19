@@ -170,16 +170,15 @@ public class RubiksCube extends Drawable {
 
 			double angleAdded = Math.toRadians(pointOfCLick.getY() - lastClicksQueue.peek().getY());
 
-			angleAdded *= 10 * deltaTime;
+			angleAdded *= 7 * deltaTime;
 
 			double cubePositionTolerance = 0.1;
 
-			if(currentRotationOperation.get().shouldLockIn()) {
+			if (currentRotationOperation.get().shouldLockIn()) {
 				angleAdded = -currentRotationOperation.get().getAngleOfRotation();
-				angleAdded %= (Math.PI/2);
+				angleAdded %= (Math.PI / 2);
 				Log.w("AngleToRemove", String.valueOf(angleAdded));
-			}
-			else {
+			} else {
 				currentRotationOperation.get().addToAngle(angleAdded);
 				Log.w("Angle", String.valueOf(currentRotationOperation.get().getAngleOfRotation()));
 			}
@@ -211,7 +210,7 @@ public class RubiksCube extends Drawable {
 					}
 				}
 			}
-			if(currentRotationOperation.get().shouldLockIn()) {
+			if (currentRotationOperation.get().shouldLockIn()) {
 				currentRotationOperation = Optional.empty();
 			}
 		}
@@ -252,7 +251,7 @@ public class RubiksCube extends Drawable {
 				}
 				break;
 			case MotionEvent.ACTION_UP:
-				if(currentRotationOperation.isPresent() && !currentRotationOperation.get().shouldLockIn()) {
+				if (currentRotationOperation.isPresent() && !currentRotationOperation.get().shouldLockIn()) {
 					currentRotationOperation.get().setLockIn(true);
 				}
 				if (!hasNoticedActionUp) {
