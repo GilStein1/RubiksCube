@@ -5,6 +5,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.example.my3dproject.ScreenGeometryManager;
+import com.example.my3dproject.math.MathUtil;
+import com.example.my3dproject.math.MatrixUtil;
+import com.example.my3dproject.math.Vec3D;
 import com.example.my3dproject.math.geometry.Point2d;
 import com.example.my3dproject.math.geometry.Point3d;
 import com.example.my3dproject.math.geometry.PointUtils;
@@ -48,60 +51,38 @@ public class Cube extends Drawable {
 		polygons.add(new Polygon(this, randomColor, points3dToDraw[2], points3dToDraw[6], points3dToDraw[4], points3dToDraw[0]));
 	}
 
-	public void rotateX(double angle, Quaternion currentRotation) {
-		Quaternion xRotation = Quaternion.fromAxisAngle(angle, 1, 0, 0);
-		double[][] rotationMatrix = xRotation.toRotationMatrix();
-		double[][] inverseRotationMatrix = currentRotation.inverse().toRotationMatrix();
-
-		for (int i = 0; i < points3dToDraw.length; i++) {
-			Point p = points3dToDraw[i];
-			double tx = p.getX() - drawnX;
-			double ty = p.getY() - drawnY;
-			double tz = p.getZ() - drawnZ;
-
-			double rotatedX = rotationMatrix[0][0] * tx + rotationMatrix[0][1] * ty + rotationMatrix[0][2] * tz;
-			double rotatedY = rotationMatrix[1][0] * tx + rotationMatrix[1][1] * ty + rotationMatrix[1][2] * tz;
-			double rotatedZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
-
-			double finalX = inverseRotationMatrix[0][0] * rotatedX + inverseRotationMatrix[0][1] * rotatedY + inverseRotationMatrix[0][2] * rotatedZ + x;
-			double finalY = inverseRotationMatrix[1][0] * rotatedX + inverseRotationMatrix[1][1] * rotatedY + inverseRotationMatrix[1][2] * rotatedZ + y;
-			double finalZ = inverseRotationMatrix[2][0] * rotatedX + inverseRotationMatrix[2][1] * rotatedY + inverseRotationMatrix[2][2] * rotatedZ + z;
-
+	public void rotateWithMatrix(double[][] matrix, Point3d centerOfRotation) {
+		for (int i = 0; i < points3d.length; i++) {
+			Point p = points3d[i];
+			double tx = p.getX() - centerOfRotation.getX();
+			double ty = p.getY() - centerOfRotation.getY();
+			double tz = p.getZ() - centerOfRotation.getZ();
+			double finalX = matrix[0][0] * tx + matrix[0][1] * ty + matrix[0][2] * tz + centerOfRotation.getX();
+			double finalY = matrix[1][0] * tx + matrix[1][1] * ty + matrix[1][2] * tz + centerOfRotation.getY();
+			double finalZ = matrix[2][0] * tx + matrix[2][1] * ty + matrix[2][2] * tz + centerOfRotation.getZ();
 			points3d[i].moveTo(finalX, finalY, finalZ);
 		}
+		double tx = x - centerOfRotation.getX();
+		double ty = y - centerOfRotation.getY();
+		double tz = z - centerOfRotation.getZ();
+		x = matrix[0][0] * tx + matrix[0][1] * ty + matrix[0][2] * tz + centerOfRotation.getX();
+		y = matrix[1][0] * tx + matrix[1][1] * ty + matrix[1][2] * tz + centerOfRotation.getY();
+		z = matrix[2][0] * tx + matrix[2][1] * ty + matrix[2][2] * tz + centerOfRotation.getZ();
 	}
 
-
-	public void rotateY(double angle, Quaternion currentRotation) {
-		Quaternion yRotation = Quaternion.fromAxisAngle(angle, 0, 1, 0);
-		currentRotation = yRotation.multiply(currentRotation.inverse());
-		double[][] rotationMatrix = currentRotation.toRotationMatrix();
-		for (int i = 0; i < points3d.length; i++) {
-			Point p = points3dToDraw[i];
-			double tx = p.getX() - drawnX;
-			double ty = p.getY() - drawnY;
-			double tz = p.getZ() - drawnZ;
-			double newX = rotationMatrix[0][0] * tx + rotationMatrix[0][1] * ty + rotationMatrix[0][2] * tz;
-			double newY = rotationMatrix[1][0] * tx + rotationMatrix[1][1] * ty + rotationMatrix[1][2] * tz;
-			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
-			points3d[i].moveTo(newX + x, newY + y, newZ + z);
-		}
+	public void rotateX(double angle, Point3d centerOfRotation) {
+		double[][] matrix = Quaternion.fromAxisAngle(angle, 1, 0, 0).toRotationMatrix();
+		rotateWithMatrix(matrix, centerOfRotation);
 	}
 
-	public void rotateZ(double angle, Quaternion currentRotation) {
-		Quaternion zRotation = Quaternion.fromAxisAngle(angle, 0, 0, 1);
-		currentRotation = zRotation.multiply(currentRotation.inverse());
-		double[][] rotationMatrix = currentRotation.toRotationMatrix();
-		for (int i = 0; i < points3d.length; i++) {
-			Point p = points3dToDraw[i];
-			double tx = p.getX() - drawnX;
-			double ty = p.getY() - drawnY;
-			double tz = p.getZ() - drawnZ;
-			double newX = rotationMatrix[0][0] * tx + rotationMatrix[0][1] * ty + rotationMatrix[0][2] * tz;
-			double newY = rotationMatrix[1][0] * tx + rotationMatrix[1][1] * ty + rotationMatrix[1][2] * tz;
-			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
-			points3d[i].moveTo(newX + x, newY + y, newZ + z);
-		}
+	public void rotateY(double angle, Point3d centerOfRotation) {
+		double[][] matrix = Quaternion.fromAxisAngle(angle, 0, 1, 0).toRotationMatrix();
+		rotateWithMatrix(matrix, centerOfRotation);
+	}
+
+	public void rotateZ(double angle, Point3d centerOfRotation) {
+		double[][] matrix = Quaternion.fromAxisAngle(angle, 0, 0, 1).toRotationMatrix();
+		rotateWithMatrix(matrix, centerOfRotation);
 	}
 
 	public Point[] getAll3dPoints() {
@@ -141,9 +122,15 @@ public class Cube extends Drawable {
 	public void render(Canvas canvas) {
 		Paint paint = new Paint();
 		paint.setColor(Color.BLACK);
-		canvas.drawCircle(
-			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedX(new Point3d(drawnX, drawnY, drawnZ)),
+		paint.setTextSize(30);
+		canvas.drawText("(" + ((int)(x*10)/10.0) + "," + ((int)(y*10)/10.0) + "," + ((int)(z*1000)/1000.0) + ")",
+			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedX(new Point3d(drawnX, drawnY, drawnZ)) - 100,
 			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedY(new Point3d(drawnX, drawnY, drawnZ)),
-			10, paint);
+			paint
+		);
+//		canvas.drawCircle(
+//			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedX(new Point3d(drawnX, drawnY, drawnZ)),
+//			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedY(new Point3d(drawnX, drawnY, drawnZ)),
+//			10, paint);
 	}
 }

@@ -1,17 +1,23 @@
 package com.example.my3dproject;
 
+import android.util.Log;
+
 import com.example.my3dproject.drawables.Cube;
 
 public class RotationOperation {
 
 	private Cube instanceCube;
 	private boolean isRotatingX, isRotatingY, isRotatingZ;
+	private boolean lockIn;
+	private double angleOfRotation;
 
 	public RotationOperation(Cube instanceCube, boolean isRotatingX, boolean isRotatingY, boolean isRotatingZ) {
 		this.instanceCube = instanceCube;
 		this.isRotatingX = isRotatingX;
 		this.isRotatingY = isRotatingY;
 		this.isRotatingZ = isRotatingZ;
+		this.lockIn = false;
+		this.angleOfRotation = 0;
 	}
 
 	public RotationOperation(Cube instanceCube, int rotationAxis) {
@@ -28,6 +34,26 @@ public class RotationOperation {
 		else if(rotationAxis == 2) {
 			isRotatingZ = true;
 		}
+	}
+
+	public void setAngleOfRotation(double angle) {
+		this.angleOfRotation = angle;
+	}
+
+	public double getAngleOfRotation() {
+		return angleOfRotation;
+	}
+
+	public void addToAngle(double angleToAdd) {
+		this.angleOfRotation += angleToAdd;
+	}
+
+	public void setLockIn(boolean lockIn) {
+		this.lockIn = lockIn;
+	}
+
+	public boolean shouldLockIn() {
+		return lockIn;
 	}
 
 	public Cube getInstanceCube() {

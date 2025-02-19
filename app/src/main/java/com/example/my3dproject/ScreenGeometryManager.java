@@ -49,11 +49,11 @@ public class ScreenGeometryManager {
 	}
 
 	public double getProjectedX(Point3d point, double focalLength) {
-		return (point.getX() / point.getZ()) * focalLength * getScreenSizeRatio();
+		return (point.getX() / (point.getZ() + Constants.EnvironmentConstants.PLAYER_POSITION.getZ())) * focalLength * getScreenSizeRatio();
 	}
 
 	public double getProjectedY(Point3d point, double focalLength) {
-		return (point.getY() / point.getZ()) * focalLength * getScreenSizeRatio();
+		return (point.getY() / (point.getZ() + Constants.EnvironmentConstants.PLAYER_POSITION.getZ())) * focalLength * getScreenSizeRatio();
 	}
 
 	public double getProjectedX(Point3d point) {

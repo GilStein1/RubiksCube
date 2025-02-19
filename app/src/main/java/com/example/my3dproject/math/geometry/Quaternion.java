@@ -12,6 +12,10 @@ public class Quaternion {
 		this.z = z;
 	}
 
+	public double[] getAxis() {
+		return new double[]{x, y, z};
+	}
+
 	public Vec3D getRotationVector() {
 		return new Vec3D(x, y ,z);
 	}

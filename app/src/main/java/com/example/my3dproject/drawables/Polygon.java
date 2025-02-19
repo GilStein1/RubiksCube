@@ -69,7 +69,7 @@ public class Polygon extends Drawable {
 		Vec3D playerDirection = Vec3D.fromDifferenceInPos(middle, playerPos);
 		playerDirection.normalize();
 		Vec3D normalVector = updateNormalVector();
-		return playerDirection.dotProduct(normalVector) > -0.1;
+		return playerDirection.dotProduct(normalVector) < 0.1;
 	}
 
 	public boolean isPointInPolygon(Point2d point) {

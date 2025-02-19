@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 		if (hasFocused && controller == null) {
 			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight());
 			controller.addDrawables(
-				new RubiksCube(0, 0, 100, 50)
+				new RubiksCube(0, 0, 0, 50)
 			);
 			frameLayout.addView(controller);
 		}

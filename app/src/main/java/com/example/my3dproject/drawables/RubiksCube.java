@@ -48,37 +48,37 @@ public class RubiksCube extends Drawable {
 		this.polygons = new ArrayList<>();
 		this.selectedPolygon = Optional.empty();
 		this.cubes = new ArrayList<>();
-		double sizeOfSmallCubes = size/3;
-		cubes.add(new Cube(x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
+		double sizeOfSmallCubes = size / 3;
+		cubes.add(new Cube(x - sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 0, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 0, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 0, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
 
-		cubes.add(new Cube(x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*0, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*0, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*0, y - sizeOfSmallCubes*0, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x - sizeOfSmallCubes*0, y + sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 0, y - sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 0, y - sizeOfSmallCubes * 0, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 0, y + sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 0, y - sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 0, y - sizeOfSmallCubes * 0, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 0, y + sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 0, y - sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 0, y - sizeOfSmallCubes * 0, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x - sizeOfSmallCubes * 0, y + sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
 
-		cubes.add(new Cube(x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x + sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(x + sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z - sizeOfSmallCubes*0, sizeOfSmallCubes));
-		cubes.add(new Cube(x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x + sizeOfSmallCubes*1, y - sizeOfSmallCubes*0, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
-		cubes.add(new Cube(x + sizeOfSmallCubes*1, y + sizeOfSmallCubes*1, z + sizeOfSmallCubes*1, sizeOfSmallCubes));
-		for(Cube cube : cubes) {
+		cubes.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 0, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 0, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 0, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubes.add(new Cube(x + sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		for (Cube cube : cubes) {
 			points3d.addAll(Arrays.asList(cube.getAll3dPoints()));
 			points3dToDraw.addAll(Arrays.asList(cube.getAll3dPointsToDraw()));
 			polygons.addAll(cube.getAllPolygons());
@@ -111,7 +111,7 @@ public class RubiksCube extends Drawable {
 			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
 			points3dToDraw.get(i).moveTo(newX + x, newY + y, newZ + z);
 		}
-		for(Cube cube : cubes) {
+		for (Cube cube : cubes) {
 			Point3d p = cube.getPos();
 			double tx = p.getX() - x;
 			double ty = p.getY() - y;
@@ -137,39 +137,87 @@ public class RubiksCube extends Drawable {
 		double scaledTime = deltaTime * 100;
 		if (!isScreenPressed) {
 			updateRotationsFromDecreasingVelocity(scaledTime);
-		}
-		else if(selectedPolygon.isPresent() && lastClicksQueue.remainingCapacity() == 0 && !currentRotationOperation.isPresent()) {
+		} else if (selectedPolygon.isPresent() && lastClicksQueue.remainingCapacity() == 0 && !currentRotationOperation.isPresent()) {
 			Cube selectedCube = selectedPolygon.get().getParentCube();
 			Vec3D rotationVector = currentRotation.getRotationVector();
-			if(Math.abs(pointOfCLick.getX() - lastClicksQueue.peek().getX()) >
-				Math.abs(pointOfCLick.getY() - lastClicksQueue.peek().getY())
-			) {
-				currentRotationOperation = Optional.of(new RotationOperation(selectedCube, 1));
-			}
-			else {
-				currentRotationOperation = Optional.of(new RotationOperation(selectedCube, 0));
+			if (Math.abs(rotationVector.getX()) > Math.max(Math.abs(rotationVector.getY()), Math.abs(rotationVector.getZ()))) {
+				if (Math.abs(pointOfCLick.getX() - lastClicksQueue.peek().getX()) >
+					Math.abs(pointOfCLick.getY() - lastClicksQueue.peek().getY())
+				) {
+					currentRotationOperation = Optional.of(new RotationOperation(selectedCube, 0));
+				} else {
+					currentRotationOperation = Optional.of(new RotationOperation(selectedCube, 1));
+				}
+			} else if (Math.abs(rotationVector.getY()) > Math.abs(rotationVector.getZ())) {
+				if (Math.abs(pointOfCLick.getX() - lastClicksQueue.peek().getX()) >
+					Math.abs(pointOfCLick.getY() - lastClicksQueue.peek().getY())
+				) {
+					currentRotationOperation = Optional.of(new RotationOperation(selectedCube, 1));
+				} else {
+					currentRotationOperation = Optional.of(new RotationOperation(selectedCube, 2));
+				}
+			} else {
+				if (Math.abs(pointOfCLick.getX() - lastClicksQueue.peek().getX()) >
+					Math.abs(pointOfCLick.getY() - lastClicksQueue.peek().getY())
+				) {
+					currentRotationOperation = Optional.of(new RotationOperation(selectedCube, 2));
+				} else {
+					currentRotationOperation = Optional.of(new RotationOperation(selectedCube, 0));
+				}
 			}
 		}
-		if(selectedPolygon.isPresent() && currentRotationOperation.isPresent()) {
-			Log.w("rotatingX", String.valueOf(currentRotationOperation.get().isRotatingX()));
-			Log.w("rotatingY", String.valueOf(currentRotationOperation.get().isRotatingY()));
-			Log.w("rotatingZ", String.valueOf(currentRotationOperation.get().isRotatingZ()));
+		if (currentRotationOperation.isPresent()) {
 
-//			currentRotationOperation = Optional.empty();
-			if(currentRotationOperation.get().isRotatingX()) {
-				currentRotationOperation.get().getInstanceCube().rotateX(Math.toRadians(pointOfCLick.getY() - lastClicksQueue.peek().getY())*deltaTime*50, currentRotation);
+			double angleAdded = Math.toRadians(pointOfCLick.getY() - lastClicksQueue.peek().getY());
+
+			angleAdded *= 10 * deltaTime;
+
+			double cubePositionTolerance = 0.1;
+
+			if(currentRotationOperation.get().shouldLockIn()) {
+				angleAdded = -currentRotationOperation.get().getAngleOfRotation();
+				angleAdded %= (Math.PI/2);
+				Log.w("AngleToRemove", String.valueOf(angleAdded));
 			}
-			else if(currentRotationOperation.get().isRotatingY()) {
-//				currentRotationOperation.get().getInstanceCube().rotateY(Math.toRadians(pointOfCLick.getX() - lastClicksQueue.peek().getX())*deltaTime*50, currentRotation);
+			else {
+				currentRotationOperation.get().addToAngle(angleAdded);
+				Log.w("Angle", String.valueOf(currentRotationOperation.get().getAngleOfRotation()));
 			}
-//			else if(currentRotationOperation.get().isRotatingZ()) {
-//				currentRotationOperation.get().getInstanceCube().rotateZ(0.1*deltaTime, currentRotation);
-//			}
-//			currentRotationOperation = Optional.empty();
+
+			if (currentRotationOperation.get().isRotatingX()) {
+				for (Cube cube : cubes) {
+					if (Math.abs(cube.getPos().getX() - currentRotationOperation.get().getInstanceCube().getPos().getX()) < cubePositionTolerance) {
+						cube.rotateX(
+							(angleAdded),
+							new Point3d(currentRotationOperation.get().getInstanceCube().getPos().getX(), 0, 0));
+					}
+				}
+			} else if (currentRotationOperation.get().isRotatingY()) {
+				for (Cube cube : cubes) {
+					if (Math.abs(cube.getPos().getY() - currentRotationOperation.get().getInstanceCube().getPos().getY()) < cubePositionTolerance) {
+						cube.rotateY(
+							(angleAdded),
+							new Point3d(0, currentRotationOperation.get().getInstanceCube().getPos().getY(), 0)
+						);
+					}
+				}
+			} else if (currentRotationOperation.get().isRotatingZ()) {
+				for (Cube cube : cubes) {
+					if (Math.abs(cube.getPos().getZ() - currentRotationOperation.get().getInstanceCube().getPos().getZ()) < cubePositionTolerance) {
+						cube.rotateZ(
+							(angleAdded),
+							new Point3d(0, 0, currentRotationOperation.get().getInstanceCube().getPos().getZ())
+						);
+					}
+				}
+			}
+			if(currentRotationOperation.get().shouldLockIn()) {
+				currentRotationOperation = Optional.empty();
+			}
 		}
 		rotate(Math.toRadians(xRotation), Math.toRadians(yRotation), 0);
 		updateAllDots(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
-		for(Cube cube : cubes) {
+		for (Cube cube : cubes) {
 			cube.update(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
 		}
 		lastPointOfClick = pointOfCLick.times(getScreenSizeRatio());
@@ -199,16 +247,18 @@ public class RubiksCube extends Drawable {
 		switch (event) {
 			case MotionEvent.ACTION_DOWN:
 				isScreenPressed = true;
-				if(!selectedPolygon.isPresent()) {
+				if (!selectedPolygon.isPresent()) {
 					selectedPolygon = searchForClickedPolygon(pointOfCLick);
 				}
 				break;
 			case MotionEvent.ACTION_UP:
+				if(currentRotationOperation.isPresent() && !currentRotationOperation.get().shouldLockIn()) {
+					currentRotationOperation.get().setLockIn(true);
+				}
 				if (!hasNoticedActionUp) {
 					hasNoticedActionUp = true;
 					isScreenPressed = false;
-					currentRotationOperation = Optional.empty();
-					if(!selectedPolygon.isPresent()) {
+					if (!selectedPolygon.isPresent()) {
 						xRotationalVelocity =
 							(lastClicksQueue.peek().getY() - pointOfCLick.times(getScreenSizeRatio()).getY())
 								* rotationScale * rotationalVelocityScale;
@@ -220,7 +270,7 @@ public class RubiksCube extends Drawable {
 				selectedPolygon = Optional.empty();
 				break;
 			case MotionEvent.ACTION_MOVE:
-				if(!selectedPolygon.isPresent()) {
+				if (!selectedPolygon.isPresent()) {
 					rotateCubeBasedOfNewPointOfClick(pointOfCLick);
 				}
 				break;
@@ -231,9 +281,9 @@ public class RubiksCube extends Drawable {
 	}
 
 	private Optional<Polygon> searchForClickedPolygon(Point2d pointOfClick) {
-		for(int i = polygons.size() - 1; i >= 0; i--) {
-			if(polygons.get(i).isPointingToPlayer()) {
-				if(polygons.get(i).isPointInPolygon(pointOfClick)) {
+		for (int i = polygons.size() - 1; i >= 0; i--) {
+			if (polygons.get(i).isPointingToPlayer()) {
+				if (polygons.get(i).isPointInPolygon(pointOfClick)) {
 					polygons.get(i).setSelected(true);
 					return Optional.of(polygons.get(i));
 				}
@@ -253,10 +303,10 @@ public class RubiksCube extends Drawable {
 
 	@Override
 	public void render(Canvas canvas) {
-		polygons.sort(Comparator.comparingDouble(p -> -p.getDistanceFromPlayer()));
+		polygons.sort(Comparator.comparingDouble(Polygon::getDistanceFromPlayer));
 		selectedPolygon.ifPresent(polygon -> polygon.setSelected(true));
-		for(Polygon polygon : polygons) {
-			if(polygon.isPointingToPlayer()) {
+		for (Polygon polygon : polygons) {
+			if (polygon.isPointingToPlayer()) {
 				polygon.render(canvas);
 			}
 		}
