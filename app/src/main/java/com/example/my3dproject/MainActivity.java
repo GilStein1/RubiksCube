@@ -25,10 +25,12 @@ public class MainActivity extends AppCompatActivity {
 		super.onWindowFocusChanged(hasFocused);
 		if (hasFocused && controller == null) {
 			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight());
-			controller.addDrawables(
-				new RubiksCube(0, 0, 0, 50)
-			);
-			frameLayout.addView(controller);
+			RubiksCube rubiksCube = new RubiksCube(0, 0, 0, 50, controller.getAnimationManager());
+			findViewById(R.id.btnRandomize).setOnClickListener(view -> {
+				rubiksCube.randomize();
+			});
+			controller.addDrawables(rubiksCube);
+			frameLayout.addView(controller, 0);
 		}
 	}
 }

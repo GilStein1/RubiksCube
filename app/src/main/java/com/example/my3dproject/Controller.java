@@ -22,6 +22,7 @@ public class Controller extends SurfaceView implements Runnable {
 	private final List<Drawable> drawables;
 	private Canvas canvas;
 	private double lastTime;
+	private final TimedAnimationManager animationManager;
 
 	public Controller(Context context, int screenWidth, int screenHeight) {
 		super(context);
@@ -33,6 +34,7 @@ public class Controller extends SurfaceView implements Runnable {
 		this.renderThread = new Thread(this);
 		this.drawables = new ArrayList<>();
 		this.lastTime = System.nanoTime() / 1e9;
+		this.animationManager = new TimedAnimationManager();
 		initHelpers();
 		renderThread.start();
 	}
@@ -62,10 +64,15 @@ public class Controller extends SurfaceView implements Runnable {
 		}
 	}
 
+	public TimedAnimationManager getAnimationManager() {
+		return animationManager;
+	}
+
 	@Override
 	public void run() {
 		while (true) {
 			double currentTime = System.nanoTime() / 1e9;
+			animationManager.update();
 			drawSurface(currentTime - lastTime);
 			lastTime = currentTime;
 		}

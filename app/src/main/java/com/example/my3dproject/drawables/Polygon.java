@@ -174,7 +174,7 @@ public class Polygon extends Drawable {
 		paintOfFilledShape.setStyle(Paint.Style.FILL);
 		Paint paintOfLines = new Paint();
 		paintOfLines.setColor(isSelected? Color.LTGRAY : Color.BLACK);
-		paintOfLines.setStrokeWidth(3);
+		paintOfLines.setStrokeWidth((float) (3*ScreenGeometryManager.getInstance().getScreenSizeRatio()));
 		paintOfLines.setAntiAlias(false);
 		paintOfLines.setStyle(Paint.Style.STROKE);
 		isSelected = false;

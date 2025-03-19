@@ -38,7 +38,7 @@ public class CubeColors {
 			colors[1] = Color.DKGRAY;
 		}
 		else if (yValue < 0){
-			colors[1] = Color.rgb(255, 140, 0);
+			colors[1] = Color.rgb(255,165,0);
 			colors[0] = Color.DKGRAY;
 		}
 		else {
@@ -46,7 +46,7 @@ public class CubeColors {
 			colors[0] = Color.DKGRAY;
 		}
 		if(zValue > 0) {
-			colors[5] = Color.GREEN;
+			colors[5] = Color.rgb(0,197,0);
 			colors[3] = Color.DKGRAY;
 		}
 		else if (zValue < 0){

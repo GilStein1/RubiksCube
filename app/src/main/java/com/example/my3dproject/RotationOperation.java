@@ -1,7 +1,5 @@
 package com.example.my3dproject;
 
-import android.util.Log;
-
 import com.example.my3dproject.drawables.Cube;
 
 public class RotationOperation {
@@ -10,6 +8,8 @@ public class RotationOperation {
 	private boolean isRotatingX, isRotatingY, isRotatingZ;
 	private boolean lockIn;
 	private double angleOfRotation;
+
+	public static final double CUBE_ROTATION_TOLERANCE = 0.1;
 
 	public RotationOperation(Cube instanceCube, boolean isRotatingX, boolean isRotatingY, boolean isRotatingZ) {
 		this.instanceCube = instanceCube;

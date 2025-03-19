@@ -10,6 +10,23 @@
     <FrameLayout
         android:id="@+id/frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="bottom|center_horizontal">
+
+            <Button
+                android:id="@+id/btnRandomize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Randomize"
+                android:layout_marginBottom="16dp"/> <!-- Space from bottom -->
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>
