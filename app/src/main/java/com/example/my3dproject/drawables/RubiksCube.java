@@ -5,6 +5,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
 
+import com.example.my3dproject.RubiksCubeState;
 import com.example.my3dproject.TimedAction;
 import com.example.my3dproject.Constants;
 import com.example.my3dproject.RotationOperation;
@@ -43,7 +44,7 @@ public class RubiksCube extends Drawable {
 	private double xRotation, yRotation;
 	private boolean isScreenPressed;
 	private boolean hasNoticedActionUp;
-	private AtomicBoolean isRandomizing;
+	private RubiksCubeState rubiksCubeState;
 	private Optional<RotationOperation> currentRotationOperation;
 	private final Stack<Pair<Consumer<Double>, Double>> undoStack;
 	private final double rubiksCubeSize;
@@ -105,7 +106,7 @@ public class RubiksCube extends Drawable {
 		this.yRotation = 0;
 		this.isScreenPressed = false;
 		this.hasNoticedActionUp = false;
-		this.isRandomizing = new AtomicBoolean(false);
+		this.rubiksCubeState = RubiksCubeState.IDLE;
 		this.currentRotationOperation = Optional.empty();
 		this.undoStack = new Stack<>();
 	}
@@ -152,7 +153,7 @@ public class RubiksCube extends Drawable {
 		double scaledTime = deltaTime * 100;
 		if (!isScreenPressed) {
 			updateRotationsFromDecreasingVelocity(scaledTime);
-		} else if (!isRandomizing.get() && selectedPolygon.isPresent() && lastClicksQueue.remainingCapacity() == 0 && !currentRotationOperation.isPresent()) {
+		} else if (rubiksCubeState.isAvailableForModifications() && selectedPolygon.isPresent() && lastClicksQueue.remainingCapacity() == 0 && !currentRotationOperation.isPresent()) {
 			Cube selectedCube = selectedPolygon.get().getParentCube();
 			Vec3D rotationVector = currentRotation.getRotationVector();
 			if (Math.abs(rotationVector.getX()) > Math.max(Math.abs(rotationVector.getY()), Math.abs(rotationVector.getZ()))) {
@@ -309,10 +310,10 @@ public class RubiksCube extends Drawable {
 	}
 
 	public void randomize() {
-		if(isRandomizing.get()) {
+		if(!rubiksCubeState.isAvailableForModifications()) {
 			return;
 		}
-		isRandomizing.set(true);
+		rubiksCubeState = RubiksCubeState.RANDOMIZING;
 		int amountOfTurns = 50;
 		int animationSteps = 25;
 		double timeToTurn = 0.12;
@@ -320,7 +321,7 @@ public class RubiksCube extends Drawable {
 		int lastAxis = (int)(Math.random()*3);
 		int lastSide = (int)(Math.random()*3) - 1;
 		int direction = 1;
-		animationManager.addAction(new TimedAction(() -> isRandomizing.set(false), timeToTurn * amountOfTurns));
+		animationManager.addAction(new TimedAction(() -> rubiksCubeState = RubiksCubeState.IDLE, timeToTurn * amountOfTurns));
 		for(int i = 0; i < amountOfTurns; i++) {
 			int axis = (int)(Math.random()*3);
 			int side = (int)(Math.random()*3) - 1;
@@ -358,17 +359,25 @@ public class RubiksCube extends Drawable {
 	}
 
 	public void solve() {
+		if(!rubiksCubeState.isAvailableForModifications()) {
+			return;
+		}
+		rubiksCubeState = RubiksCubeState.SOLVING;
 		int animationSteps = 20;
-		double timeToTurn = 0.08;
+		double timeToTurn = 0.05;
+		double index = 0;
+		int stackSize = undoStack.size();
 		double timeOffset = 0;
 		while (!undoStack.empty()) {
 			Pair<Consumer<Double>, Double> action = undoStack.pop();
+			double timeWithSlowingOffset = (timeToTurn + 0.1 * Math.pow((index + 1)/stackSize, 3.5));
 			for(int i = 0; i < animationSteps; i++) {
-				animationManager.addAction(new TimedAction(() -> action.first.accept(action.second/animationSteps), timeOffset + i*timeToTurn/animationSteps));
+				animationManager.addAction(new TimedAction(() -> action.first.accept(action.second/animationSteps), timeOffset + i*timeWithSlowingOffset/animationSteps));
 			}
-//			animationManager.addAction(new TimedAction(() -> action.first.accept(action.second), timeOffset));
-			timeOffset += timeToTurn;
+			index++;
+			timeOffset += timeWithSlowingOffset;
 		}
+		animationManager.addAction(new TimedAction(() -> rubiksCubeState = RubiksCubeState.IDLE, timeOffset));
 	}
 
 	public void rotateXAroundCube(Cube cubeToRotateAround, double angle) {
@@ -413,8 +422,5 @@ public class RubiksCube extends Drawable {
 				polygon.render(canvas);
 			}
 		}
-//		for(Cube c : cubes) {
-//			c.render(canvas);
-//		}
 	}
 }
