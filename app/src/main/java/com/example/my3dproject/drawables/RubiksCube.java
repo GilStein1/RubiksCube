@@ -97,7 +97,7 @@ public class RubiksCube extends Drawable {
 			points3dToDraw.addAll(Arrays.asList(cube.getAll3dPointsToDraw()));
 			polygons.addAll(cube.getAllPolygons());
 		}
-		this.lastClicksQueue = new ArrayBlockingQueue<>(10);
+		this.lastClicksQueue = new ArrayBlockingQueue<>(5);
 		this.lastPointOfClick = new Point2d(0, 0);
 		this.currentRotation = new Quaternion(1, 0, 0, 0);
 		this.xRotationalVelocity = 0;
@@ -147,13 +147,22 @@ public class RubiksCube extends Drawable {
 	public void update(double deltaTime, Point2d pointOfCLick, int event) {
 		if (lastClicksQueue.remainingCapacity() == 0) {
 			updateByClickInput(pointOfCLick, event);
-			lastClicksQueue.remove();
+			if(!lastClicksQueue.isEmpty()) {
+				lastClicksQueue.remove();
+			}
 		}
-		lastClicksQueue.add(pointOfCLick.times(1/getScreenSizeRatio()));
+		if(event == MotionEvent.ACTION_DOWN || event == MotionEvent.ACTION_MOVE) {
+			lastClicksQueue.add(pointOfCLick.times(1/getScreenSizeRatio()));
+		}
+
 		double scaledTime = deltaTime * 100;
+
+		double distance = (lastClicksQueue.remainingCapacity() == 0)? Math.sqrt(Math.pow((pointOfCLick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX()), 2)
+			+ Math.pow((pointOfCLick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY()), 2)) : 0;
+
 		if (!isScreenPressed) {
 			updateRotationsFromDecreasingVelocity(scaledTime);
-		} else if (rubiksCubeState.isAvailableForModifications() && selectedPolygon.isPresent() && lastClicksQueue.remainingCapacity() == 0) {
+		} else if (rubiksCubeState.isAvailableForModifications() && selectedPolygon.isPresent() && lastClicksQueue.remainingCapacity() == 0 && distance > 10) {
 			rubiksCubeState = RubiksCubeState.ROTATED_BY_PLAYER;
 			Cube selectedCube = selectedPolygon.get().getParentCube();
 			Vec3D rotationUpVector = new Vec3D(
@@ -225,6 +234,9 @@ public class RubiksCube extends Drawable {
 			}
 			animationManager.addAction(new TimedAction(() -> rubiksCubeState = RubiksCubeState.IDLE, 0.5));
 		}
+//		else if(lastClicksQueue.remainingCapacity() != 0) {
+			Log.w("the queue is less then z", String.valueOf(lastClicksQueue.remainingCapacity()));
+//		}
 		rotate(Math.toRadians(xRotation), Math.toRadians(yRotation), 0);
 		updateAllDots(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
 		for (Cube cube : cubes) {
@@ -290,6 +302,7 @@ public class RubiksCube extends Drawable {
 							(lastClicksQueue.peek().getX() - pointOfCLick.times(1/getScreenSizeRatio()).getX())
 								* rotationScale * rotationalVelocityScale;
 					}
+					lastClicksQueue.clear();
 				}
 				selectedPolygon = Optional.empty();
 				break;
