@@ -332,8 +332,8 @@ public class RubiksCube extends Drawable {
 	}
 
 	private void rotateCubeBasedOfNewPointOfClick(Point2d pointOfCLick) {
-		xRotation = (lastPointOfClick.getY() - pointOfCLick.times(1/getScreenSizeRatio()).getY()) * rotationScale;
-		yRotation = (lastPointOfClick.getX() - pointOfCLick.times(1/getScreenSizeRatio()).getX()) * rotationScale;
+		xRotation = (lastPointOfClick.getY() - pointOfCLick.times(getScreenSizeRatio()).getY()) * rotationScale;
+		yRotation = (lastPointOfClick.getX() - pointOfCLick.times(getScreenSizeRatio()).getX()) * rotationScale;
 	}
 
 	private static int getSignOf(double value) {
