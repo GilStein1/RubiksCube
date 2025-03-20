@@ -97,7 +97,7 @@ public class RubiksCube extends Drawable {
 			points3dToDraw.addAll(Arrays.asList(cube.getAll3dPointsToDraw()));
 			polygons.addAll(cube.getAllPolygons());
 		}
-		this.lastClicksQueue = new ArrayBlockingQueue<>(5);
+		this.lastClicksQueue = new ArrayBlockingQueue<>(10);
 		this.lastPointOfClick = new Point2d(0, 0);
 		this.currentRotation = new Quaternion(1, 0, 0, 0);
 		this.xRotationalVelocity = 0;
@@ -162,87 +162,87 @@ public class RubiksCube extends Drawable {
 
 		if (!isScreenPressed) {
 			updateRotationsFromDecreasingVelocity(scaledTime);
-		} else if (rubiksCubeState.isAvailableForModifications() && selectedPolygon.isPresent() && lastClicksQueue.remainingCapacity() == 0 && distance > 10) {
-			rubiksCubeState = RubiksCubeState.ROTATED_BY_PLAYER;
-			Cube selectedCube = selectedPolygon.get().getParentCube();
-			Vec3D rotationUpVector = new Vec3D(
-				currentRotation.toRotationMatrix()[0][1],
-				currentRotation.toRotationMatrix()[1][1],
-				currentRotation.toRotationMatrix()[2][1]
-			);
-			Vec3D rotationForwardVector = new Vec3D(
-				currentRotation.toRotationMatrix()[0][2],
-				currentRotation.toRotationMatrix()[1][2],
-				currentRotation.toRotationMatrix()[2][2]
-			);
-			boolean isMostlyRotatingToSide = Math.abs(pointOfCLick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX()) >
-					Math.abs(pointOfCLick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY());
-			int directionOfSwipe = isMostlyRotatingToSide ?
-				(pointOfCLick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX()) > 0 ? 1 : -1 :
-				(pointOfCLick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY()) > 0 ? 1 : -1;
-			if (Math.abs(rotationUpVector.getX()) > Math.abs(rotationUpVector.getY()) && Math.abs(rotationUpVector.getX()) > Math.abs(rotationUpVector.getZ())) {
-				if(Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getY()) && Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getX())) {
-					if(isMostlyRotatingToSide) {
-						animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-					}
-					else {
-						animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-					}
-				}
-				else {
-					if(isMostlyRotatingToSide) {
-						animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-					}
-					else {
-						animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-					}
-				}
-			} else if (Math.abs(rotationUpVector.getY()) > Math.abs(rotationUpVector.getX()) && Math.abs(rotationUpVector.getY()) > Math.abs(rotationUpVector.getZ())) {
-				if(Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getY()) && Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getX())) {
-					if(isMostlyRotatingToSide) {
-						animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-					}
-					else {
-						animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-					}
-				}
-				else {
-					if(isMostlyRotatingToSide) {
-						animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-					}
-					else {
-						animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-					}
-				}
-			} else {
-				if(Math.abs(rotationForwardVector.getY()) > Math.abs(rotationForwardVector.getZ()) && Math.abs(rotationForwardVector.getY()) > Math.abs(rotationForwardVector.getX())) {
-					if(isMostlyRotatingToSide) {
-						animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-					}
-					else {
-						animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-					}
-				}
-				else {
-					if(isMostlyRotatingToSide) {
-						animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-					}
-					else {
-						animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-					}
-				}
-			}
-			animationManager.addAction(new TimedAction(() -> rubiksCubeState = RubiksCubeState.IDLE, 0.5));
 		}
-//		else if(lastClicksQueue.remainingCapacity() != 0) {
-			Log.w("the queue is less then z", String.valueOf(lastClicksQueue.remainingCapacity()));
-//		}
+
 		rotate(Math.toRadians(xRotation), Math.toRadians(yRotation), 0);
 		updateAllDots(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
 		for (Cube cube : cubes) {
 			cube.update(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
 		}
 		lastPointOfClick = pointOfCLick.times(getScreenSizeRatio());
+	}
+
+	private void detectCubeRotationByPlayer(Point2d pointOfCLick) {
+		rubiksCubeState = RubiksCubeState.ROTATED_BY_PLAYER;
+		Cube selectedCube = selectedPolygon.get().getParentCube();
+		Vec3D rotationUpVector = new Vec3D(
+			currentRotation.toRotationMatrix()[0][1],
+			currentRotation.toRotationMatrix()[1][1],
+			currentRotation.toRotationMatrix()[2][1]
+		);
+		Vec3D rotationForwardVector = new Vec3D(
+			currentRotation.toRotationMatrix()[0][2],
+			currentRotation.toRotationMatrix()[1][2],
+			currentRotation.toRotationMatrix()[2][2]
+		);
+		boolean isMostlyRotatingToSide = Math.abs(pointOfCLick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX()) >
+			Math.abs(pointOfCLick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY());
+		int directionOfSwipe = isMostlyRotatingToSide ?
+			(pointOfCLick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX()) > 0 ? 1 : -1 :
+			(pointOfCLick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY()) > 0 ? 1 : -1;
+		if (Math.abs(rotationUpVector.getX()) > Math.abs(rotationUpVector.getY()) && Math.abs(rotationUpVector.getX()) > Math.abs(rotationUpVector.getZ())) {
+			if(Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getY()) && Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getX())) {
+				if(isMostlyRotatingToSide) {
+					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+				}
+				else {
+					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+				}
+			}
+			else {
+				if(isMostlyRotatingToSide) {
+					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+				}
+				else {
+					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+				}
+			}
+		} else if (Math.abs(rotationUpVector.getY()) > Math.abs(rotationUpVector.getX()) && Math.abs(rotationUpVector.getY()) > Math.abs(rotationUpVector.getZ())) {
+			if(Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getY()) && Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getX())) {
+				if(isMostlyRotatingToSide) {
+					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+				}
+				else {
+					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+				}
+			}
+			else {
+				if(isMostlyRotatingToSide) {
+					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+				}
+				else {
+					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+				}
+			}
+		} else {
+			if(Math.abs(rotationForwardVector.getY()) > Math.abs(rotationForwardVector.getZ()) && Math.abs(rotationForwardVector.getY()) > Math.abs(rotationForwardVector.getX())) {
+				if(isMostlyRotatingToSide) {
+					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+				}
+				else {
+					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+				}
+			}
+			else {
+				if(isMostlyRotatingToSide) {
+					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+				}
+				else {
+					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+				}
+			}
+		}
+		animationManager.addAction(new TimedAction(() -> rubiksCubeState = RubiksCubeState.IDLE, 0.5));
 	}
 
 	private void addRotationToUndoListForPlayerMove(double angleRotated) {
@@ -302,7 +302,9 @@ public class RubiksCube extends Drawable {
 							(lastClicksQueue.peek().getX() - pointOfCLick.times(1/getScreenSizeRatio()).getX())
 								* rotationScale * rotationalVelocityScale;
 					}
-					lastClicksQueue.clear();
+				}
+				if (rubiksCubeState.isAvailableForModifications() && selectedPolygon.isPresent() && lastClicksQueue.remainingCapacity() == 0) {
+					detectCubeRotationByPlayer(pointOfCLick);
 				}
 				selectedPolygon = Optional.empty();
 				break;
@@ -330,8 +332,8 @@ public class RubiksCube extends Drawable {
 	}
 
 	private void rotateCubeBasedOfNewPointOfClick(Point2d pointOfCLick) {
-		xRotation = (lastPointOfClick.getY() - pointOfCLick.times(getScreenSizeRatio()).getY()) * rotationScale;
-		yRotation = (lastPointOfClick.getX() - pointOfCLick.times(getScreenSizeRatio()).getX()) * rotationScale;
+		xRotation = (lastPointOfClick.getY() - pointOfCLick.times(1/getScreenSizeRatio()).getY()) * rotationScale;
+		yRotation = (lastPointOfClick.getX() - pointOfCLick.times(1/getScreenSizeRatio()).getX()) * rotationScale;
 	}
 
 	private static int getSignOf(double value) {
