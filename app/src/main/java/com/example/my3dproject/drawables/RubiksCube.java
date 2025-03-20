@@ -2,6 +2,7 @@ package com.example.my3dproject.drawables;
 
 import android.graphics.Canvas;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MotionEvent;
 
 import com.example.my3dproject.TimedAction;
@@ -18,8 +19,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 public class RubiksCube extends Drawable {
 
@@ -42,6 +45,7 @@ public class RubiksCube extends Drawable {
 	private boolean hasNoticedActionUp;
 	private AtomicBoolean isRandomizing;
 	private Optional<RotationOperation> currentRotationOperation;
+	private final Stack<Pair<Consumer<Double>, Double>> undoStack;
 	private final double rubiksCubeSize;
 	private final double smallCubesSize;
 
@@ -103,6 +107,7 @@ public class RubiksCube extends Drawable {
 		this.hasNoticedActionUp = false;
 		this.isRandomizing = new AtomicBoolean(false);
 		this.currentRotationOperation = Optional.empty();
+		this.undoStack = new Stack<>();
 	}
 
 	private void rotate(double xAngle, double yAngle, double zAngle) {
@@ -185,6 +190,7 @@ public class RubiksCube extends Drawable {
 			if (currentRotationOperation.get().shouldLockIn()) {
 				angleAdded = -currentRotationOperation.get().getAngleOfRotation();
 				angleAdded %= (Math.PI / 2);
+				addRotationToUndoListForPlayerMove((currentRotationOperation.get().getAngleOfRotation() + angleAdded)%360);
 				Log.w("AngleToRemove", String.valueOf(angleAdded));
 			} else {
 				currentRotationOperation.get().addToAngle(angleAdded);
@@ -208,6 +214,20 @@ public class RubiksCube extends Drawable {
 			cube.update(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
 		}
 		lastPointOfClick = pointOfCLick.times(getScreenSizeRatio());
+	}
+
+	private void addRotationToUndoListForPlayerMove(double angleRotated) {
+		Log.w("AngleRotatedToUndo", String.valueOf(angleRotated));
+		Cube instanceCube = currentRotationOperation.get().getInstanceCube();
+		if(currentRotationOperation.get().isRotatingX()) {
+			undoStack.push(new Pair<>(angle -> rotateXAroundCube(instanceCube, angle), -angleRotated));
+		}
+		else if(currentRotationOperation.get().isRotatingY()) {
+			undoStack.push(new Pair<>(angle -> rotateYAroundCube(instanceCube, angle), -angleRotated));
+		}
+		else {
+			undoStack.push(new Pair<>(angle -> rotateZAroundCube(instanceCube, angle), -angleRotated));
+		}
 	}
 
 	private void updateAllDots(double deltaTime, Point2d pointOfCLick, int event) {
@@ -316,6 +336,7 @@ public class RubiksCube extends Drawable {
 						new Cube(side * smallCubesSize, 0, 0, smallCubesSize), Math.toRadians(90.0/animationSteps*directionOfRotation)
 					),j*timeToTurn/animationSteps + i*timeToTurn));
 				}
+				undoStack.push(new Pair<>(angle -> rotateXAroundCube(new Cube(side * smallCubesSize, 0, 0, smallCubesSize), angle), Math.toRadians(90.0 * -directionOfRotation)));
 			}
 			else if(axis == 1) {
 				for(int j = 0; j < animationSteps; j++) {
@@ -323,6 +344,7 @@ public class RubiksCube extends Drawable {
 						new Cube(0, side * smallCubesSize, 0, smallCubesSize), Math.toRadians(90.0/animationSteps*directionOfRotation)
 					),j*timeToTurn/animationSteps + i*timeToTurn));
 				}
+				undoStack.push(new Pair<>(angle -> rotateYAroundCube(new Cube(0, side * smallCubesSize, 0, smallCubesSize), angle), Math.toRadians(90.0 * -directionOfRotation)));
 			}
 			else {
 				for(int j = 0; j < animationSteps; j++) {
@@ -330,7 +352,22 @@ public class RubiksCube extends Drawable {
 						new Cube(0, 0, side * smallCubesSize, smallCubesSize), Math.toRadians(90.0/animationSteps*directionOfRotation)
 					),j*timeToTurn/animationSteps + i*timeToTurn));
 				}
+				undoStack.push(new Pair<>(angle -> rotateZAroundCube(new Cube(0, 0, side * smallCubesSize, smallCubesSize), angle), Math.toRadians(90.0 * -directionOfRotation)));
 			}
+		}
+	}
+
+	public void solve() {
+		int animationSteps = 20;
+		double timeToTurn = 0.08;
+		double timeOffset = 0;
+		while (!undoStack.empty()) {
+			Pair<Consumer<Double>, Double> action = undoStack.pop();
+			for(int i = 0; i < animationSteps; i++) {
+				animationManager.addAction(new TimedAction(() -> action.first.accept(action.second/animationSteps), timeOffset + i*timeToTurn/animationSteps));
+			}
+//			animationManager.addAction(new TimedAction(() -> action.first.accept(action.second), timeOffset));
+			timeOffset += timeToTurn;
 		}
 	}
 
