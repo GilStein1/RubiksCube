@@ -147,13 +147,9 @@ public class RubiksCube extends Drawable {
 	public void update(double deltaTime, Point2d pointOfCLick, int event) {
 		if (lastClicksQueue.remainingCapacity() == 0) {
 			updateByClickInput(pointOfCLick, event);
-			if(!lastClicksQueue.isEmpty()) {
-				lastClicksQueue.remove();
-			}
+			lastClicksQueue.remove();
 		}
-		if(event == MotionEvent.ACTION_DOWN || event == MotionEvent.ACTION_MOVE) {
-			lastClicksQueue.add(pointOfCLick.times(1/getScreenSizeRatio()));
-		}
+		lastClicksQueue.add(pointOfCLick.times(1/getScreenSizeRatio()));
 
 		double scaledTime = deltaTime * 100;
 
