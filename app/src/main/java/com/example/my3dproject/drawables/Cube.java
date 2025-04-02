@@ -3,12 +3,8 @@ package com.example.my3dproject.drawables;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.example.my3dproject.ScreenGeometryManager;
-import com.example.my3dproject.math.MathUtil;
-import com.example.my3dproject.math.MatrixUtil;
-import com.example.my3dproject.math.Vec3D;
 import com.example.my3dproject.math.geometry.CubeColors;
 import com.example.my3dproject.math.geometry.Point2d;
 import com.example.my3dproject.math.geometry.Point3d;
@@ -16,6 +12,7 @@ import com.example.my3dproject.math.geometry.PointUtils;
 import com.example.my3dproject.math.geometry.Quaternion;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Cube extends Drawable {
@@ -25,6 +22,7 @@ public class Cube extends Drawable {
 	private final Point[] points3d;
 	private final Point[] points3dToDraw;
 	private final List<Polygon> polygons;
+	private final List<Polygon> polygonsToDraw;
 
 	public Cube(double x, double y, double z, double size) {
 		super();
@@ -44,13 +42,22 @@ public class Cube extends Drawable {
 		};
 		this.points3dToDraw = PointUtils.copyArrayOfPoints(points3d);
 		this.polygons = new ArrayList<>();
+		this.polygonsToDraw = new ArrayList<>();
 		CubeColors colors = CubeColors.getColorsFromPos(x, y, z);
-		polygons.add(new Polygon(this, colors.getColors()[5], points3dToDraw[0], points3dToDraw[1], points3dToDraw[3], points3dToDraw[2]));
-		polygons.add(new Polygon(this, colors.getColors()[3], points3dToDraw[5], points3dToDraw[4], points3dToDraw[6], points3dToDraw[7]));
-		polygons.add(new Polygon(this, colors.getColors()[2], points3dToDraw[0], points3dToDraw[4], points3dToDraw[5], points3dToDraw[1]));
-		polygons.add(new Polygon(this, colors.getColors()[4], points3dToDraw[3], points3dToDraw[7], points3dToDraw[6], points3dToDraw[2]));
-		polygons.add(new Polygon(this, colors.getColors()[1], points3dToDraw[1], points3dToDraw[5], points3dToDraw[7], points3dToDraw[3]));
-		polygons.add(new Polygon(this, colors.getColors()[0], points3dToDraw[2], points3dToDraw[6], points3dToDraw[4], points3dToDraw[0]));
+
+		polygons.add(new Polygon(this, colors.getColors()[5], points3d[0], points3d[1], points3d[3], points3d[2]));
+		polygons.add(new Polygon(this, colors.getColors()[3], points3d[5], points3d[4], points3d[6], points3d[7]));
+		polygons.add(new Polygon(this, colors.getColors()[2], points3d[0], points3d[4], points3d[5], points3d[1]));
+		polygons.add(new Polygon(this, colors.getColors()[4], points3d[3], points3d[7], points3d[6], points3d[2]));
+		polygons.add(new Polygon(this, colors.getColors()[1], points3d[1], points3d[5], points3d[7], points3d[3]));
+		polygons.add(new Polygon(this, colors.getColors()[0], points3d[2], points3d[6], points3d[4], points3d[0]));
+
+		polygonsToDraw.add(new Polygon(this, colors.getColors()[5], points3dToDraw[0], points3dToDraw[1], points3dToDraw[3], points3dToDraw[2]));
+		polygonsToDraw.add(new Polygon(this, colors.getColors()[3], points3dToDraw[5], points3dToDraw[4], points3dToDraw[6], points3dToDraw[7]));
+		polygonsToDraw.add(new Polygon(this, colors.getColors()[2], points3dToDraw[0], points3dToDraw[4], points3dToDraw[5], points3dToDraw[1]));
+		polygonsToDraw.add(new Polygon(this, colors.getColors()[4], points3dToDraw[3], points3dToDraw[7], points3dToDraw[6], points3dToDraw[2]));
+		polygonsToDraw.add(new Polygon(this, colors.getColors()[1], points3dToDraw[1], points3dToDraw[5], points3dToDraw[7], points3dToDraw[3]));
+		polygonsToDraw.add(new Polygon(this, colors.getColors()[0], points3dToDraw[2], points3dToDraw[6], points3dToDraw[4], points3dToDraw[0]));
 	}
 
 	public void rotateWithMatrix(double[][] matrix, Point3d centerOfRotation) {
@@ -96,11 +103,15 @@ public class Cube extends Drawable {
 	}
 
 	public List<Polygon> getAllPolygons() {
-		return polygons;
+		return polygonsToDraw;
 	}
 
 	public Point3d getPos() {
 		return new Point3d(x, y, z);
+	}
+
+	public Polygon getPolygonFromDrawPolygon(Polygon drawPolygon) {
+		return polygons.get(polygonsToDraw.indexOf(drawPolygon));
 	}
 
 	public void updateDrawnPos(double x, double y, double z) {
@@ -115,7 +126,7 @@ public class Cube extends Drawable {
 
 	@Override
 	public void update(double deltaTime, Point2d pointOfClick, int event) {
-		for (Polygon polygon : polygons) {
+		for (Polygon polygon : polygonsToDraw) {
 			polygon.update(deltaTime, pointOfClick, event);
 		}
 	}

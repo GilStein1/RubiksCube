@@ -54,4 +54,9 @@ public class Vec3D {
 		this.z = z;
 	}
 
+	@Override
+	public String toString() {
+		return "(" + x + "," + y + "," + z + ")";
+	}
+
 }

@@ -10,7 +10,11 @@ import com.example.my3dproject.TimedAction;
 import com.example.my3dproject.Constants;
 import com.example.my3dproject.RotationOperation;
 import com.example.my3dproject.TimedAnimationManager;
+import com.example.my3dproject.math.MathUtil;
 import com.example.my3dproject.math.Vec3D;
+import com.example.my3dproject.math.geometry.Axis;
+import com.example.my3dproject.math.geometry.Direction;
+import com.example.my3dproject.math.geometry.DirectionCross;
 import com.example.my3dproject.math.geometry.Point2d;
 import com.example.my3dproject.math.geometry.Point3d;
 import com.example.my3dproject.math.geometry.Quaternion;
@@ -22,7 +26,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public class RubiksCube extends Drawable {
@@ -31,10 +34,15 @@ public class RubiksCube extends Drawable {
 	private final TimedAnimationManager animationManager;
 	private final double x, y, z;
 	private final List<Cube> cubes;
+	private final List<Cube> cubesThatDoNotRotate;
 	private final List<Point> points3d;
+	private final List<Point> notRotatedPoints3d;
 	private final List<Point> points3dToDraw;
-	private final List<Polygon> polygons;
+	private final List<Point> notRotatedPointsToDraw;
+	private final List<Polygon> drawnPolygons;
+	private final List<Polygon> notRotatedPolygons;
 	private Optional<Polygon> selectedPolygon;
+	private Optional<Polygon> selectedNotRotatedPolygon;
 	private Quaternion currentRotation;
 	private final float rotationScale = 0.3f;
 	private final float rotationalVelocityScale = 0.25f;
@@ -57,10 +65,15 @@ public class RubiksCube extends Drawable {
 		this.rubiksCubeSize = size;
 		this.animationManager = animationManager;
 		this.points3d = new ArrayList<>();
+		this.notRotatedPoints3d = new ArrayList<>();
 		this.points3dToDraw = new ArrayList<>();
-		this.polygons = new ArrayList<>();
+		this.notRotatedPointsToDraw = new ArrayList<>();
+		this.drawnPolygons = new ArrayList<>();
+		this.notRotatedPolygons = new ArrayList<>();
 		this.selectedPolygon = Optional.empty();
+		this.selectedNotRotatedPolygon = Optional.empty();
 		this.cubes = new ArrayList<>();
+		this.cubesThatDoNotRotate = new ArrayList<>();
 		double sizeOfSmallCubes = size / 3;
 		this.smallCubesSize = sizeOfSmallCubes;
 		cubes.add(new Cube(x - sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
@@ -92,10 +105,47 @@ public class RubiksCube extends Drawable {
 		cubes.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
 		cubes.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 0, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
 		cubes.add(new Cube(x + sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 0, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 0, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 0, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 0, y - sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 0, y - sizeOfSmallCubes * 0, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 0, y + sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 0, y - sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 0, y - sizeOfSmallCubes * 0, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 0, y + sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 0, y - sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 0, y - sizeOfSmallCubes * 0, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x - sizeOfSmallCubes * 0, y + sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+
+		cubesThatDoNotRotate.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 0, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x + sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 0, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x + sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z - sizeOfSmallCubes * 0, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x + sizeOfSmallCubes * 1, y - sizeOfSmallCubes * 0, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+		cubesThatDoNotRotate.add(new Cube(x + sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
+
 		for (Cube cube : cubes) {
 			points3d.addAll(Arrays.asList(cube.getAll3dPoints()));
 			points3dToDraw.addAll(Arrays.asList(cube.getAll3dPointsToDraw()));
-			polygons.addAll(cube.getAllPolygons());
+			drawnPolygons.addAll(cube.getAllPolygons());
+		}
+
+		for(Cube cube : cubesThatDoNotRotate) {
+			notRotatedPolygons.addAll(cube.getAllPolygons());
+			notRotatedPoints3d.addAll(Arrays.asList(cube.getAll3dPoints()));
+			notRotatedPointsToDraw.addAll(Arrays.asList(cube.getAll3dPointsToDraw()));
 		}
 		this.lastClicksQueue = new ArrayBlockingQueue<>(10);
 		this.lastPointOfClick = new Point2d(0, 0);
@@ -109,6 +159,7 @@ public class RubiksCube extends Drawable {
 		this.rubiksCubeState = RubiksCubeState.IDLE;
 		this.currentRotationOperation = Optional.empty();
 		this.undoStack = new Stack<>();
+		rotate(0.001, 0.001, 0.001);
 	}
 
 	private void rotate(double xAngle, double yAngle, double zAngle) {
@@ -127,7 +178,27 @@ public class RubiksCube extends Drawable {
 			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
 			points3dToDraw.get(i).moveTo(newX + x, newY + y, newZ + z);
 		}
+		for (int i = 0; i < notRotatedPoints3d.size(); i++) {
+			Point p = notRotatedPoints3d.get(i);
+			double tx = p.getX() - x;
+			double ty = p.getY() - y;
+			double tz = p.getZ() - z;
+			double newX = rotationMatrix[0][0] * tx + rotationMatrix[0][1] * ty + rotationMatrix[0][2] * tz;
+			double newY = rotationMatrix[1][0] * tx + rotationMatrix[1][1] * ty + rotationMatrix[1][2] * tz;
+			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
+			notRotatedPointsToDraw.get(i).moveTo(newX + x, newY + y, newZ + z);
+		}
 		for (Cube cube : cubes) {
+			Point3d p = cube.getPos();
+			double tx = p.getX() - x;
+			double ty = p.getY() - y;
+			double tz = p.getZ() - z;
+			double newX = rotationMatrix[0][0] * tx + rotationMatrix[0][1] * ty + rotationMatrix[0][2] * tz;
+			double newY = rotationMatrix[1][0] * tx + rotationMatrix[1][1] * ty + rotationMatrix[1][2] * tz;
+			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
+			cube.updateDrawnPos(newX + x, newY + y, newZ + z);
+		}
+		for (Cube cube : cubesThatDoNotRotate) {
 			Point3d p = cube.getPos();
 			double tx = p.getX() - x;
 			double ty = p.getY() - y;
@@ -165,79 +236,116 @@ public class RubiksCube extends Drawable {
 		for (Cube cube : cubes) {
 			cube.update(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
 		}
+		for (Cube cube : cubesThatDoNotRotate) {
+			cube.update(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
+		}
 		lastPointOfClick = pointOfCLick.times(getScreenSizeRatio());
 	}
 
 	private void detectCubeRotationByPlayer(Point2d pointOfCLick) {
 		rubiksCubeState = RubiksCubeState.ROTATED_BY_PLAYER;
 		Cube selectedCube = selectedPolygon.get().getParentCube();
-		Vec3D rotationUpVector = new Vec3D(
-			currentRotation.toRotationMatrix()[0][1],
-			currentRotation.toRotationMatrix()[1][1],
-			currentRotation.toRotationMatrix()[2][1]
-		);
-		Vec3D rotationForwardVector = new Vec3D(
-			currentRotation.toRotationMatrix()[0][2],
-			currentRotation.toRotationMatrix()[1][2],
-			currentRotation.toRotationMatrix()[2][2]
-		);
+		Polygon nonRotatedPolygon = selectedNotRotatedPolygon.get().getParentCube().getPolygonFromDrawPolygon(selectedNotRotatedPolygon.get());
+		DirectionCross directionCross = new DirectionCross();
+		directionCross.rotate(currentRotation);
 		boolean isMostlyRotatingToSide = Math.abs(pointOfCLick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX()) >
 			Math.abs(pointOfCLick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY());
 		int directionOfSwipe = isMostlyRotatingToSide ?
 			(pointOfCLick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX()) > 0 ? 1 : -1 :
 			(pointOfCLick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY()) > 0 ? 1 : -1;
-		if (Math.abs(rotationUpVector.getX()) > Math.abs(rotationUpVector.getY()) && Math.abs(rotationUpVector.getX()) > Math.abs(rotationUpVector.getZ())) {
-			if(Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getY()) && Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getX())) {
-				if(isMostlyRotatingToSide) {
-					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-				}
-				else {
-					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-				}
+		directionOfSwipe *= -(int) (Math.abs(directionCross.getDirectionVector(Direction.RIGHT).getX())
+			/directionCross.getDirectionVector(Direction.RIGHT).getX()
+			* Math.abs(directionCross.getDirectionVector(Direction.UP).getY())
+			/directionCross.getDirectionVector(Direction.UP).getY()
+			*Math.abs(directionCross.getDirectionVector(Direction.FORWARD).getZ())
+			/directionCross.getDirectionVector(Direction.FORWARD).getZ());
+
+		Log.w("normalVector", nonRotatedPolygon.updateNormalVector().toString());
+		if(nonRotatedPolygon.isPointingToZ()) {
+			boolean isUpRight = MathUtil.isVectorMostlyInAxis(directionCross.getDirectionVector(Direction.UP), Axis.Y);
+//			directionOfSwipe *= isUpRight ? directionCross.getDirectionVector(Direction.UP).getY() < 0 ? 1 : -1 :
+//				directionCross.getDirectionVector(Direction.RIGHT).getX() < 0 ? 1 : -1;
+			if(isUpRight ^ isMostlyRotatingToSide) {
+				animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
 			}
 			else {
-				if(isMostlyRotatingToSide) {
-					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-				}
-				else {
-					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-				}
-			}
-		} else if (Math.abs(rotationUpVector.getY()) > Math.abs(rotationUpVector.getX()) && Math.abs(rotationUpVector.getY()) > Math.abs(rotationUpVector.getZ())) {
-			if(Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getY()) && Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getX())) {
-				if(isMostlyRotatingToSide) {
-					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-				}
-				else {
-					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-				}
-			}
-			else {
-				if(isMostlyRotatingToSide) {
-					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-				}
-				else {
-					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-				}
-			}
-		} else {
-			if(Math.abs(rotationForwardVector.getY()) > Math.abs(rotationForwardVector.getZ()) && Math.abs(rotationForwardVector.getY()) > Math.abs(rotationForwardVector.getX())) {
-				if(isMostlyRotatingToSide) {
-					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-				}
-				else {
-					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-				}
-			}
-			else {
-				if(isMostlyRotatingToSide) {
-					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-				}
-				else {
-					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-				}
+				animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
 			}
 		}
+		else if(nonRotatedPolygon.isPointingToX()) {
+			boolean isUpRight = MathUtil.isVectorMostlyInAxis(directionCross.getDirectionVector(Direction.UP), Axis.Y);
+//			directionOfSwipe *= isUpRight ? directionCross.getDirectionVector(Direction.UP).getY() < 0 ? 1 : -1 :
+//				directionCross.getDirectionVector(Direction.FORWARD).getZ() < 0 ? 1 : -1;
+			if(isUpRight ^ isMostlyRotatingToSide) {
+				animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+			}
+			else {
+				animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+			}
+		}
+		else {
+			boolean isUpRight = MathUtil.isVectorMostlyInAxis(directionCross.getDirectionVector(Direction.FORWARD), Axis.Y);
+//			directionOfSwipe *= isUpRight ? directionCross.getDirectionVector(Direction.FORWARD).getZ() < 0 ? 1 : -1 :
+//				directionCross.getDirectionVector(Direction.RIGHT).getX() < 0 ? 1 : -1;
+			if(isUpRight ^ isMostlyRotatingToSide) {
+				animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+			}
+			else {
+				animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+			}
+		}
+//		if (Math.abs(rotationUpVector.getX()) > Math.abs(rotationUpVector.getY()) && Math.abs(rotationUpVector.getX()) > Math.abs(rotationUpVector.getZ())) {
+//			if(Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getY()) && Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getX())) {
+//				if(isMostlyRotatingToSide) {
+//					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+//				}
+//				else {
+//					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+//				}
+//			}
+//			else {
+//				if(isMostlyRotatingToSide) {
+//					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+//				}
+//				else {
+//					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+//				}
+//			}
+//		} else if (Math.abs(rotationUpVector.getY()) > Math.abs(rotationUpVector.getX()) && Math.abs(rotationUpVector.getY()) > Math.abs(rotationUpVector.getZ())) {
+//			if(Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getY()) && Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getX())) {
+//				if(isMostlyRotatingToSide) {
+//					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+//				}
+//				else {
+//					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+//				}
+//			}
+//			else {
+//				if(isMostlyRotatingToSide) {
+//					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+//				}
+//				else {
+//					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+//				}
+//			}
+//		} else {
+//			if(Math.abs(rotationForwardVector.getY()) > Math.abs(rotationForwardVector.getZ()) && Math.abs(rotationForwardVector.getY()) > Math.abs(rotationForwardVector.getX())) {
+//				if(isMostlyRotatingToSide) {
+//					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+//				}
+//				else {
+//					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+//				}
+//			}
+//			else {
+//				if(isMostlyRotatingToSide) {
+//					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+//				}
+//				else {
+//					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
+//				}
+//			}
+//		}
 		animationManager.addAction(new TimedAction(() -> rubiksCubeState = RubiksCubeState.IDLE, 0.5));
 	}
 
@@ -258,6 +366,9 @@ public class RubiksCube extends Drawable {
 	private void updateAllDots(double deltaTime, Point2d pointOfCLick, int event) {
 		for (int i = 0; i < points3dToDraw.size(); i++) {
 			points3dToDraw.get(i).update(deltaTime, pointOfCLick, event);
+		}
+		for (int i = 0; i < notRotatedPointsToDraw.size(); i++) {
+			notRotatedPointsToDraw.get(i).update(deltaTime, pointOfCLick, event);
 		}
 	}
 
@@ -280,7 +391,8 @@ public class RubiksCube extends Drawable {
 			case MotionEvent.ACTION_DOWN:
 				isScreenPressed = true;
 				if (!selectedPolygon.isPresent()) {
-					selectedPolygon = searchForClickedPolygon(pointOfCLick);
+					selectedPolygon = searchForClickedPolygon(drawnPolygons, pointOfCLick);
+					selectedNotRotatedPolygon = searchForClickedPolygon(notRotatedPolygons, pointOfCLick);
 				}
 				break;
 			case MotionEvent.ACTION_UP:
@@ -303,6 +415,7 @@ public class RubiksCube extends Drawable {
 					detectCubeRotationByPlayer(pointOfCLick);
 				}
 				selectedPolygon = Optional.empty();
+				selectedNotRotatedPolygon = Optional.empty();
 				break;
 			case MotionEvent.ACTION_MOVE:
 				if (!selectedPolygon.isPresent()) {
@@ -315,7 +428,7 @@ public class RubiksCube extends Drawable {
 		}
 	}
 
-	private Optional<Polygon> searchForClickedPolygon(Point2d pointOfClick) {
+	private Optional<Polygon> searchForClickedPolygon(List<Polygon> polygons, Point2d pointOfClick) {
 		for (int i = polygons.size() - 1; i >= 0; i--) {
 			if (polygons.get(i).isPointingToPlayer()) {
 				if (polygons.get(i).isPointInPolygon(pointOfClick)) {
@@ -463,11 +576,18 @@ public class RubiksCube extends Drawable {
 
 	@Override
 	public void render(Canvas canvas) {
-		polygons.sort(Comparator.comparingDouble(Polygon::getDistanceFromPlayer));
+		drawnPolygons.sort(Comparator.comparingDouble(Polygon::getDistanceFromPlayer));
+		notRotatedPolygons.sort(Comparator.comparingDouble(Polygon::getDistanceFromPlayer));
 		selectedPolygon.ifPresent(polygon -> polygon.setSelected(true));
-		for (Polygon polygon : polygons) {
+		for (Polygon polygon : drawnPolygons) {
 			if (polygon.isPointingToPlayer()) {
 				polygon.render(canvas);
+			}
+		}
+		for (Polygon polygon : notRotatedPolygons) {
+			if (polygon.isPointingToPlayer()) {
+				polygon.setSelected(false);
+//				polygon.render(canvas);
 			}
 		}
 	}

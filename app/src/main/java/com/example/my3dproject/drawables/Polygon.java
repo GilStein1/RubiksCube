@@ -48,15 +48,18 @@ public class Polygon extends Drawable {
 	}
 
 	public boolean isPointingToX() {
-		return Math.abs(points.get(0).getX() - points.get(1).getX()) < 10;
+		Vec3D normal = updateNormalVector();
+		return Math.abs(normal.getX()) > Math.max(Math.abs(normal.getY()), Math.abs(normal.getZ()));
 	}
 
 	public boolean isPointingToY() {
-		return Math.abs(points.get(0).getY() - points.get(1).getY()) < 10;
+		Vec3D normal = updateNormalVector();
+		return Math.abs(normal.getY()) > Math.max(Math.abs(normal.getX()), Math.abs(normal.getZ()));
 	}
 
 	public boolean isPointingToZ() {
-		return Math.abs(points.get(0).getZ() - points.get(1).getZ()) < 10;
+		Vec3D normal = updateNormalVector();
+		return Math.abs(normal.getZ()) > Math.max(Math.abs(normal.getX()), Math.abs(normal.getY()));
 	}
 
 	public void setSelected(boolean isSelected) {
@@ -113,7 +116,7 @@ public class Polygon extends Drawable {
 		return new Point3d(xAvg, yAvg, zAvg);
 	}
 
-	private Vec3D updateNormalVector() {
+	public Vec3D updateNormalVector() {
 		Vec3D vector = new Vec3D(0, 0, 0);
 		vector.setX((points.get(0).getY() - points.get(1).getY()) * (points.get(0).getZ() - points.get(2).getZ()) - (points.get(0).getZ() - points.get(1).getZ()) * (points.get(0).getY() - points.get(2).getY()));
 		vector.setY((points.get(0).getZ() - points.get(1).getZ()) * (points.get(0).getX() - points.get(2).getX()) - (points.get(0).getX() - points.get(1).getX()) * (points.get(0).getZ() - points.get(2).getZ()));
@@ -181,4 +184,5 @@ public class Polygon extends Drawable {
 		canvas.drawPath(pathOfPolygon, paintOfFilledShape);
 		canvas.drawPath(pathOfLines, paintOfLines);
 	}
+
 }

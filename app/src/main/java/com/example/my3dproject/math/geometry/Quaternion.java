@@ -17,7 +17,7 @@ public class Quaternion {
 	}
 
 	public Vec3D getRotationVector() {
-		return new Vec3D(x, y ,z);
+		return new Vec3D(x, y, z);
 	}
 
 	public static Quaternion fromAxisAngle(double angle, double x, double y, double z) {
@@ -54,6 +54,29 @@ public class Quaternion {
 			w * q.z + x * q.y - y * q.x + z * q.w
 		);
 	}
+
+	public double[] getAngles() {
+		return new double[]{getXRotation(), getYRotation(), getZRotation()};
+	}
+
+	public double getXRotation() {
+		return Math.atan2(2.0 * (w * x + y * z), 1.0 - 2.0 * (x * x + y * y));
+	}
+
+	public double getYRotation() {
+		return Math.asin(2.0 * (w * y - z * x));
+	}
+
+	public double getZRotation() {
+		return Math.atan2(2.0 * (w * z + x * y), 1.0 - 2.0 * (y * y + z * z));
+	}
+
+	public Vec3D rotateVector(Vec3D vector) {
+		Quaternion vectorQuat = new Quaternion(0, vector.getX(), vector.getY(), vector.getZ());
+		Quaternion resultQuat = this.multiply(vectorQuat).multiply(this.conjugate());
+		return new Vec3D(resultQuat.x, resultQuat.y, resultQuat.z).normalize();
+	}
+
 
 	public double[][] toRotationMatrix() {
 		return new double[][]{
