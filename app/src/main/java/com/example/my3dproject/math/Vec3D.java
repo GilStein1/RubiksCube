@@ -26,8 +26,27 @@ public class Vec3D {
 			this.getZ() * other.getZ();
 	}
 
+	public double cosineSimilarity(Vec3D other) {
+		double dot = this.dotProduct(other);
+		double normA = Math.sqrt(this.dotProduct(this));
+		double normB = Math.sqrt(other.dotProduct(other));
+		return (normA == 0 || normB == 0) ? 0 : dot / (normA * normB);
+	}
+
 	public static Vec3D fromDifferenceInPos(Point3d p1, Point3d p2) {
 		return new Vec3D(p1.getX() - p2.getX(), p1.getY() - p2.getY(), p1.getZ() - p2.getZ());
+	}
+
+	public double getValueInMainAxis() {
+		if(Math.abs(x) > Math.max(Math.abs(y), Math.abs(z))) {
+			return x;
+		}
+		else {
+			if(Math.abs(y) > Math.abs(z)) {
+				return y;
+			}
+		}
+		return z;
 	}
 
 	public double getX() {

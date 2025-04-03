@@ -1,6 +1,7 @@
 package com.example.my3dproject.drawables;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
@@ -253,18 +254,32 @@ public class RubiksCube extends Drawable {
 		int directionOfSwipe = isMostlyRotatingToSide ?
 			(pointOfCLick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX()) > 0 ? 1 : -1 :
 			(pointOfCLick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY()) > 0 ? 1 : -1;
-		directionOfSwipe *= -(int) (Math.abs(directionCross.getDirectionVector(Direction.RIGHT).getX())
-			/directionCross.getDirectionVector(Direction.RIGHT).getX()
-			* Math.abs(directionCross.getDirectionVector(Direction.UP).getY())
-			/directionCross.getDirectionVector(Direction.UP).getY()
-			*Math.abs(directionCross.getDirectionVector(Direction.FORWARD).getZ())
-			/directionCross.getDirectionVector(Direction.FORWARD).getZ());
+//		directionOfSwipe *= -(int) (
+//			Math.abs(directionCross.getDirectionVector(Direction.RIGHT).getX())
+//			/directionCross.getDirectionVector(Direction.RIGHT).getX()
+//			* Math.abs(directionCross.getDirectionVector(Direction.UP).getY())
+//			/directionCross.getDirectionVector(Direction.UP).getY()
+//			* Math.abs(directionCross.getDirectionVector(Direction.FORWARD).getZ())
+//			/directionCross.getDirectionVector(Direction.FORWARD).getZ()
+//		);
 
 		Log.w("normalVector", nonRotatedPolygon.updateNormalVector().toString());
+
+		Log.w("direction", "{\n" + directionCross.getDirectionVector(Direction.RIGHT) + "\n" +
+			directionCross.getDirectionVector(Direction.LEFT) + "\n" +
+			directionCross.getDirectionVector(Direction.UP) + "\n" +
+			directionCross.getDirectionVector(Direction.DOWN) + "\n" +
+			directionCross.getDirectionVector(Direction.FORWARD) + "\n" +
+			directionCross.getDirectionVector(Direction.BACKWARD) + "\n}");
+
 		if(nonRotatedPolygon.isPointingToZ()) {
 			boolean isUpRight = MathUtil.isVectorMostlyInAxis(directionCross.getDirectionVector(Direction.UP), Axis.Y);
-//			directionOfSwipe *= isUpRight ? directionCross.getDirectionVector(Direction.UP).getY() < 0 ? 1 : -1 :
-//				directionCross.getDirectionVector(Direction.RIGHT).getX() < 0 ? 1 : -1;
+			directionOfSwipe *= -(int) (
+				Math.abs(Math.abs(directionCross.getDirectionVector(Direction.UP).getY())
+					/directionCross.getDirectionVector(Direction.UP).getY()
+					* Math.abs(directionCross.getDirectionVector(Direction.RIGHT).getX())
+					/directionCross.getDirectionVector(Direction.RIGHT).getX()
+				));
 			if(isUpRight ^ isMostlyRotatingToSide) {
 				animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
 			}
@@ -274,8 +289,12 @@ public class RubiksCube extends Drawable {
 		}
 		else if(nonRotatedPolygon.isPointingToX()) {
 			boolean isUpRight = MathUtil.isVectorMostlyInAxis(directionCross.getDirectionVector(Direction.UP), Axis.Y);
-//			directionOfSwipe *= isUpRight ? directionCross.getDirectionVector(Direction.UP).getY() < 0 ? 1 : -1 :
-//				directionCross.getDirectionVector(Direction.FORWARD).getZ() < 0 ? 1 : -1;
+			directionOfSwipe *= -(int) (
+				Math.abs(Math.abs(directionCross.getDirectionVector(Direction.UP).getY())
+					/directionCross.getDirectionVector(Direction.UP).getY()
+					* Math.abs(directionCross.getDirectionVector(Direction.FORWARD).getZ())
+					/directionCross.getDirectionVector(Direction.FORWARD).getZ()
+			));
 			if(isUpRight ^ isMostlyRotatingToSide) {
 				animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
 			}
@@ -285,8 +304,12 @@ public class RubiksCube extends Drawable {
 		}
 		else {
 			boolean isUpRight = MathUtil.isVectorMostlyInAxis(directionCross.getDirectionVector(Direction.FORWARD), Axis.Y);
-//			directionOfSwipe *= isUpRight ? directionCross.getDirectionVector(Direction.FORWARD).getZ() < 0 ? 1 : -1 :
-//				directionCross.getDirectionVector(Direction.RIGHT).getX() < 0 ? 1 : -1;
+			directionOfSwipe *= -(int) (
+				Math.abs(directionCross.getDirectionVector(Direction.RIGHT).getX())
+					/directionCross.getDirectionVector(Direction.RIGHT).getX()
+					* Math.abs(directionCross.getDirectionVector(Direction.FORWARD).getZ())
+					/directionCross.getDirectionVector(Direction.FORWARD).getZ()
+			);
 			if(isUpRight ^ isMostlyRotatingToSide) {
 				animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
 			}
@@ -294,58 +317,6 @@ public class RubiksCube extends Drawable {
 				animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
 			}
 		}
-//		if (Math.abs(rotationUpVector.getX()) > Math.abs(rotationUpVector.getY()) && Math.abs(rotationUpVector.getX()) > Math.abs(rotationUpVector.getZ())) {
-//			if(Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getY()) && Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getX())) {
-//				if(isMostlyRotatingToSide) {
-//					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//				}
-//				else {
-//					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//				}
-//			}
-//			else {
-//				if(isMostlyRotatingToSide) {
-//					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//				}
-//				else {
-//					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//				}
-//			}
-//		} else if (Math.abs(rotationUpVector.getY()) > Math.abs(rotationUpVector.getX()) && Math.abs(rotationUpVector.getY()) > Math.abs(rotationUpVector.getZ())) {
-//			if(Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getY()) && Math.abs(rotationForwardVector.getZ()) > Math.abs(rotationForwardVector.getX())) {
-//				if(isMostlyRotatingToSide) {
-//					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//				}
-//				else {
-//					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//				}
-//			}
-//			else {
-//				if(isMostlyRotatingToSide) {
-//					animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//				}
-//				else {
-//					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//				}
-//			}
-//		} else {
-//			if(Math.abs(rotationForwardVector.getY()) > Math.abs(rotationForwardVector.getZ()) && Math.abs(rotationForwardVector.getY()) > Math.abs(rotationForwardVector.getX())) {
-//				if(isMostlyRotatingToSide) {
-//					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//				}
-//				else {
-//					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//				}
-//			}
-//			else {
-//				if(isMostlyRotatingToSide) {
-//					animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//				}
-//				else {
-//					animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//				}
-//			}
-//		}
 		animationManager.addAction(new TimedAction(() -> rubiksCubeState = RubiksCubeState.IDLE, 0.5));
 	}
 
@@ -590,5 +561,34 @@ public class RubiksCube extends Drawable {
 //				polygon.render(canvas);
 			}
 		}
+		DirectionCross directionCross = new DirectionCross();
+		directionCross.rotate(currentRotation);
+		Point p = new Point(
+			directionCross.getDirectionVector(Direction.UP).getX() * 40,
+			directionCross.getDirectionVector(Direction.UP).getY() * 40,
+			directionCross.getDirectionVector(Direction.UP).getZ() * 40
+		);
+		p.setColor(Color.RED);
+		p.update(0, new Point2d(0, 0), 0);
+		p.render(canvas);
+
+		p = new Point(
+			directionCross.getDirectionVector(Direction.RIGHT).getX() * 40,
+			directionCross.getDirectionVector(Direction.RIGHT).getY() * 40,
+			directionCross.getDirectionVector(Direction.RIGHT).getZ() * 40
+		);
+		p.setColor(Color.YELLOW);
+		p.update(0, new Point2d(0, 0), 0);
+		p.render(canvas);
+
+		p = new Point(
+			directionCross.getDirectionVector(Direction.FORWARD).getX() * 40,
+			directionCross.getDirectionVector(Direction.FORWARD).getY() * 40,
+			directionCross.getDirectionVector(Direction.FORWARD).getZ() * 40
+		);
+		p.setColor(Color.GREEN);
+		p.update(0, new Point2d(0, 0), 0);
+		p.render(canvas);
+
 	}
 }

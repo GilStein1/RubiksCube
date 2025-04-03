@@ -14,6 +14,7 @@ public class Point extends Drawable {
 	private final ScreenGeometryManager screenGeometryManager;
 	private double x, y, z;
 	private double drawX, drawY;
+	private int color;
 
 	public Point(double x, double y, double z) {
 		super();
@@ -23,6 +24,7 @@ public class Point extends Drawable {
 		this.z = z;
 		this.drawX = x * screenGeometryManager.getScreenSizeRatio();
 		this.drawY = y * screenGeometryManager.getScreenSizeRatio();
+		this.color = Color.BLACK;
 	}
 
 	public Point(Point other) {
@@ -58,6 +60,10 @@ public class Point extends Drawable {
 		);
 	}
 
+	public void setColor(int color) {
+		this.color = color;
+	}
+
 	@Override
 	public void update(double deltaTime, Point2d pointOfCLick, int event) {
 		drawX = screenGeometryManager.getProjectionTranslatedX(getPose());
@@ -67,7 +73,11 @@ public class Point extends Drawable {
 	@Override
 	public void render(Canvas canvas) {
 		Paint paint = new Paint();
+		paint.setStyle(Paint.Style.STROKE);
 		paint.setColor(Color.BLACK);
+		canvas.drawCircle((float) drawX, (float) drawY, 10, paint);
+		paint.setStyle(Paint.Style.FILL);
+		paint.setColor(color);
 		canvas.drawCircle((float) drawX, (float) drawY, 10, paint);
 	}
 }

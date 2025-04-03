@@ -32,6 +32,24 @@ public class DirectionCross {
 		}
 	}
 
+	public Direction getMostSimilarDirection(Vec3D vec3D) {
+		double right = vec3D.cosineSimilarity(getDirectionVector(Direction.RIGHT));
+		double left = vec3D.cosineSimilarity(getDirectionVector(Direction.LEFT));
+		double up = vec3D.cosineSimilarity(getDirectionVector(Direction.UP));
+		double down = vec3D.cosineSimilarity(getDirectionVector(Direction.DOWN));
+		double forward = vec3D.cosineSimilarity(getDirectionVector(Direction.FORWARD));
+		double backward = vec3D.cosineSimilarity(getDirectionVector(Direction.BACKWARD));
+
+		double max = Math.max(Math.max(Math.max(right, left), Math.max(up, down)), Math.max(forward, backward));
+
+		if (right == max) return Direction.RIGHT;
+		if (left == max) return Direction.LEFT;
+		if (up == max) return Direction.UP;
+		if (down == max) return Direction.DOWN;
+		if (forward == max) return Direction.FORWARD;
+		return Direction.BACKWARD;
+	}
+
 	private void rotatePoint(Point3d point, Quaternion rotation) {
 		double[][] rotationMatrix = rotation.toRotationMatrix();
 		double newX = rotationMatrix[0][0] * point.getX() + rotationMatrix[0][1] * point.getY() + rotationMatrix[0][2] * point.getZ();
