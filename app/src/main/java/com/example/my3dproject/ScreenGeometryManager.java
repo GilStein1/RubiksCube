@@ -72,6 +72,10 @@ public class ScreenGeometryManager {
 		return centerY(getProjectedY(point, focalLength));
 	}
 
+	public Point3d getProjectionTranslatedPoint3d(Point3d point, double focalLength) {
+		return new Point3d(getProjectionTranslatedX(point, focalLength), getProjectionTranslatedY(point, focalLength), 0);
+	}
+
 	public double getProjectionTranslatedX(Point3d point) {
 		return getProjectionTranslatedX(point, focalLength);
 	}

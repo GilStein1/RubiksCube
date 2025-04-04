@@ -2,6 +2,9 @@ package com.example.my3dproject.math;
 
 import com.example.my3dproject.math.geometry.Axis;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 public class MathUtil {
 
 	public static double roundValue(double value, int amountOfRounding) {
@@ -15,6 +18,10 @@ public class MathUtil {
 			case Z: return Math.abs(vector.getZ()) > Math.max(Math.abs(vector.getY()), Math.abs(vector.getX()));
 		}
 		return false;
+	}
+
+	public static void sortVectorsByMostSimilarity(Vec3D vectorToCompareTo, Vec3D... vectors) {
+		Arrays.sort(vectors, Comparator.comparingDouble(vec -> (vectorToCompareTo.cosineSimilarity(vec) + 1)/2.0));
 	}
 
 }

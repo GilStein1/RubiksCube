@@ -27,6 +27,9 @@ public class Vec3D {
 	}
 
 	public double cosineSimilarity(Vec3D other) {
+		if(other == null) {
+			return -1;
+		}
 		double dot = this.dotProduct(other);
 		double normA = Math.sqrt(this.dotProduct(this));
 		double normB = Math.sqrt(other.dotProduct(other));
