@@ -1,13 +1,20 @@
-package com.example.my3dproject;
+package com.example.my3dproject.activities;
 
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
+import com.example.my3dproject.Controller;
+import com.example.my3dproject.R;
+import com.example.my3dproject.ScreenTouchListener;
 import com.example.my3dproject.drawables.RubiksCube;
 
-public class MainActivity extends AppCompatActivity {
+public class GameActivities extends AppCompatActivity {
 
 	private FrameLayout frameLayout;
 	private Controller controller;
@@ -15,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_game_activities);
 		frameLayout = findViewById(R.id.frame);
 		frameLayout.setOnTouchListener(ScreenTouchListener.getInstance());
 	}
@@ -32,4 +39,5 @@ public class MainActivity extends AppCompatActivity {
 			frameLayout.addView(controller, 0);
 		}
 	}
+
 }

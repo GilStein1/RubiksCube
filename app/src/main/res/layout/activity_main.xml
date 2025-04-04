@@ -5,35 +5,13 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity"
+    android:gravity="center">
 
-    <FrameLayout
-        android:id="@+id/frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="bottom|center_horizontal">
-
-            <Button
-                android:id="@+id/btnRandomize"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:text="Randomize"
-                android:layout_marginBottom="16dp"/>
-
-            <Button
-                android:id="@+id/btnSolve"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:text="Solve"
-                android:layout_marginBottom="16dp"/>
-
-        </LinearLayout>
-
-    </FrameLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Move To Game"
+        android:onClick="startGame"/>
 
 </LinearLayout>
