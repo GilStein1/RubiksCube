@@ -3,18 +3,14 @@ package com.example.my3dproject.activities;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.my3dproject.Controller;
 import com.example.my3dproject.R;
 import com.example.my3dproject.ScreenTouchListener;
 import com.example.my3dproject.drawables.RubiksCube;
 
-public class GameActivities extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity {
 
 	private FrameLayout frameLayout;
 	private Controller controller;

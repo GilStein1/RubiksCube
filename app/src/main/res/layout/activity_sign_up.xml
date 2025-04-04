@@ -5,14 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MainActivity"
+    tools:context=".activities.SignUpActivity"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rubik's Cube"
+        android:text="Sign Up"
         android:textSize="30sp"
         android:layout_marginTop="40dp"/>
 
@@ -26,6 +26,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
+            android:layout_marginLeft="40dp"
+            android:text="Name:"/>
+
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="40dp"
+            android:hint="your name"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="40dp"
             android:text="Email:"/>
 
@@ -64,22 +81,22 @@
         android:layout_marginTop="20dp">
 
         <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:text="login"
-            android:layout_marginRight="10dp"
-            android:textSize="20sp"
-            android:onClick="logInByButton"/>
-
-        <Button
             android:id="@+id/btnSignUp"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="sign up"
-            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
             android:textSize="20sp"
-            android:onClick="signUpByButton"/>
+            android:onClick="signUpByButtonInSignUp"/>
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="cancel"
+            android:layout_marginLeft="10dp"
+            android:textSize="20sp"
+            android:onClick="cancelByButton"/>
 
     </LinearLayout>
 

@@ -49,8 +49,7 @@ public class Controller extends SurfaceView implements Runnable {
 	}
 
 	private void drawSurface(double deltaTime) {
-		if (surfaceHolder.getSurface().isValid()) {
-			canvas = surfaceHolder.lockCanvas();
+		if (surfaceHolder.getSurface().isValid() && (canvas = surfaceHolder.lockCanvas()) != null) {
 			canvas.drawPaint(background);
 			for (Drawable drawable : drawables) {
 				drawable.update(
