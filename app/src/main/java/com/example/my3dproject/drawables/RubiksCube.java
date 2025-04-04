@@ -254,14 +254,11 @@ public class RubiksCube extends Drawable {
 		int directionOfSwipe = isMostlyRotatingToSide ?
 			(pointOfCLick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX()) > 0 ? 1 : -1 :
 			(pointOfCLick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY()) > 0 ? 1 : -1;
-//		directionOfSwipe *= -(int) (
-//			Math.abs(directionCross.getDirectionVector(Direction.RIGHT).getX())
-//			/directionCross.getDirectionVector(Direction.RIGHT).getX()
-//			* Math.abs(directionCross.getDirectionVector(Direction.UP).getY())
-//			/directionCross.getDirectionVector(Direction.UP).getY()
-//			* Math.abs(directionCross.getDirectionVector(Direction.FORWARD).getZ())
-//			/directionCross.getDirectionVector(Direction.FORWARD).getZ()
-//		);
+		
+		directionOfSwipe = -directionOfSwipe
+			* (new DirectionCross().getMostSimilarDirection(directionCross.getDirectionVector(Direction.RIGHT)).isPositiveInAxis() ? 1 : -1)
+			* (new DirectionCross().getMostSimilarDirection(directionCross.getDirectionVector(Direction.UP)).isPositiveInAxis() ? 1 : -1)
+			* (new DirectionCross().getMostSimilarDirection(directionCross.getDirectionVector(Direction.FORWARD)).isPositiveInAxis() ? 1 : -1);
 
 		Log.w("normalVector", nonRotatedPolygon.updateNormalVector().toString());
 
@@ -274,12 +271,6 @@ public class RubiksCube extends Drawable {
 
 		if(nonRotatedPolygon.isPointingToZ()) {
 			boolean isUpRight = MathUtil.isVectorMostlyInAxis(directionCross.getDirectionVector(Direction.UP), Axis.Y);
-			directionOfSwipe *= -(int) (
-				Math.abs(Math.abs(directionCross.getDirectionVector(Direction.UP).getY())
-					/directionCross.getDirectionVector(Direction.UP).getY()
-					* Math.abs(directionCross.getDirectionVector(Direction.RIGHT).getX())
-					/directionCross.getDirectionVector(Direction.RIGHT).getX()
-				));
 			if(isUpRight ^ isMostlyRotatingToSide) {
 				animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
 			}
@@ -289,12 +280,6 @@ public class RubiksCube extends Drawable {
 		}
 		else if(nonRotatedPolygon.isPointingToX()) {
 			boolean isUpRight = MathUtil.isVectorMostlyInAxis(directionCross.getDirectionVector(Direction.UP), Axis.Y);
-			directionOfSwipe *= -(int) (
-				Math.abs(Math.abs(directionCross.getDirectionVector(Direction.UP).getY())
-					/directionCross.getDirectionVector(Direction.UP).getY()
-					* Math.abs(directionCross.getDirectionVector(Direction.FORWARD).getZ())
-					/directionCross.getDirectionVector(Direction.FORWARD).getZ()
-			));
 			if(isUpRight ^ isMostlyRotatingToSide) {
 				animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
 			}
@@ -304,12 +289,6 @@ public class RubiksCube extends Drawable {
 		}
 		else {
 			boolean isUpRight = MathUtil.isVectorMostlyInAxis(directionCross.getDirectionVector(Direction.FORWARD), Axis.Y);
-			directionOfSwipe *= -(int) (
-				Math.abs(directionCross.getDirectionVector(Direction.RIGHT).getX())
-					/directionCross.getDirectionVector(Direction.RIGHT).getX()
-					* Math.abs(directionCross.getDirectionVector(Direction.FORWARD).getZ())
-					/directionCross.getDirectionVector(Direction.FORWARD).getZ()
-			);
 			if(isUpRight ^ isMostlyRotatingToSide) {
 				animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
 			}
