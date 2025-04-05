@@ -250,20 +250,12 @@ public class RubiksCube extends Drawable {
 		lastPointOfClick = pointOfCLick.times(1/getScreenSizeRatio());
 	}
 
-	private void detectCubeRotationByPlayer(
-		Point2d lastPointOfClick
-	) {
+	private void detectCubeRotationByPlayer(Point2d lastPointOfClick) {
 		rubiksCubeState = RubiksCubeState.ROTATED_BY_PLAYER;
 		Cube selectedCube = selectedPolygon.get().getParentCube();
 		Polygon nonRotatedPolygon = selectedNotRotatedPolygon.get().getParentCube().getPolygonFromDrawPolygon(selectedNotRotatedPolygon.get());
 		DirectionCross directionCross = new DirectionCross();
 		directionCross.rotate(currentRotation);
-		boolean isMostlyRotatingToSide = Math.abs(lastPointOfClick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX()) >
-			Math.abs(lastPointOfClick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY());
-		int directionOfSwipe = isMostlyRotatingToSide ?
-			(lastPointOfClick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX()) > 0 ? 1 : -1 :
-			(lastPointOfClick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY()) > 0 ? 1 : -1;
-
 		Vec3D swipeVector = new Vec3D(
 			lastPointOfClick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX(),
 			(lastPointOfClick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY()),
@@ -283,16 +275,6 @@ public class RubiksCube extends Drawable {
 			vecRight, vecLeft, vecUp, vecDown, vecForward, vecBackward
 		};
 		translateVectorsToProjections(directionVectors);
-
-		Log.w("SPACE", "---------------");
-		Log.w("SwipeVec", swipeVector.toString());
-		Log.w("VecRight", vecRight.toString());
-		Log.w("VecLeft", vecLeft.toString());
-		Log.w("VecUp", vecUp.toString());
-		Log.w("VecDown", vecDown.toString());
-		Log.w("VecForward", vecForward.toString());
-		Log.w("VecBackward", vecBackward.toString());
-
 		if(directionOfNormalOfPolygon.getAxis() == Axis.X) {
 			directionVectors = new Vec3D[] {
 				vecUp, vecDown, vecForward, vecBackward
@@ -308,114 +290,60 @@ public class RubiksCube extends Drawable {
 				vecRight, vecLeft, vecUp, vecDown
 			};
 		}
-
 		MathUtil.sortVectorsByMostSimilarity(swipeVector, directionVectors);
-
 		Vec3D mostSimilarVec = directionVectors[directionVectors.length - 1];
-
 		if(mostSimilarVec == vecRight) {
-			Log.w("MostSimilarVector", "-> vecRight");
 			if(directionOfNormalOfPolygon.getAxis() == Axis.Z) {
-				animateRotatingAroundY(25, 0.12, (directionOfNormalOfPolygon.isPositiveInAxis() ? 1 : -1) * Math.toRadians(90), selectedCube);
+				animateRotatingAroundY(25, 0.12, -(directionOfNormalOfPolygon.getSignInAxis()) * Math.toRadians(90), selectedCube);
 			}
 			else if(directionOfNormalOfPolygon.getAxis() == Axis.Y) {
-				animateRotatingAroundZ(25, 0.12, (directionOfNormalOfPolygon.isPositiveInAxis() ? 1 : -1) * Math.toRadians(90), selectedCube);
+				animateRotatingAroundZ(25, 0.12, (directionOfNormalOfPolygon.getSignInAxis()) * Math.toRadians(90), selectedCube);
 			}
 		}
 		else if(mostSimilarVec == vecLeft) {
-			Log.w("MostSimilarVector", "-> vecLeft");
 			if(directionOfNormalOfPolygon.getAxis() == Axis.Z) {
-				animateRotatingAroundY(25, 0.12, (directionOfNormalOfPolygon.isPositiveInAxis() ? 1 : -1) * -Math.toRadians(90), selectedCube);
+				animateRotatingAroundY(25, 0.12, -(directionOfNormalOfPolygon.getSignInAxis()) * -Math.toRadians(90), selectedCube);
 			}
 			else if(directionOfNormalOfPolygon.getAxis() == Axis.Y) {
-				animateRotatingAroundZ(25, 0.12, (directionOfNormalOfPolygon.isPositiveInAxis() ? 1 : -1) * -Math.toRadians(90), selectedCube);
+				animateRotatingAroundZ(25, 0.12, (directionOfNormalOfPolygon.getSignInAxis()) * -Math.toRadians(90), selectedCube);
 			}
 		}
 		else if(mostSimilarVec == vecUp) {
-			Log.w("MostSimilarVector", "-> vecUp");
 			if(directionOfNormalOfPolygon.getAxis() == Axis.Z) {
-				animateRotatingAroundX(25, 0.12, (directionOfNormalOfPolygon.isPositiveInAxis() ? 1 : -1) * Math.toRadians(90), selectedCube);
+				animateRotatingAroundX(25, 0.12, (directionOfNormalOfPolygon.getSignInAxis()) * Math.toRadians(90), selectedCube);
 			}
 			else if(directionOfNormalOfPolygon.getAxis() == Axis.X) {
-				animateRotatingAroundZ(25, 0.12, (directionOfNormalOfPolygon.isPositiveInAxis() ? 1 : -1) * Math.toRadians(90), selectedCube);
+				animateRotatingAroundZ(25, 0.12, -(directionOfNormalOfPolygon.getSignInAxis()) * Math.toRadians(90), selectedCube);
 			}
 		}
 		else if(mostSimilarVec == vecDown) {
-			Log.w("MostSimilarVector", "-> vecDown");
 			if(directionOfNormalOfPolygon.getAxis() == Axis.Z) {
-				animateRotatingAroundX(25, 0.12, (directionOfNormalOfPolygon.isPositiveInAxis() ? 1 : -1) * -Math.toRadians(90), selectedCube);
+				animateRotatingAroundX(25, 0.12, (directionOfNormalOfPolygon.getSignInAxis()) * -Math.toRadians(90), selectedCube);
 			}
 			else if(directionOfNormalOfPolygon.getAxis() == Axis.X) {
-				animateRotatingAroundZ(25, 0.12, (directionOfNormalOfPolygon.isPositiveInAxis() ? 1 : -1) * -Math.toRadians(90), selectedCube);
+				animateRotatingAroundZ(25, 0.12, -(directionOfNormalOfPolygon.getSignInAxis()) * -Math.toRadians(90), selectedCube);
 			}
 		}
 		else if(mostSimilarVec == vecForward) {
-			Log.w("MostSimilarVector", "-> vecForward");
 			if(directionOfNormalOfPolygon.getAxis() == Axis.X) {
-				animateRotatingAroundY(25, 0.12, (directionOfNormalOfPolygon.isPositiveInAxis() ? 1 : -1) * Math.toRadians(90), selectedCube);
+				animateRotatingAroundY(25, 0.12, (directionOfNormalOfPolygon.getSignInAxis()) * Math.toRadians(90), selectedCube);
 			}
 			else if(directionOfNormalOfPolygon.getAxis() == Axis.Y) {
-				animateRotatingAroundX(25, 0.12, (directionOfNormalOfPolygon.isPositiveInAxis() ? 1 : -1) * Math.toRadians(90), selectedCube);
+				animateRotatingAroundX(25, 0.12, -(directionOfNormalOfPolygon.getSignInAxis()) * Math.toRadians(90), selectedCube);
 			}
 		}
 		else if(mostSimilarVec == vecBackward){
-			Log.w("MostSimilarVector", "-> vecBackward");
 			if(directionOfNormalOfPolygon.getAxis() == Axis.X) {
-				animateRotatingAroundY(25, 0.12, (directionOfNormalOfPolygon.isPositiveInAxis() ? 1 : -1) * -Math.toRadians(90), selectedCube);
+				animateRotatingAroundY(25, 0.12, (directionOfNormalOfPolygon.getSignInAxis()) * -Math.toRadians(90), selectedCube);
 			}
 			else if(directionOfNormalOfPolygon.getAxis() == Axis.Y) {
-				animateRotatingAroundX(25, 0.12, (directionOfNormalOfPolygon.isPositiveInAxis() ? 1 : -1) * -Math.toRadians(90), selectedCube);
+				animateRotatingAroundX(25, 0.12, -(directionOfNormalOfPolygon.getSignInAxis()) * -Math.toRadians(90), selectedCube);
 			}
 		}
-		else {
-			Log.w("MostSimilarVector", "-> NULL");
-		}
-		
-//		directionOfSwipe = -directionOfSwipe
-//			* (new DirectionCross().getMostSimilarDirection(directionCross.getDirectionVector(Direction.RIGHT)).isPositiveInAxis() ? 1 : -1)
-//			* (new DirectionCross().getMostSimilarDirection(directionCross.getDirectionVector(Direction.UP)).isPositiveInAxis() ? 1 : -1)
-//			* (new DirectionCross().getMostSimilarDirection(directionCross.getDirectionVector(Direction.FORWARD)).isPositiveInAxis() ? 1 : -1);
-//
-//		Log.w("normalVector", nonRotatedPolygon.updateNormalVector().toString());
-//
-//		Log.w("direction", "{\n" + directionCross.getDirectionVector(Direction.RIGHT) + "\n" +
-//			directionCross.getDirectionVector(Direction.LEFT) + "\n" +
-//			directionCross.getDirectionVector(Direction.UP) + "\n" +
-//			directionCross.getDirectionVector(Direction.DOWN) + "\n" +
-//			directionCross.getDirectionVector(Direction.FORWARD) + "\n" +
-//			directionCross.getDirectionVector(Direction.BACKWARD) + "\n}");
-//
-//		if(nonRotatedPolygon.isPointingToZ()) {
-//			boolean isUpRight = MathUtil.isVectorMostlyInAxis(directionCross.getDirectionVector(Direction.UP), Axis.Y);
-//			if(isUpRight ^ isMostlyRotatingToSide) {
-//				animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//			}
-//			else {
-//				animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//			}
-//		}
-//		else if(nonRotatedPolygon.isPointingToX()) {
-//			boolean isUpRight = MathUtil.isVectorMostlyInAxis(directionCross.getDirectionVector(Direction.UP), Axis.Y);
-//			if(isUpRight ^ isMostlyRotatingToSide) {
-//				animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//			}
-//			else {
-//				animateRotatingAroundY(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//			}
-//		}
-//		else {
-//			boolean isUpRight = MathUtil.isVectorMostlyInAxis(directionCross.getDirectionVector(Direction.FORWARD), Axis.Y);
-//			if(isUpRight ^ isMostlyRotatingToSide) {
-//				animateRotatingAroundX(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//			}
-//			else {
-//				animateRotatingAroundZ(25, 0.12, Math.toRadians(90*directionOfSwipe), selectedCube);
-//			}
-//		}
 		animationManager.addAction(new TimedAction(() -> rubiksCubeState = RubiksCubeState.IDLE, 0.5));
 	}
 
-	private Vec3D translateVectorToProjection(Vec3D vec3D) {
+	private void translateVectorToProjection(Vec3D vec3D) {
 		vec3D.normalize();
 		Point3d p1 = new Point3d(0, 0, 0);
 		Point3d p2 = new Point3d(vec3D.getX() * rubiksCubeSize*2, vec3D.getY() * rubiksCubeSize*2, vec3D.getZ() * rubiksCubeSize*2);
@@ -425,7 +353,6 @@ public class RubiksCube extends Drawable {
 		vec3D.setX(finalVec.getX());
 		vec3D.setY(finalVec.getY());
 		vec3D.setZ(0);
-		return vec3D;
 	}
 
 	private void translateVectorsToProjections(Vec3D... vectors) {
@@ -675,34 +602,34 @@ public class RubiksCube extends Drawable {
 //				polygon.render(canvas);
 			}
 		}
-		DirectionCross directionCross = new DirectionCross();
-		directionCross.rotate(currentRotation);
-		Point p = new Point(
-			directionCross.getDirectionVector(Direction.UP).getX() * 40,
-			directionCross.getDirectionVector(Direction.UP).getY() * 40,
-			directionCross.getDirectionVector(Direction.UP).getZ() * 40
-		);
-		p.setColor(Color.RED);
-		p.update(0, new Point2d(0, 0), 0);
-		p.render(canvas);
-
-		p = new Point(
-			directionCross.getDirectionVector(Direction.RIGHT).getX() * 40,
-			directionCross.getDirectionVector(Direction.RIGHT).getY() * 40,
-			directionCross.getDirectionVector(Direction.RIGHT).getZ() * 40
-		);
-		p.setColor(Color.YELLOW);
-		p.update(0, new Point2d(0, 0), 0);
-		p.render(canvas);
-
-		p = new Point(
-			directionCross.getDirectionVector(Direction.FORWARD).getX() * 40,
-			directionCross.getDirectionVector(Direction.FORWARD).getY() * 40,
-			directionCross.getDirectionVector(Direction.FORWARD).getZ() * 40
-		);
-		p.setColor(Color.GREEN);
-		p.update(0, new Point2d(0, 0), 0);
-		p.render(canvas);
+//		DirectionCross directionCross = new DirectionCross();
+//		directionCross.rotate(currentRotation);
+//		Point p = new Point(
+//			directionCross.getDirectionVector(Direction.UP).getX() * 40,
+//			directionCross.getDirectionVector(Direction.UP).getY() * 40,
+//			directionCross.getDirectionVector(Direction.UP).getZ() * 40
+//		);
+//		p.setColor(Color.RED);
+//		p.update(0, new Point2d(0, 0), 0);
+//		p.render(canvas);
+//
+//		p = new Point(
+//			directionCross.getDirectionVector(Direction.RIGHT).getX() * 40,
+//			directionCross.getDirectionVector(Direction.RIGHT).getY() * 40,
+//			directionCross.getDirectionVector(Direction.RIGHT).getZ() * 40
+//		);
+//		p.setColor(Color.YELLOW);
+//		p.update(0, new Point2d(0, 0), 0);
+//		p.render(canvas);
+//
+//		p = new Point(
+//			directionCross.getDirectionVector(Direction.FORWARD).getX() * 40,
+//			directionCross.getDirectionVector(Direction.FORWARD).getY() * 40,
+//			directionCross.getDirectionVector(Direction.FORWARD).getZ() * 40
+//		);
+//		p.setColor(Color.GREEN);
+//		p.update(0, new Point2d(0, 0), 0);
+//		p.render(canvas);
 
 	}
 }

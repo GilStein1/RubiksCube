@@ -25,6 +25,10 @@ public enum Direction {
 		return isPositiveInAxis;
 	}
 
+	public int getSignInAxis() {
+		return isPositiveInAxis ? 1 : -1;
+	}
+
 	public boolean isNegativeInAxis() {
 		return !isPositiveInAxis;
 	}
