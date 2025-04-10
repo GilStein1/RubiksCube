@@ -16,6 +16,6 @@ public abstract class Drawable {
 
 	public abstract void update(double deltaTime, Point2d pointOfClick, int event);
 
-	public abstract void render(Canvas canvas);
+	public abstract void render(Canvas canvas, boolean isDarkMode);
 
 }

@@ -1,6 +1,7 @@
 package com.example.my3dproject;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -39,7 +40,7 @@ public class Controller extends SurfaceView implements Runnable {
 		this.shouldTimerCount = false;
 		this.isGamePaused = false;
 		this.background = new Paint();
-		background.setColor(Color.WHITE);
+		background.setColor(isDarkMode()? Color.BLACK : Color.WHITE);
 		this.surfaceHolder = getHolder();
 		this.renderThread = new Thread(this);
 		this.drawables = new ArrayList<>();
@@ -60,6 +61,7 @@ public class Controller extends SurfaceView implements Runnable {
 
 	private void drawSurface(double deltaTime) {
 		if (surfaceHolder.getSurface().isValid() && (canvas = surfaceHolder.lockCanvas()) != null) {
+			background.setColor(isDarkMode()? Color.BLACK : Color.WHITE);
 			canvas.drawPaint(background);
 			for (Drawable drawable : drawables) {
 				drawable.update(
@@ -67,10 +69,15 @@ public class Controller extends SurfaceView implements Runnable {
 					ScreenTouchListener.getInstance().getPos(),
 					ScreenTouchListener.getInstance().getEvent()
 				);
-				drawable.render(canvas);
+				drawable.render(canvas, isDarkMode());
 			}
 			surfaceHolder.unlockCanvasAndPost(canvas);
 		}
+	}
+
+	public boolean isDarkMode() {
+		int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+		return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
 	}
 
 	public TimedAnimationManager getAnimationManager() {

@@ -132,7 +132,7 @@ public class Cube extends Drawable {
 	}
 
 	@Override
-	public void render(Canvas canvas) {
+	public void render(Canvas canvas, boolean isDarkMode) {
 		Paint paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setTextSize(30);

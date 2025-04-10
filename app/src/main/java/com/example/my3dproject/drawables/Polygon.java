@@ -22,6 +22,8 @@ public class Polygon extends Drawable {
 	private final Cube parentCube;
 	@ColorInt
 	private final int color;
+	@ColorInt
+	private int calculatedColor;
 	private final List<Point> points;
 	private final ScreenGeometryManager screenGeometryManager;
 	private Path pathOfPolygon;
@@ -34,6 +36,7 @@ public class Polygon extends Drawable {
 		super();
 		this.parentCube = cube;
 		this.color = color;
+		this.calculatedColor = color;
 		this.points = Arrays.asList(points);
 		this.screenGeometryManager = ScreenGeometryManager.getInstance();
 		this.pathOfPolygon = new Path();
@@ -128,7 +131,7 @@ public class Polygon extends Drawable {
 	@Override
 	public void update(double deltaTime, Point2d pointOfClick, int event) {
 		normalVector = updateNormalVector();
-		paintOfFilledShape.setColor(calculateColorWithShade(color));
+		calculatedColor = calculateColorWithShade(color);
 		pathOfPolygon = new Path();
 		pathOfLines = new Path();
 		pathOfPolygon.moveTo(
@@ -172,8 +175,28 @@ public class Polygon extends Drawable {
 		);
 	}
 
+	private int getInverseOfColor(int color) {
+		if(color == Color.YELLOW) {
+			return Color.rgb(255, 255, 71);
+		}
+		else if(color == Color.RED) {
+			return Color.rgb(255, 0, 255);
+		}
+		else if(color == Color.BLUE) {
+			return Color.rgb(51, 153, 255);
+		}
+		else if(color == Color.rgb(0,197,0)) {
+			return Color.rgb(0, 255, 102);
+		}
+		else if(color == Color.rgb(255,165,0)) {
+			return Color.rgb(225, 122, 70);
+		}
+		return color;
+	}
+
 	@Override
-	public void render(Canvas canvas) {
+	public void render(Canvas canvas, boolean isDarkMode) {
+		paintOfFilledShape.setColor(isDarkMode ? calculateColorWithShade(getInverseOfColor(color)) : calculatedColor);
 		paintOfFilledShape.setStyle(Paint.Style.FILL);
 		Paint paintOfLines = new Paint();
 		paintOfLines.setColor(isSelected? Color.LTGRAY : Color.BLACK);

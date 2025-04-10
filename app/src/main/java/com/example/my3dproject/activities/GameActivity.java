@@ -66,7 +66,7 @@ public class GameActivity extends AppCompatActivity {
 		if (hasFocused && controller == null) {
 			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight(), tvTimer);
 			RubiksCube rubiksCube = new RubiksCube(0, 0, 0, 50, controller);
-			findViewById(R.id.btnRandomize).setOnClickListener(view -> rubiksCube.shuffle());
+			findViewById(R.id.btnShuffle).setOnClickListener(view -> rubiksCube.shuffle());
 			findViewById(R.id.btnReset).setOnClickListener(view -> rubiksCube.solve());
 			controller.addDrawables(rubiksCube);
 			frameLayout.addView(controller, 0);

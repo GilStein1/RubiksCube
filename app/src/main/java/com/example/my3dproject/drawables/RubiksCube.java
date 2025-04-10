@@ -583,13 +583,13 @@ public class RubiksCube extends Drawable {
 	}
 
 	@Override
-	public void render(Canvas canvas) {
+	public void render(Canvas canvas, boolean isDarkMode) {
 		drawnPolygons.sort(Comparator.comparingDouble(Polygon::getDistanceFromPlayer));
 		notRotatedPolygons.sort(Comparator.comparingDouble(Polygon::getDistanceFromPlayer));
 		selectedPolygon.ifPresent(polygon -> polygon.setSelected(true));
 		for (Polygon polygon : drawnPolygons) {
 			if (polygon.isPointingToPlayer()) {
-				polygon.render(canvas);
+				polygon.render(canvas, isDarkMode);
 			}
 		}
 		for (Polygon polygon : notRotatedPolygons) {

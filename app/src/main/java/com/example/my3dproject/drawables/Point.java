@@ -71,7 +71,7 @@ public class Point extends Drawable {
 	}
 
 	@Override
-	public void render(Canvas canvas) {
+	public void render(Canvas canvas, boolean isDarkMode) {
 		Paint paint = new Paint();
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setColor(Color.BLACK);
