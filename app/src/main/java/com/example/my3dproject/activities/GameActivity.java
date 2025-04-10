@@ -29,7 +29,7 @@ public class GameActivity extends AppCompatActivity {
 		if (hasFocused && controller == null) {
 			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight());
 			RubiksCube rubiksCube = new RubiksCube(0, 0, 0, 50, controller.getAnimationManager());
-			findViewById(R.id.btnRandomize).setOnClickListener(view -> rubiksCube.randomize());
+			findViewById(R.id.btnRandomize).setOnClickListener(view -> rubiksCube.shuffle());
 			findViewById(R.id.btnSolve).setOnClickListener(view -> rubiksCube.solve());
 			controller.addDrawables(rubiksCube);
 			frameLayout.addView(controller, 0);

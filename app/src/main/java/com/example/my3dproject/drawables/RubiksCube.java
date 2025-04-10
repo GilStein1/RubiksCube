@@ -1,7 +1,6 @@
 package com.example.my3dproject.drawables;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
@@ -28,9 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class RubiksCube extends Drawable {
 
@@ -57,7 +54,6 @@ public class RubiksCube extends Drawable {
 	private boolean isScreenPressed;
 	private boolean hasNoticedActionUp;
 	private RubiksCubeState rubiksCubeState;
-	private Optional<RotationOperation> currentRotationOperation;
 	private final Stack<Pair<Consumer<Double>, Double>> undoStack;
 	private final double rubiksCubeSize;
 	private final double smallCubesSize;
@@ -161,7 +157,6 @@ public class RubiksCube extends Drawable {
 		this.isScreenPressed = false;
 		this.hasNoticedActionUp = false;
 		this.rubiksCubeState = RubiksCubeState.IDLE;
-		this.currentRotationOperation = Optional.empty();
 		this.undoStack = new Stack<>();
 		rotate(0.001, 0.001, 0.001);
 	}
@@ -361,20 +356,6 @@ public class RubiksCube extends Drawable {
 		}
 	}
 
-	private void addRotationToUndoListForPlayerMove(double angleRotated) {
-		Log.w("AngleRotatedToUndo", String.valueOf(angleRotated));
-		Cube instanceCube = currentRotationOperation.get().getInstanceCube();
-		if(currentRotationOperation.get().isRotatingX()) {
-			undoStack.push(new Pair<>(angle -> rotateXAroundCube(instanceCube, angle), -angleRotated));
-		}
-		else if(currentRotationOperation.get().isRotatingY()) {
-			undoStack.push(new Pair<>(angle -> rotateYAroundCube(instanceCube, angle), -angleRotated));
-		}
-		else {
-			undoStack.push(new Pair<>(angle -> rotateZAroundCube(instanceCube, angle), -angleRotated));
-		}
-	}
-
 	private void updateAllDots(double deltaTime, Point2d pointOfCLick, int event) {
 		for (int i = 0; i < points3dToDraw.size(); i++) {
 			points3dToDraw.get(i).update(deltaTime, pointOfCLick, event);
@@ -408,9 +389,6 @@ public class RubiksCube extends Drawable {
 				}
 				break;
 			case MotionEvent.ACTION_UP:
-				if (currentRotationOperation.isPresent() && !currentRotationOperation.get().shouldLockIn()) {
-					currentRotationOperation.get().setLockIn(true);
-				}
 				if (!hasNoticedActionUp) {
 					hasNoticedActionUp = true;
 					isScreenPressed = false;
@@ -461,11 +439,11 @@ public class RubiksCube extends Drawable {
 		return (value > 0 ? 1 : -1);
 	}
 
-	public void randomize() {
+	public void shuffle() {
 		if(!rubiksCubeState.isAvailableForModifications()) {
 			return;
 		}
-		rubiksCubeState = RubiksCubeState.RANDOMIZING;
+		rubiksCubeState = RubiksCubeState.SHUFFLE;
 		int amountOfTurns = 50;
 		int animationSteps = 25;
 		double timeToTurn = 0.12;

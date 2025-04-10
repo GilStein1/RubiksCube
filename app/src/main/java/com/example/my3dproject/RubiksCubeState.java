@@ -5,7 +5,7 @@ public enum RubiksCubeState {
 	IDLE(true),
 	SOLVING(false),
 	ROTATED_BY_PLAYER(false),
-	RANDOMIZING(false);
+	SHUFFLE(false);
 
 	private final boolean isAvailableForModifications;
 
