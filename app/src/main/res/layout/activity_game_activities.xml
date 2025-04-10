@@ -1,39 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.GameActivity">
 
-    <FrameLayout
-        android:id="@+id/frame"
+    <!-- Main Game Content -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Top Bar -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/topBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="bottom|center_horizontal">
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Menu Button (Hamburger icon) -->
+            <ImageButton
+                android:id="@+id/btnMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_menu_sort_by_size"
+                android:contentDescription="Menu"
+                android:layout_marginEnd="12dp" />
+
+            <TextView
+                android:id="@+id/timerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⏱ 00:00"
+                android:textSize="18sp"
+                android:layout_marginEnd="16dp" />
+
+            <TextView
+                android:id="@+id/scoreText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🏆 Score: 0"
+                android:textSize="18sp"
+                android:layout_marginEnd="16dp" />
+
+            <Button
+                android:id="@+id/btnReset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reset" />
+        </LinearLayout>
+
+        <!-- Cube Area -->
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/topBar"
+            app:layout_constraintBottom_toTopOf="@+id/bottomBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="#111" />
+
+        <!-- Bottom Bar -->
+        <LinearLayout
+            android:id="@+id/bottomBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <Button
                 android:id="@+id/btnRandomize"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Randomize"
-                android:layout_marginBottom="16dp"/>
-
-            <Button
-                android:id="@+id/btnSolve"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:text="Solve"
-                android:layout_marginBottom="16dp"/>
-
+                android:text="🎲 Randomize" />
         </LinearLayout>
 
-    </FrameLayout>
+        <!-- Floating Pause Button -->
+        <ImageButton
+            android:id="@+id/btnPause"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:src="@android:drawable/ic_media_pause"
+            android:contentDescription="Pause"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="12dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Overlay Message -->
+        <TextView
+            android:id="@+id/statusOverlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Solved!"
+            android:textSize="32sp"
+            android:textColor="#FFFFFF"
+            android:background="#AA000000"
+            android:padding="16dp"
+            android:visibility="gone"
+            android:alpha="0"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Navigation Drawer Content -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/nav_menu"
+        android:background="#FFF" />
+</androidx.drawerlayout.widget.DrawerLayout>
