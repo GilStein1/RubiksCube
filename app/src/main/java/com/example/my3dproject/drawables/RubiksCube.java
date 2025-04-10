@@ -1,10 +1,10 @@
 package com.example.my3dproject.drawables;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
 
+import com.example.my3dproject.Controller;
 import com.example.my3dproject.RubiksCubeState;
 import com.example.my3dproject.ScreenGeometryManager;
 import com.example.my3dproject.TimedAction;
@@ -32,6 +32,7 @@ import java.util.function.Consumer;
 public class RubiksCube extends Drawable {
 
 	private final ArrayBlockingQueue<Point2d> lastClicksQueue;
+	private final Controller controller;
 	private final TimedAnimationManager animationManager;
 	private final double x, y, z;
 	private final List<Cube> cubes;
@@ -58,12 +59,13 @@ public class RubiksCube extends Drawable {
 	private final double rubiksCubeSize;
 	private final double smallCubesSize;
 
-	public RubiksCube(double x, double y, double z, double size, TimedAnimationManager animationManager) {
+	public RubiksCube(double x, double y, double z, double size, Controller controller) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.rubiksCubeSize = size;
-		this.animationManager = animationManager;
+		this.controller = controller;
+		this.animationManager = controller.getAnimationManager();
 		this.points3d = new ArrayList<>();
 		this.notRotatedPoints3d = new ArrayList<>();
 		this.points3dToDraw = new ArrayList<>();
@@ -444,6 +446,7 @@ public class RubiksCube extends Drawable {
 			return;
 		}
 		rubiksCubeState = RubiksCubeState.SHUFFLE;
+		controller.stopTimer(true);
 		int amountOfTurns = 50;
 		int animationSteps = 25;
 		double timeToTurn = 0.12;
@@ -451,7 +454,10 @@ public class RubiksCube extends Drawable {
 		int lastAxis = (int)(Math.random()*3);
 		int lastSide = (int)(Math.random()*3) - 1;
 		int direction = 1;
-		animationManager.addAction(new TimedAction(() -> rubiksCubeState = RubiksCubeState.IDLE, timeToTurn * amountOfTurns));
+		animationManager.addAction(new TimedAction(() -> {
+			rubiksCubeState = RubiksCubeState.IDLE;
+			controller.stopTimer(false);
+		}, timeToTurn * amountOfTurns));
 		for(int i = 0; i < amountOfTurns; i++) {
 			int axis = (int)(Math.random()*3);
 			int side = (int)(Math.random()*3) - 1;
@@ -493,6 +499,7 @@ public class RubiksCube extends Drawable {
 			return;
 		}
 		rubiksCubeState = RubiksCubeState.SOLVING;
+		controller.stopTimer(true);
 		int animationSteps = 20;
 		double timeToTurn = 0.05;
 		double index = 0;
@@ -507,7 +514,10 @@ public class RubiksCube extends Drawable {
 			index++;
 			timeOffset += timeWithSlowingOffset;
 		}
-		animationManager.addAction(new TimedAction(() -> rubiksCubeState = RubiksCubeState.IDLE, timeOffset));
+		animationManager.addAction(new TimedAction(() -> {
+			rubiksCubeState = RubiksCubeState.IDLE;
+			controller.resetTimer();
+		}, timeOffset));
 	}
 
 	private void animateRotatingAroundX(int animationSteps, double timeToTurn, double angle, Cube cubeToRotateAround) {
@@ -562,6 +572,14 @@ public class RubiksCube extends Drawable {
 				);
 			}
 		}
+	}
+
+	public void setState(RubiksCubeState state) {
+		this.rubiksCubeState = state;
+	}
+
+	public RubiksCubeState getRubiksCubeState() {
+		return rubiksCubeState;
 	}
 
 	@Override

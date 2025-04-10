@@ -6,8 +6,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.TextView;
 
 import com.example.my3dproject.drawables.Drawable;
+import com.example.my3dproject.drawables.RubiksCube;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +18,10 @@ import java.util.List;
 public class Controller extends SurfaceView implements Runnable {
 
 	private final int screenWidth, screenHeight;
+	private final TextView tvTimer;
+	private double timer;
+	private boolean shouldTimerCount;
+	private boolean isGamePaused;
 	private final Paint background;
 	private final SurfaceHolder surfaceHolder;
 	private final Thread renderThread;
@@ -24,10 +30,14 @@ public class Controller extends SurfaceView implements Runnable {
 	private double lastTime;
 	private final TimedAnimationManager animationManager;
 
-	public Controller(Context context, int screenWidth, int screenHeight) {
+	public Controller(Context context, int screenWidth, int screenHeight, TextView tvTimer) {
 		super(context);
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
+		this.tvTimer = tvTimer;
+		this.timer = 0;
+		this.shouldTimerCount = false;
+		this.isGamePaused = false;
 		this.background = new Paint();
 		background.setColor(Color.WHITE);
 		this.surfaceHolder = getHolder();
@@ -67,10 +77,37 @@ public class Controller extends SurfaceView implements Runnable {
 		return animationManager;
 	}
 
+	private void updateTimer(double deltaTime) {
+		timer += deltaTime;
+		String minutes = (int)(timer/60) < 10 ? "0" + (int)(timer/60) : "" + (int)(timer/60);
+		String seconds = (int)(timer % 60) < 10 ? "0" + (int)(timer % 60) : "" + (int)(timer % 60);
+		tvTimer.post(() -> tvTimer.setText("⏱ " + minutes + ":" + seconds));
+	}
+
+	public void resetTimer() {
+		timer = 0;
+		tvTimer.post(() -> tvTimer.setText("⏱ 00:00"));
+	}
+
+	public void stopTimer(boolean stopTimer) {
+		this.shouldTimerCount = !stopTimer;
+	}
+
+	public void pauseGame(boolean pauseGame) {
+		this.isGamePaused = pauseGame;
+	}
+
+	public boolean isGamePaused() {
+		return isGamePaused;
+	}
+
 	@Override
 	public void run() {
 		while (true) {
 			double currentTime = System.nanoTime() / 1e9;
+			if(shouldTimerCount && !isGamePaused) {
+				updateTimer(currentTime - lastTime);
+			}
 			animationManager.update();
 			drawSurface(currentTime - lastTime);
 			lastTime = currentTime;

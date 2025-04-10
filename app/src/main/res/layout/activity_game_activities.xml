@@ -35,7 +35,7 @@
                 android:layout_marginEnd="12dp" />
 
             <TextView
-                android:id="@+id/timerText"
+                android:id="@+id/tvTimer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="⏱ 00:00"
@@ -86,18 +86,6 @@
                 android:layout_height="wrap_content"
                 android:text="🎲 Randomize" />
         </LinearLayout>
-
-        <!-- Floating Pause Button -->
-        <ImageButton
-            android:id="@+id/btnPause"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_media_pause"
-            android:contentDescription="Pause"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="12dp" />
 
         <!-- Overlay Message -->
         <TextView

@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.my3dproject.Controller;
 import com.example.my3dproject.R;
 import com.example.my3dproject.ScreenTouchListener;
+import com.example.my3dproject.TimedAction;
 import com.example.my3dproject.drawables.RubiksCube;
 import com.google.android.material.navigation.NavigationView;
 
@@ -24,6 +26,7 @@ public class GameActivity extends AppCompatActivity {
 	private DrawerLayout drawerLayout;
 	private NavigationView navView;
 	private ImageButton menuButton;
+	private TextView tvTimer;
 	private Controller controller;
 
 	@Override
@@ -37,6 +40,8 @@ public class GameActivity extends AppCompatActivity {
 		menuButton = findViewById(R.id.btnMenu);
 
 		menuButton.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+
+		tvTimer = findViewById(R.id.tvTimer);
 
 		navView.setNavigationItemSelectedListener(item -> {
 			int id = item.getItemId();
@@ -59,8 +64,8 @@ public class GameActivity extends AppCompatActivity {
 	public void onWindowFocusChanged(boolean hasFocused) {
 		super.onWindowFocusChanged(hasFocused);
 		if (hasFocused && controller == null) {
-			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight());
-			RubiksCube rubiksCube = new RubiksCube(0, 0, 0, 50, controller.getAnimationManager());
+			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight(), tvTimer);
+			RubiksCube rubiksCube = new RubiksCube(0, 0, 0, 50, controller);
 			findViewById(R.id.btnRandomize).setOnClickListener(view -> rubiksCube.shuffle());
 			findViewById(R.id.btnReset).setOnClickListener(view -> rubiksCube.solve());
 			controller.addDrawables(rubiksCube);
