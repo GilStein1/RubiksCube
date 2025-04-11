@@ -1,27 +1,35 @@
 package com.example.my3dproject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Account {
 
 	public String accountId;
 	public String name;
-	public String number;
 	public String userId;
-	public double balance;
+	public List<RotationOperation> rotationOperations;
 
-	public Account(String userId, String number, String name, String accountId) {
+	public Account(String userId, String name, String accountId) {
 		this.userId = userId;
-		this.number = number;
 		this.name = name;
 		this.accountId = accountId;
-		this.balance = 0;
+		this.rotationOperations = new ArrayList<>();
 	}
 
 	public Account() {
 		this.accountId = "";
 		this.name = "";
-		this.number = "";
 		this.userId = "";
-		this.balance = 0;
+		this.rotationOperations = new ArrayList<>();
+	}
+
+	public void setRotationOperationList(List<RotationOperation> rotationOperations) {
+		this.rotationOperations = rotationOperations;
+	}
+
+	public List<RotationOperation> getRotationOperationList() {
+		return rotationOperations;
 	}
 
 	public String getAccountId() {
@@ -40,28 +48,12 @@ public class Account {
 		this.name = name;
 	}
 
-	public String getNumber() {
-		return number;
-	}
-
-	public void setNumber(String number) {
-		this.number = number;
-	}
-
 	public String getUserId() {
 		return userId;
 	}
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public double getBalance() {
-		return balance;
-	}
-
-	public void setBalance(double balance) {
-		this.balance = balance;
 	}
 
 }

@@ -5,16 +5,24 @@ import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
 
 import com.example.my3dproject.drawables.Drawable;
 import com.example.my3dproject.drawables.RubiksCube;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Controller extends SurfaceView implements Runnable {
 
@@ -30,6 +38,12 @@ public class Controller extends SurfaceView implements Runnable {
 	private Canvas canvas;
 	private double lastTime;
 	private final TimedAnimationManager animationManager;
+	private List<RotationOperation> rotationOperations;
+	private FirebaseAuth mAuth;
+	private DatabaseReference accountRef;
+	private List<Account> accounts;
+	private Account currentAccount;
+	private List<Consumer<Account>> taskToDoWhenAccountIsLogged;
 
 	public Controller(Context context, int screenWidth, int screenHeight, TextView tvTimer) {
 		super(context);
@@ -46,6 +60,11 @@ public class Controller extends SurfaceView implements Runnable {
 		this.drawables = new ArrayList<>();
 		this.lastTime = System.nanoTime() / 1e9;
 		this.animationManager = new TimedAnimationManager();
+		this.mAuth = FirebaseAuth.getInstance();
+		FirebaseDatabase database = FirebaseDatabase.getInstance();
+		this.accountRef = database.getReference("accounts");
+		this.taskToDoWhenAccountIsLogged = new ArrayList<>();
+		findCurrentAccount();
 		initHelpers();
 		renderThread.start();
 	}
@@ -108,12 +127,74 @@ public class Controller extends SurfaceView implements Runnable {
 		return isGamePaused;
 	}
 
+	public void saveAnotherRotation(RotationOperation rotationOperation) {
+		rotationOperations.add(rotationOperation);
+		Log.d("RotationOps", "Current list size: " + rotationOperations.size());
+		updateSavedAccountInDatabase();
+	}
+
+	public void clearAllSavedRotations() {
+		rotationOperations.clear();
+		updateSavedAccountInDatabase();
+	}
+
+	private void updateSavedAccountInDatabase() {
+		currentAccount.setRotationOperationList(rotationOperations);
+		accountRef.child(mAuth.getCurrentUser().getUid()).setValue(currentAccount)
+			.addOnCompleteListener(task -> {
+				if (task.isSuccessful()) {
+					Log.d("FirebaseG", "Data saved successfully!");
+				} else {
+					Log.e("FirebaseG", "Failed to save data", task.getException());
+				}
+			});
+	}
+
+	public List<RotationOperation> getSavedRotationOperations() {
+		return rotationOperations;
+	}
+
+	public void addTaskToDoWhenAccountIsLogged(Consumer<Account> task) {
+		taskToDoWhenAccountIsLogged.add(task);
+	}
+
+	private void runTasksThatWaitForAccountLog() {
+		for(Consumer<Account> task : taskToDoWhenAccountIsLogged) {
+			task.accept(currentAccount);
+		}
+		taskToDoWhenAccountIsLogged.clear();
+		Log.w("All tasks run", "the list size is " + rotationOperations.size());
+	}
+
+	public void findCurrentAccount() {
+		accountRef.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				for (DataSnapshot data : dataSnapshot.getChildren()) {
+					Account account = data.getValue(Account.class);
+					if (mAuth.getCurrentUser() != null && account.getUserId().equals(mAuth.getCurrentUser().getUid())) {
+						currentAccount = account;
+						rotationOperations = account.getRotationOperationList();
+						Log.w("Account is Found", "His ID is " + account.accountId);
+					}
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError ignored) {
+			}
+		});
+	}
+
 	@Override
 	public void run() {
 		while (true) {
 			double currentTime = System.nanoTime() / 1e9;
 			if(shouldTimerCount && !isGamePaused) {
 				updateTimer(currentTime - lastTime);
+			}
+			if(!taskToDoWhenAccountIsLogged.isEmpty() && currentAccount != null) {
+				runTasksThatWaitForAccountLog();
 			}
 			animationManager.update();
 			drawSurface(currentTime - lastTime);

@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.util.Pair;
 import android.view.MotionEvent;
 
+import com.example.my3dproject.Account;
 import com.example.my3dproject.Controller;
 import com.example.my3dproject.RubiksCubeState;
 import com.example.my3dproject.ScreenGeometryManager;
@@ -161,6 +162,39 @@ public class RubiksCube extends Drawable {
 		this.rubiksCubeState = RubiksCubeState.IDLE;
 		this.undoStack = new Stack<>();
 		rotate(0.001, 0.001, 0.001);
+		controller.addTaskToDoWhenAccountIsLogged(this::updateRotationsFromDatabase);
+	}
+
+	private void updateRotationsFromDatabase(Account account) {
+		List<RotationOperation> rotationOperations = account.getRotationOperationList();
+		for(RotationOperation rotationOperation : rotationOperations) {
+			Cube cubeToRotateAround = new Cube(
+				rotationOperation.getPointToRotateAround().getX(),
+				rotationOperation.getPointToRotateAround().getY(),
+				rotationOperation.getPointToRotateAround().getZ(), smallCubesSize
+			);
+			double angle = rotationOperation.getAngleOfRotation();
+			switch (rotationOperation.getAxisOfRotation()) {
+				case X: {
+					rotateXAroundCube(cubeToRotateAround, rotationOperation.getAngleOfRotation()
+					);
+					undoStack.push(new Pair<>(angleToRotate -> rotateXAroundCube(cubeToRotateAround, angleToRotate), -angle));
+					break;
+				}
+				case Y: {
+					rotateYAroundCube(cubeToRotateAround, rotationOperation.getAngleOfRotation()
+					);
+					undoStack.push(new Pair<>(angleToRotate -> rotateYAroundCube(cubeToRotateAround, angleToRotate), -angle));
+					break;
+				}
+				case Z: {
+					rotateZAroundCube(cubeToRotateAround, rotationOperation.getAngleOfRotation()
+					);
+					undoStack.push(new Pair<>(angleToRotate -> rotateZAroundCube(cubeToRotateAround, angleToRotate), -angle));
+					break;
+				}
+			}
+		}
 	}
 
 	private void rotate(double xAngle, double yAngle, double zAngle) {
@@ -473,6 +507,10 @@ public class RubiksCube extends Drawable {
 						new Cube(side * smallCubesSize, 0, 0, smallCubesSize), Math.toRadians(90.0/animationSteps*directionOfRotation)
 					),j*timeToTurn/animationSteps + i*timeToTurn));
 				}
+				animationManager.addAction(new TimedAction(
+					() -> controller.saveAnotherRotation(new RotationOperation(side * smallCubesSize, 0, 0, Axis.X, Math.toRadians(90.0*directionOfRotation))),
+					i*timeToTurn*0
+				));
 				undoStack.push(new Pair<>(angle -> rotateXAroundCube(new Cube(side * smallCubesSize, 0, 0, smallCubesSize), angle), Math.toRadians(90.0 * -directionOfRotation)));
 			}
 			else if(axis == 1) {
@@ -481,6 +519,11 @@ public class RubiksCube extends Drawable {
 						new Cube(0, side * smallCubesSize, 0, smallCubesSize), Math.toRadians(90.0/animationSteps*directionOfRotation)
 					),j*timeToTurn/animationSteps + i*timeToTurn));
 				}
+				animationManager.addAction(new TimedAction(
+					() -> controller.saveAnotherRotation(new RotationOperation(0, side * smallCubesSize, 0, Axis.Y, Math.toRadians(90.0*directionOfRotation))),
+					i*timeToTurn*0
+
+				));
 				undoStack.push(new Pair<>(angle -> rotateYAroundCube(new Cube(0, side * smallCubesSize, 0, smallCubesSize), angle), Math.toRadians(90.0 * -directionOfRotation)));
 			}
 			else {
@@ -489,6 +532,10 @@ public class RubiksCube extends Drawable {
 						new Cube(0, 0, side * smallCubesSize, smallCubesSize), Math.toRadians(90.0/animationSteps*directionOfRotation)
 					),j*timeToTurn/animationSteps + i*timeToTurn));
 				}
+				animationManager.addAction(new TimedAction(
+					() -> controller.saveAnotherRotation(new RotationOperation(0.0, 0.0, side * smallCubesSize, Axis.Z, Math.toRadians(90.0*directionOfRotation))),
+					i*timeToTurn*0
+				));
 				undoStack.push(new Pair<>(angle -> rotateZAroundCube(new Cube(0, 0, side * smallCubesSize, smallCubesSize), angle), Math.toRadians(90.0 * -directionOfRotation)));
 			}
 		}
@@ -517,10 +564,12 @@ public class RubiksCube extends Drawable {
 		animationManager.addAction(new TimedAction(() -> {
 			rubiksCubeState = RubiksCubeState.IDLE;
 			controller.resetTimer();
+			controller.clearAllSavedRotations();
 		}, timeOffset));
 	}
 
 	private void animateRotatingAroundX(int animationSteps, double timeToTurn, double angle, Cube cubeToRotateAround) {
+		controller.saveAnotherRotation(new RotationOperation(cubeToRotateAround.getPos(), Axis.X, angle));
 		for(int i = 0; i < animationSteps; i++) {
 			animationManager.addAction(new TimedAction(() -> rotateXAroundCube(cubeToRotateAround, angle/animationSteps), i*timeToTurn/animationSteps));
 		}
@@ -528,6 +577,7 @@ public class RubiksCube extends Drawable {
 	}
 
 	private void animateRotatingAroundY(int animationSteps, double timeToTurn, double angle, Cube cubeToRotateAround) {
+		controller.saveAnotherRotation(new RotationOperation(cubeToRotateAround.getPos(), Axis.Y, angle));
 		for(int i = 0; i < animationSteps; i++) {
 			animationManager.addAction(new TimedAction(() -> rotateYAroundCube(cubeToRotateAround, angle/animationSteps), i*timeToTurn/animationSteps));
 		}
@@ -535,6 +585,7 @@ public class RubiksCube extends Drawable {
 	}
 
 	private void animateRotatingAroundZ(int animationSteps, double timeToTurn, double angle, Cube cubeToRotateAround) {
+		controller.saveAnotherRotation(new RotationOperation(cubeToRotateAround.getPos(), Axis.Z, angle));
 		for(int i = 0; i < animationSteps; i++) {
 			animationManager.addAction(new TimedAction(() -> rotateZAroundCube(cubeToRotateAround, angle/animationSteps), i*timeToTurn/animationSteps));
 		}

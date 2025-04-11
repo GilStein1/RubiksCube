@@ -1,90 +1,42 @@
 package com.example.my3dproject;
 
 import com.example.my3dproject.drawables.Cube;
+import com.example.my3dproject.math.geometry.Axis;
+import com.example.my3dproject.math.geometry.Point3d;
 
 public class RotationOperation {
 
-	private Cube instanceCube;
-	private boolean isRotatingX, isRotatingY, isRotatingZ;
-	private boolean lockIn;
-	private double angleOfRotation;
+	private final Point3d pointToRotateAround;
+	private final Axis axisOfRotation;
+	private final double angleOfRotation;
 
 	public static final double CUBE_ROTATION_TOLERANCE = 0.1;
 
-	public RotationOperation(Cube instanceCube, boolean isRotatingX, boolean isRotatingY, boolean isRotatingZ) {
-		this.instanceCube = instanceCube;
-		this.isRotatingX = isRotatingX;
-		this.isRotatingY = isRotatingY;
-		this.isRotatingZ = isRotatingZ;
-		this.lockIn = false;
-		this.angleOfRotation = 0;
+	public RotationOperation(Point3d pointToRotateAround, Axis axisOfRotation, double angleOfRotation) {
+		this.pointToRotateAround = pointToRotateAround;
+		this.axisOfRotation = axisOfRotation;
+		this.angleOfRotation = angleOfRotation;
 	}
 
-	public RotationOperation(Cube instanceCube, int rotationAxis) {
-		this.instanceCube = instanceCube;
-		this.isRotatingX = false;
-		this.isRotatingY = false;
-		this.isRotatingZ = false;
-		if(rotationAxis == 0) {
-			isRotatingX = true;
-		}
-		else if(rotationAxis == 1) {
-			isRotatingY = true;
-		}
-		else if(rotationAxis == 2) {
-			isRotatingZ = true;
-		}
+	public RotationOperation(double x, double y, double z, Axis axisOfRotation, double angleOfRotation) {
+		this(new Point3d(x, y, z), axisOfRotation, angleOfRotation);
 	}
 
-	public void setAngleOfRotation(double angle) {
-		this.angleOfRotation = angle;
+	public RotationOperation() {
+		pointToRotateAround = new Point3d(0, 0, 0);
+		axisOfRotation = Axis.X;
+		angleOfRotation = 0;
+	}
+
+	public Point3d getPointToRotateAround() {
+		return pointToRotateAround;
+	}
+
+	public Axis getAxisOfRotation() {
+		return axisOfRotation;
 	}
 
 	public double getAngleOfRotation() {
 		return angleOfRotation;
-	}
-
-	public void addToAngle(double angleToAdd) {
-		this.angleOfRotation += angleToAdd;
-	}
-
-	public void setLockIn(boolean lockIn) {
-		this.lockIn = lockIn;
-	}
-
-	public boolean shouldLockIn() {
-		return lockIn;
-	}
-
-	public Cube getInstanceCube() {
-		return instanceCube;
-	}
-
-	public void setInstanceCube(Cube instanceCube) {
-		this.instanceCube = instanceCube;
-	}
-
-	public boolean isRotatingX() {
-		return isRotatingX;
-	}
-
-	public void setRotatingX(boolean rotatingX) {
-		isRotatingX = rotatingX;
-	}
-
-	public boolean isRotatingY() {
-		return isRotatingY;
-	}
-
-	public void setRotatingY(boolean rotatingY) {
-		isRotatingY = rotatingY;
-	}
-
-	public boolean isRotatingZ() {
-		return isRotatingZ;
-	}
-
-	public void setRotatingZ(boolean rotatingZ) {
-		isRotatingZ = rotatingZ;
 	}
 }

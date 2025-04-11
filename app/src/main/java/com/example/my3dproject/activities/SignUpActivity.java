@@ -2,6 +2,7 @@ package com.example.my3dproject.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
 		mAuth = FirebaseAuth.getInstance();
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
 		accountRef = database.getReference("accounts");
+		Log.w("somehow got to account creation", "somehow got to account creation");
 	}
 
 	@Override
@@ -51,26 +53,11 @@ public class SignUpActivity extends AppCompatActivity {
 		etPassword = findViewById(R.id.etPassword);
 	}
 
-	public void createBankAccount() {
+	public void createAccount() {
 		String name = etName.getText().toString();
-		accountRef = accountRef.push();
-		Account account = new Account(accountRef.getKey(), createRandomNumber(accounts), name, mAuth.getCurrentUser().getUid());
-		accountRef.setValue(account);
-	}
-
-	private String createRandomNumber(List<Account> allExistingAccounts) {
-		long randomNum = (int) (Math.random() * 1000000);
-		String randomNumAsString = String.valueOf(randomNum);
-		int numOfZerosMissing = 6 - randomNumAsString.length();
-		for (int i = 0; i < numOfZerosMissing; i++) {
-			randomNumAsString = '0' + randomNumAsString;
-		}
-		for (Account account : allExistingAccounts) {
-			if (account.getNumber().equals(randomNumAsString)) {
-				return createRandomNumber(allExistingAccounts);
-			}
-		}
-		return randomNumAsString;
+//		accountRef = accountRef.push();
+		Account account = new Account(mAuth.getCurrentUser().getUid(), name, accountRef.getKey());
+		accountRef.child(mAuth.getCurrentUser().getUid()).setValue(account);
 	}
 
 	public void signUpByButtonInSignUp(View view) {
@@ -85,7 +72,7 @@ public class SignUpActivity extends AppCompatActivity {
 		mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
 			if (task.isSuccessful()) {
 				Toast.makeText(this, "Authentication success.", Toast.LENGTH_SHORT).show();
-				createBankAccount();
+				createAccount();
 				Intent intent = getIntent();
 				intent.putExtra("userEmail", etEmail.getText().toString());
 				intent.putExtra("userPassword", etPassword.getText().toString());
