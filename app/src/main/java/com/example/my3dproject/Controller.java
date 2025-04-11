@@ -175,7 +175,6 @@ public class Controller extends SurfaceView implements Runnable {
 					if (mAuth.getCurrentUser() != null && account.getUserId().equals(mAuth.getCurrentUser().getUid())) {
 						currentAccount = account;
 						rotationOperations = account.getRotationOperationList();
-						Log.w("Account is Found", "His ID is " + account.accountId);
 					}
 				}
 			}

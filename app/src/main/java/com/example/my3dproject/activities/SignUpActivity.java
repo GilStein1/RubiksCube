@@ -55,8 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
 
 	public void createAccount() {
 		String name = etName.getText().toString();
-//		accountRef = accountRef.push();
-		Account account = new Account(mAuth.getCurrentUser().getUid(), name, accountRef.getKey());
+		Account account = new Account(mAuth.getCurrentUser().getUid(), name);
 		accountRef.child(mAuth.getCurrentUser().getUid()).setValue(account);
 	}
 

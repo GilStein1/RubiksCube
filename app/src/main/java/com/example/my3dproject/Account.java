@@ -5,20 +5,17 @@ import java.util.List;
 
 public class Account {
 
-	public String accountId;
 	public String name;
 	public String userId;
 	public List<RotationOperation> rotationOperations;
 
-	public Account(String userId, String name, String accountId) {
+	public Account(String userId, String name) {
 		this.userId = userId;
 		this.name = name;
-		this.accountId = accountId;
 		this.rotationOperations = new ArrayList<>();
 	}
 
 	public Account() {
-		this.accountId = "";
 		this.name = "";
 		this.userId = "";
 		this.rotationOperations = new ArrayList<>();
@@ -30,14 +27,6 @@ public class Account {
 
 	public List<RotationOperation> getRotationOperationList() {
 		return rotationOperations;
-	}
-
-	public String getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
 	}
 
 	public String getName() {
