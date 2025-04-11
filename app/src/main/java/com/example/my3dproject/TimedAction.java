@@ -3,7 +3,7 @@ package com.example.my3dproject;
 public class TimedAction {
 
 	private Runnable action;
-	private double time;
+	protected double time;
 
 	public TimedAction(Runnable action, double time) {
 		this.action = action;

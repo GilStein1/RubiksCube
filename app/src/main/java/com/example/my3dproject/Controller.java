@@ -105,6 +105,7 @@ public class Controller extends SurfaceView implements Runnable {
 
 	private void updateTimer(double deltaTime) {
 		timer += deltaTime;
+		currentAccount.setTimer(timer);
 		String minutes = (int)(timer/60) < 10 ? "0" + (int)(timer/60) : "" + (int)(timer/60);
 		String seconds = (int)(timer % 60) < 10 ? "0" + (int)(timer % 60) : "" + (int)(timer % 60);
 		tvTimer.post(() -> tvTimer.setText("⏱ " + minutes + ":" + seconds));
@@ -112,7 +113,9 @@ public class Controller extends SurfaceView implements Runnable {
 
 	public void resetTimer() {
 		timer = 0;
+		currentAccount.setTimer(timer);
 		tvTimer.post(() -> tvTimer.setText("⏱ 00:00"));
+		updateSavedAccountInDatabase();
 	}
 
 	public void stopTimer(boolean stopTimer) {
@@ -140,14 +143,8 @@ public class Controller extends SurfaceView implements Runnable {
 
 	private void updateSavedAccountInDatabase() {
 		currentAccount.setRotationOperationList(rotationOperations);
-		accountRef.child(mAuth.getCurrentUser().getUid()).setValue(currentAccount)
-			.addOnCompleteListener(task -> {
-				if (task.isSuccessful()) {
-					Log.d("FirebaseG", "Data saved successfully!");
-				} else {
-					Log.e("FirebaseG", "Failed to save data", task.getException());
-				}
-			});
+		accountRef.child(mAuth.getCurrentUser().getUid()).setValue(currentAccount);
+		Log.w("Saved the account in database", "Saved the account in database");
 	}
 
 	public List<RotationOperation> getSavedRotationOperations() {
@@ -175,6 +172,12 @@ public class Controller extends SurfaceView implements Runnable {
 					if (mAuth.getCurrentUser() != null && account.getUserId().equals(mAuth.getCurrentUser().getUid())) {
 						currentAccount = account;
 						rotationOperations = account.getRotationOperationList();
+						timer = currentAccount.getTimer();
+						shouldTimerCount = timer > 0;
+						animationManager.addLoopedAction(new LoopedAction(() -> {
+							currentAccount.setTimer(timer);
+							updateSavedAccountInDatabase();
+						}, 1.0));
 					}
 				}
 			}
@@ -195,7 +198,7 @@ public class Controller extends SurfaceView implements Runnable {
 			if(!taskToDoWhenAccountIsLogged.isEmpty() && currentAccount != null) {
 				runTasksThatWaitForAccountLog();
 			}
-			animationManager.update();
+			animationManager.update(currentTime - lastTime);
 			drawSurface(currentTime - lastTime);
 			lastTime = currentTime;
 		}

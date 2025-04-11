@@ -1,5 +1,7 @@
 package com.example.my3dproject;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -7,9 +9,11 @@ import java.util.List;
 public class TimedAnimationManager {
 
 	private final List<TimedAction> queue;
+	private final List<LoopedAction> loopedActions;
 
 	public TimedAnimationManager() {
-		queue = new ArrayList<>();
+		this.queue = new ArrayList<>();
+		this.loopedActions = new ArrayList<>();
 	}
 
 	public void addAction(TimedAction action) {
@@ -19,7 +23,20 @@ public class TimedAnimationManager {
 		}
 	}
 
-	public synchronized void update() {
+	public void addLoopedAction(LoopedAction action) {
+		synchronized (loopedActions) {
+			loopedActions.add(action);
+		}
+	}
+
+	public synchronized void update(double deltaTime) {
+		for(LoopedAction action : loopedActions) {
+			action.updateTime(deltaTime);
+			if(action.hasTimeCountPassedGivenTime()) {
+				action.resetTimeCount();
+				action.getAction().run();
+			}
+		}
 		if(queue.isEmpty()) {
 			return;
 		}

@@ -8,17 +8,20 @@ public class Account {
 	public String name;
 	public String userId;
 	public List<RotationOperation> rotationOperations;
+	public double timer;
 
 	public Account(String userId, String name) {
 		this.userId = userId;
 		this.name = name;
 		this.rotationOperations = new ArrayList<>();
+		this.timer = 0;
 	}
 
 	public Account() {
 		this.name = "";
 		this.userId = "";
 		this.rotationOperations = new ArrayList<>();
+		this.timer = 0;
 	}
 
 	public void setRotationOperationList(List<RotationOperation> rotationOperations) {
@@ -43,6 +46,14 @@ public class Account {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public double getTimer() {
+		return timer;
+	}
+
+	public void setTimer(double timer) {
+		this.timer = timer;
 	}
 
 }
