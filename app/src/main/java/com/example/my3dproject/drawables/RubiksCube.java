@@ -516,7 +516,7 @@ public class RubiksCube extends Drawable {
 		}
 		rubiksCubeState = RubiksCubeState.SHUFFLE;
 		controller.stopTimer(true);
-		int amountOfTurns = 2;
+		int amountOfTurns = 50;
 		int animationSteps = 25;
 		double timeToTurn = 0.12;
 
