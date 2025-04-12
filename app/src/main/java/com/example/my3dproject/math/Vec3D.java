@@ -1,5 +1,6 @@
 package com.example.my3dproject.math;
 
+import com.example.my3dproject.drawables.Point;
 import com.example.my3dproject.math.geometry.Point3d;
 
 public class Vec3D {
@@ -37,6 +38,10 @@ public class Vec3D {
 	}
 
 	public static Vec3D fromDifferenceInPos(Point3d p1, Point3d p2) {
+		return new Vec3D(p1.getX() - p2.getX(), p1.getY() - p2.getY(), p1.getZ() - p2.getZ());
+	}
+
+	public static Vec3D fromDifferenceInPos(Point p1, Point p2) {
 		return new Vec3D(p1.getX() - p2.getX(), p1.getY() - p2.getY(), p1.getZ() - p2.getZ());
 	}
 

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.example.my3dproject.ScreenGeometryManager;
+import com.example.my3dproject.math.Vec3D;
 import com.example.my3dproject.math.geometry.CubeColors;
 import com.example.my3dproject.math.geometry.Point2d;
 import com.example.my3dproject.math.geometry.Point3d;
@@ -12,7 +13,6 @@ import com.example.my3dproject.math.geometry.PointUtils;
 import com.example.my3dproject.math.geometry.Quaternion;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Cube extends Drawable {
@@ -110,6 +110,10 @@ public class Cube extends Drawable {
 		return new Point3d(x, y, z);
 	}
 
+	public Point3d getDrawnPose() {
+		return new Point3d(drawnX, drawnY, drawnZ);
+	}
+
 	public Polygon getPolygonFromDrawPolygon(Polygon drawPolygon) {
 		return polygons.get(polygonsToDraw.indexOf(drawPolygon));
 	}
@@ -122,6 +126,14 @@ public class Cube extends Drawable {
 
 	public void updateDrawnPos(Point3d pos) {
 		updateDrawnPos(pos.getX(), pos.getY(), pos.getZ());
+	}
+
+	public Vec3D getUpOrientationVector() {
+		return Vec3D.fromDifferenceInPos(points3d[0], points3d[1]).normalize();
+	}
+
+	public Vec3D getRightOrientationVector() {
+		return Vec3D.fromDifferenceInPos(points3d[0], points3d[2]).normalize();
 	}
 
 	@Override

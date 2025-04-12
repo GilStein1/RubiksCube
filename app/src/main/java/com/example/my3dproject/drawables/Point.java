@@ -53,6 +53,10 @@ public class Point extends Drawable {
 		return new Point3d(x, y, z);
 	}
 
+	public double getDistanceFrom(Point other) {
+		return Math.sqrt(Math.pow(x - other.x, 2) + Math.pow(y - other.y, 2) + Math.pow(z - other.z, 2));
+	}
+
 	public Point2d getLastDrawnPoint() {
 		return new Point2d(
 			screenGeometryManager.getProjectionTranslatedX(getPose()),

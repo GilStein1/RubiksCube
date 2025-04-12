@@ -1,6 +1,9 @@
 package com.example.my3dproject.drawables;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
 
@@ -59,6 +62,7 @@ public class RubiksCube extends Drawable {
 	private final Stack<Pair<Consumer<Double>, Double>> undoStack;
 	private final double rubiksCubeSize;
 	private final double smallCubesSize;
+	private boolean hasNoticedCubeSolved;
 
 	public RubiksCube(double x, double y, double z, double size, Controller controller) {
 		this.x = x;
@@ -161,8 +165,10 @@ public class RubiksCube extends Drawable {
 		this.hasNoticedActionUp = false;
 		this.rubiksCubeState = RubiksCubeState.IDLE;
 		this.undoStack = new Stack<>();
+		this.hasNoticedCubeSolved = false;
 		rotate(0.001, 0.001, 0.001);
 		controller.addTaskToDoWhenAccountIsLogged(this::updateRotationsFromDatabase);
+		controller.addTaskToDoWhenAccountIsLogged(account -> hasNoticedCubeSolved = false);
 	}
 
 	private void updateRotationsFromDatabase(Account account) {
@@ -279,6 +285,37 @@ public class RubiksCube extends Drawable {
 			cube.update(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
 		}
 		lastPointOfClick = pointOfCLick.times(1/getScreenSizeRatio());
+		boolean isCubeSolved = checkIfCubeIsSolved();
+		if(isCubeSolved) {
+			Log.w("Cube is Solved", "Cube is Solved!!!");
+		}
+		if(isCubeSolved && !hasNoticedCubeSolved) {
+			hasNoticedCubeSolved = true;
+			undoStack.clear();
+			controller.stopTimer(true);
+		}
+		if(!isCubeSolved && hasNoticedCubeSolved) {
+			hasNoticedCubeSolved = false;
+		}
+	}
+
+	private boolean checkIfCubeIsSolved() {
+		Vec3D initialUpVec = cubes.get(0).getUpOrientationVector();
+		Vec3D initialRightVec = cubes.get(0).getRightOrientationVector();
+		Log.w("________", "----------");
+		for(int i = 0; i < cubes.size(); i++) {
+//			Log.w("upVectorSimilarity", "" + initialUpVec.cosineSimilarity(cubes.get(i).getUpOrientationVector()));
+//			Log.w("rightVectorSimilarity", "" + initialRightVec.cosineSimilarity(cubes.get(i).getRightOrientationVector()));
+			boolean upIsGood = initialUpVec.cosineSimilarity(cubes.get(i).getUpOrientationVector()) > 0.999;
+			boolean rightIsGood = initialRightVec.cosineSimilarity(cubes.get(i).getRightOrientationVector()) > 0.999;
+			if(
+				!((i == 4 || i == 12 || i == 10 || i == 14 || i == 22 || i == 16 || i == 13) || (upIsGood && rightIsGood))
+			) {
+//				Log.w("Problematic Cube", "cube is: " + i);
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void detectCubeRotationByPlayer(Point2d lastPointOfClick) {
@@ -649,6 +686,15 @@ public class RubiksCube extends Drawable {
 //				polygon.render(canvas);
 			}
 		}
+
+		Paint paint = new Paint();
+		paint.setColor(Color.BLACK);
+		paint.setTextSize(100);
+
+//		for(Cube cube : cubes) {
+//			canvas.drawText(String.valueOf(cubes.indexOf(cube)), (float) ScreenGeometryManager.getInstance().getProjectionTranslatedX(cube.getDrawnPose()), (float) ScreenGeometryManager.getInstance().getProjectionTranslatedY(cube.getDrawnPose()), paint);
+//		}
+
 //		DirectionCross directionCross = new DirectionCross();
 //		directionCross.rotate(currentRotation);
 //		Point p = new Point(
