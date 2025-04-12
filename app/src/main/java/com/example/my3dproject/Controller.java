@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 public class Controller extends SurfaceView implements Runnable {
 
 	private final int screenWidth, screenHeight;
-	private final TextView tvTimer;
+	private final TextView tvTimer, tvBestTime;
 	private double timer;
 	private boolean shouldTimerCount;
 	private boolean isGamePaused;
@@ -45,11 +45,18 @@ public class Controller extends SurfaceView implements Runnable {
 	private Account currentAccount;
 	private List<Consumer<Account>> taskToDoWhenAccountIsLogged;
 
-	public Controller(Context context, int screenWidth, int screenHeight, TextView tvTimer) {
+	public Controller(
+		Context context,
+		int screenWidth,
+		int screenHeight,
+		TextView tvTimer,
+		TextView tvBestTime
+	) {
 		super(context);
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
 		this.tvTimer = tvTimer;
+		this.tvBestTime = tvBestTime;
 		this.timer = 0;
 		this.shouldTimerCount = false;
 		this.isGamePaused = false;
@@ -64,6 +71,7 @@ public class Controller extends SurfaceView implements Runnable {
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
 		this.accountRef = database.getReference("accounts");
 		this.taskToDoWhenAccountIsLogged = new ArrayList<>();
+		taskToDoWhenAccountIsLogged.add(account -> updateBestTime(account.getBestTime()));
 		findCurrentAccount();
 		initHelpers();
 		renderThread.start();
@@ -120,6 +128,26 @@ public class Controller extends SurfaceView implements Runnable {
 
 	public void stopTimer(boolean stopTimer) {
 		this.shouldTimerCount = !stopTimer;
+	}
+
+	private void updateBestTime(double newBestTime) {
+		if(newBestTime != Double.MAX_VALUE) {
+			currentAccount.setBestTime(newBestTime);
+			String minutes = (int)(newBestTime/60) < 10 ? "0" + (int)(newBestTime/60) : "" + (int)(newBestTime/60);
+			String seconds = (int)(newBestTime % 60) < 10 ? "0" + (int)(newBestTime % 60) : "" + (int)(newBestTime % 60);
+			tvBestTime.post(() -> tvBestTime.setText("\uD83C\uDFC6 Best Time: " + minutes + ":" + seconds));
+		}
+	}
+
+	public void noticedCubeIsSolved() {
+		if(currentAccount != null) {
+			if(timer > 0) {
+				if(currentAccount.getBestTime() > timer) {
+					updateBestTime(timer);
+				}
+				timer = 0;
+			}
+		}
 	}
 
 	public void pauseGame(boolean pauseGame) {

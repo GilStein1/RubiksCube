@@ -43,10 +43,10 @@
                 android:layout_marginEnd="16dp" />
 
             <TextView
-                android:id="@+id/scoreText"
+                android:id="@+id/tvBestTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🏆 Score: 0"
+                android:text="🏆 Best Time: ??:??"
                 android:textSize="18sp"
                 android:layout_marginEnd="16dp" />
 

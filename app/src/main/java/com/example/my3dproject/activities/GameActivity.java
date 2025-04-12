@@ -26,7 +26,7 @@ public class GameActivity extends AppCompatActivity {
 	private DrawerLayout drawerLayout;
 	private NavigationView navView;
 	private ImageButton menuButton;
-	private TextView tvTimer;
+	private TextView tvTimer, tvBestTime;
 	private Controller controller;
 
 	@Override
@@ -42,6 +42,7 @@ public class GameActivity extends AppCompatActivity {
 		menuButton.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
 		tvTimer = findViewById(R.id.tvTimer);
+		tvBestTime = findViewById(R.id.tvBestTime);
 
 		navView.setNavigationItemSelectedListener(item -> {
 			int id = item.getItemId();
@@ -64,7 +65,7 @@ public class GameActivity extends AppCompatActivity {
 	public void onWindowFocusChanged(boolean hasFocused) {
 		super.onWindowFocusChanged(hasFocused);
 		if (hasFocused && controller == null) {
-			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight(), tvTimer);
+			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight(), tvTimer, tvBestTime);
 			RubiksCube rubiksCube = new RubiksCube(0, 0, 0, 50, controller);
 			findViewById(R.id.btnShuffle).setOnClickListener(view -> rubiksCube.shuffle());
 			findViewById(R.id.btnReset).setOnClickListener(view -> rubiksCube.solve());

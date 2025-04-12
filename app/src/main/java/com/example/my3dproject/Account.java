@@ -9,12 +9,14 @@ public class Account {
 	public String userId;
 	public List<RotationOperation> rotationOperations;
 	public double timer;
+	public double bestTime;
 
 	public Account(String userId, String name) {
 		this.userId = userId;
 		this.name = name;
 		this.rotationOperations = new ArrayList<>();
 		this.timer = 0;
+		this.bestTime = Double.MAX_VALUE;
 	}
 
 	public Account() {
@@ -22,6 +24,7 @@ public class Account {
 		this.userId = "";
 		this.rotationOperations = new ArrayList<>();
 		this.timer = 0;
+		this.bestTime = Double.MAX_VALUE;
 	}
 
 	public void setRotationOperationList(List<RotationOperation> rotationOperations) {
@@ -54,6 +57,14 @@ public class Account {
 
 	public void setTimer(double timer) {
 		this.timer = timer;
+	}
+
+	public double getBestTime() {
+		return bestTime;
+	}
+
+	public void setBestTime(double bestTime) {
+		this.bestTime = bestTime;
 	}
 
 }

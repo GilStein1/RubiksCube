@@ -286,11 +286,9 @@ public class RubiksCube extends Drawable {
 		}
 		lastPointOfClick = pointOfCLick.times(1/getScreenSizeRatio());
 		boolean isCubeSolved = checkIfCubeIsSolved();
-		if(isCubeSolved) {
-			Log.w("Cube is Solved", "Cube is Solved!!!");
-		}
 		if(isCubeSolved && !hasNoticedCubeSolved) {
 			hasNoticedCubeSolved = true;
+			controller.noticedCubeIsSolved();
 			undoStack.clear();
 			controller.stopTimer(true);
 		}
@@ -518,7 +516,7 @@ public class RubiksCube extends Drawable {
 		}
 		rubiksCubeState = RubiksCubeState.SHUFFLE;
 		controller.stopTimer(true);
-		int amountOfTurns = 50;
+		int amountOfTurns = 2;
 		int animationSteps = 25;
 		double timeToTurn = 0.12;
 
