@@ -38,7 +38,7 @@ public class GameActivity extends AppCompatActivity {
 		frameLayout.setOnTouchListener(ScreenTouchListener.getInstance());
 		drawerLayout = findViewById(R.id.drawerLayout);
 		navView = findViewById(R.id.navView);
-		
+
 		menuButton = findViewById(R.id.btnMenu);
 
 		menuButton.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
@@ -57,8 +57,9 @@ public class GameActivity extends AppCompatActivity {
 				int id = item.getItemId();
 
 				if (id == R.id.nav_stats) {
-//					Intent intent = new Intent(GameActivity.this, StatsActivity.class);
-//					startActivity(intent);
+
+
+
 				} else if (id == R.id.nav_reset) {
 					rubiksCube.solve();
 				} else if (id == R.id.nav_exit) {
@@ -71,6 +72,22 @@ public class GameActivity extends AppCompatActivity {
 			findViewById(R.id.btnShuffle).setOnClickListener(view -> rubiksCube.shuffle());
 			controller.addDrawables(rubiksCube);
 			frameLayout.addView(controller, 0);
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		if(controller != null) {
+			controller.onPause();
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if(controller != null) {
+			controller.onDestroy();
 		}
 	}
 

@@ -35,6 +35,7 @@ public class Controller extends SurfaceView implements Runnable {
 	private final Paint background;
 	private final SurfaceHolder surfaceHolder;
 	private final Thread renderThread;
+	private volatile boolean isRenderThreadRunning;
 	private final List<Drawable> drawables;
 	private Canvas canvas;
 	private double lastTime;
@@ -66,6 +67,7 @@ public class Controller extends SurfaceView implements Runnable {
 		background.setColor(isDarkMode()? Color.BLACK : Color.WHITE);
 		this.surfaceHolder = getHolder();
 		this.renderThread = new Thread(this);
+		this.isRenderThreadRunning = true;
 		this.drawables = new ArrayList<>();
 		this.lastTime = System.nanoTime() / 1e9;
 		this.animationManager = new TimedAnimationManager();
@@ -235,6 +237,13 @@ public class Controller extends SurfaceView implements Runnable {
 					Account account = data.getValue(Account.class);
 					if (mAuth.getCurrentUser() != null && account.getUserId().equals(mAuth.getCurrentUser().getUid())) {
 						currentAccount = account;
+						if(account.shouldResetBestScore()) {
+							account.setResetBestScore(false);
+							account.setBestTime(Double.MAX_VALUE);
+							bestTime = Double.MAX_VALUE;
+							updateSavesInPreferences();
+							updateSavedAccountInDatabase();
+						}
 						if(account.getBestTime() < bestTime) {
 							bestTime = account.getBestTime();
 							updateSavedAccountInDatabase();
@@ -254,9 +263,17 @@ public class Controller extends SurfaceView implements Runnable {
 		});
 	}
 
+	public void onPause() {
+		isRenderThreadRunning = false;
+	}
+
+	public void onDestroy() {
+		isRenderThreadRunning = false;
+	}
+
 	@Override
 	public void run() {
-		while (true) {
+		while (isRenderThreadRunning) {
 			double currentTime = System.nanoTime() / 1e9;
 			if(shouldTimerCount && !isGamePaused) {
 				updateTimer(currentTime - lastTime);

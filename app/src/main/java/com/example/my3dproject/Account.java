@@ -5,17 +5,20 @@ public class Account {
 	public String name;
 	public String userId;
 	public double bestTime;
+	public boolean resetBestScore;
 
 	public Account(String userId, String name) {
 		this.userId = userId;
 		this.name = name;
 		this.bestTime = Double.MAX_VALUE;
+		this.resetBestScore = false;
 	}
 
 	public Account() {
 		this.name = "";
 		this.userId = "";
 		this.bestTime = Double.MAX_VALUE;
+		this.resetBestScore = false;
 	}
 
 	public String getName() {
@@ -42,4 +45,11 @@ public class Account {
 		this.bestTime = bestTime;
 	}
 
+	public boolean shouldResetBestScore() {
+		return resetBestScore;
+	}
+
+	public void setResetBestScore(boolean shouldResetBestScore) {
+		this.resetBestScore = shouldResetBestScore;
+	}
 }

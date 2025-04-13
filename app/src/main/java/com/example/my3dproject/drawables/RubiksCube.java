@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public class RubiksCube extends Drawable {
@@ -62,7 +63,7 @@ public class RubiksCube extends Drawable {
 	private final Stack<Pair<Consumer<Double>, Double>> undoStack;
 	private final double rubiksCubeSize;
 	private final double smallCubesSize;
-	private boolean hasNoticedCubeSolved;
+	private AtomicBoolean hasNoticedCubeSolved;
 
 	public RubiksCube(double x, double y, double z, double size, Controller controller) {
 		this.x = x;
@@ -165,7 +166,7 @@ public class RubiksCube extends Drawable {
 		this.hasNoticedActionUp = false;
 		this.rubiksCubeState = RubiksCubeState.IDLE;
 		this.undoStack = new Stack<>();
-		this.hasNoticedCubeSolved = false;
+		this.hasNoticedCubeSolved = new AtomicBoolean(false);
 		rotate(0.001, 0.001, 0.001);
 		updateRotationsFromDatabase();
 	}
@@ -201,7 +202,7 @@ public class RubiksCube extends Drawable {
 			}
 		}
 		if(checkIfCubeIsSolved()) {
-			hasNoticedCubeSolved = true;
+			hasNoticedCubeSolved.set(true);
 			controller.stopTimer(true);
 			controller.resetTimer();
 		}
@@ -290,15 +291,15 @@ public class RubiksCube extends Drawable {
 		}
 		lastPointOfClick = pointOfCLick.times(1/getScreenSizeRatio());
 		boolean isCubeSolved = checkIfCubeIsSolved();
-		if(isCubeSolved && !hasNoticedCubeSolved) {
+		if(isCubeSolved && !hasNoticedCubeSolved.get()) {
 			Log.w("Rubik's Cube", "Noticed that the cube is solved");
-			hasNoticedCubeSolved = true;
+			hasNoticedCubeSolved.set(true);
 			controller.noticedCubeIsSolved();
 			undoStack.clear();
 			controller.stopTimer(true);
 		}
-		if(!isCubeSolved && hasNoticedCubeSolved) {
-			hasNoticedCubeSolved = false;
+		if(!isCubeSolved && hasNoticedCubeSolved.get()) {
+			hasNoticedCubeSolved.set(false);
 		}
 	}
 
@@ -595,7 +596,10 @@ public class RubiksCube extends Drawable {
 			Pair<Consumer<Double>, Double> action = undoStack.pop();
 			double timeWithSlowingOffset = (timeToTurn + 0.1 * Math.pow((index + 1)/stackSize, 3.5));
 			for(int i = 0; i < animationSteps; i++) {
-				animationManager.addAction(new TimedAction(() -> action.first.accept(action.second/animationSteps), timeOffset + i*timeWithSlowingOffset/animationSteps));
+				animationManager.addAction(new TimedAction(() -> {
+					hasNoticedCubeSolved.set(true);
+					action.first.accept(action.second / animationSteps);
+				}, timeOffset + i*timeWithSlowingOffset/animationSteps));
 			}
 			index++;
 			timeOffset += timeWithSlowingOffset;
