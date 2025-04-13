@@ -41,7 +41,6 @@ public class Controller extends SurfaceView implements Runnable {
 	private List<RotationOperation> rotationOperations;
 	private FirebaseAuth mAuth;
 	private DatabaseReference accountRef;
-	private List<Account> accounts;
 	private Account currentAccount;
 	private List<Consumer<Account>> taskToDoWhenAccountIsLogged;
 

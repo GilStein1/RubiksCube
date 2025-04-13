@@ -43,22 +43,6 @@ public class GameActivity extends AppCompatActivity {
 
 		tvTimer = findViewById(R.id.tvTimer);
 		tvBestTime = findViewById(R.id.tvBestTime);
-
-		navView.setNavigationItemSelectedListener(item -> {
-			int id = item.getItemId();
-
-			if (id == R.id.nav_stats) {
-//					Intent intent = new Intent(GameActivity.this, StatsActivity.class);
-//					startActivity(intent);
-			} else if (id == R.id.nav_settings) {
-				// Placeholder – launch settings screen or show a dialog
-			} else if (id == R.id.nav_exit) {
-				finish();
-			}
-
-			drawerLayout.closeDrawer(GravityCompat.START);
-			return true;
-		});
 	}
 
 	@Override
@@ -67,8 +51,23 @@ public class GameActivity extends AppCompatActivity {
 		if (hasFocused && controller == null) {
 			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight(), tvTimer, tvBestTime);
 			RubiksCube rubiksCube = new RubiksCube(0, 0, 0, 50, controller);
+			navView.setNavigationItemSelectedListener(item -> {
+				int id = item.getItemId();
+
+				if (id == R.id.nav_stats) {
+//					Intent intent = new Intent(GameActivity.this, StatsActivity.class);
+//					startActivity(intent);
+				} else if (id == R.id.nav_reset) {
+					rubiksCube.solve();
+					// Placeholder – launch settings screen or show a dialog
+				} else if (id == R.id.nav_exit) {
+					finish();
+				}
+
+				drawerLayout.closeDrawer(GravityCompat.START);
+				return true;
+			});
 			findViewById(R.id.btnShuffle).setOnClickListener(view -> rubiksCube.shuffle());
-			findViewById(R.id.btnReset).setOnClickListener(view -> rubiksCube.solve());
 			controller.addDrawables(rubiksCube);
 			frameLayout.addView(controller, 0);
 		}

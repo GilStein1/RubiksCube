@@ -300,7 +300,6 @@ public class RubiksCube extends Drawable {
 	private boolean checkIfCubeIsSolved() {
 		Vec3D initialUpVec = cubes.get(0).getUpOrientationVector();
 		Vec3D initialRightVec = cubes.get(0).getRightOrientationVector();
-		Log.w("________", "----------");
 		for(int i = 0; i < cubes.size(); i++) {
 //			Log.w("upVectorSimilarity", "" + initialUpVec.cosineSimilarity(cubes.get(i).getUpOrientationVector()));
 //			Log.w("rightVectorSimilarity", "" + initialRightVec.cosineSimilarity(cubes.get(i).getRightOrientationVector()));
