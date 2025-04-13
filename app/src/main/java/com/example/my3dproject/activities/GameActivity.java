@@ -33,10 +33,12 @@ public class GameActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game_activities);
+		getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 		frameLayout = findViewById(R.id.frame);
 		frameLayout.setOnTouchListener(ScreenTouchListener.getInstance());
 		drawerLayout = findViewById(R.id.drawerLayout);
 		navView = findViewById(R.id.navView);
+		
 		menuButton = findViewById(R.id.btnMenu);
 
 		menuButton.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));

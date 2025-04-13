@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 		initializeViews();
 		this.mAuth = FirebaseAuth.getInstance();
 		this.signUpActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::atReturnFromSignUp);

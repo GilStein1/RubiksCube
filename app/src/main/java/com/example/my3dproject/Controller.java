@@ -72,7 +72,7 @@ public class Controller extends SurfaceView implements Runnable {
 		this.mAuth = FirebaseAuth.getInstance();
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
 		this.accountRef = database.getReference("accounts");
-		this.sharedPreferences = context.getSharedPreferences("user", 0);
+		this.sharedPreferences = context.getSharedPreferences(mAuth.getCurrentUser().getUid(), 0);
 //		this.sharedPreferences.edit().putString("bestTime", "1000").apply();
 		this.taskToDoWhenAccountIsLogged = new ArrayList<>();
 		animationManager.addLoopedAction(new LoopedAction(this::updateSavesInPreferences, 1.0));

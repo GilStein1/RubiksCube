@@ -34,6 +34,7 @@ public class SignUpActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sign_up);
+		getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 		initializeViews();
 		mAuth = FirebaseAuth.getInstance();
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
