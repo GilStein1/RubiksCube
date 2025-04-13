@@ -147,10 +147,11 @@ public class Controller extends SurfaceView implements Runnable {
 			if(bestTime > timer) {
 				bestTime = timer;
 				updateBestTime(timer);
-				if(currentAccount != null && currentAccount.getBestTime() > timer) {
-					currentAccount.setBestTime(timer);
+				if(currentAccount != null && currentAccount.getBestTime() > bestTime) {
+					currentAccount.setBestTime(bestTime);
 					updateSavedAccountInDatabase();
 				}
+				timer = 0;
 				updateSavesInPreferences();
 			}
 			timer = 0;
@@ -177,6 +178,9 @@ public class Controller extends SurfaceView implements Runnable {
 	private void getAllSavedValuesFromSharedPreferences() {
 		if(sharedPreferences.contains("timer")) {
 			this.timer = Double.parseDouble(sharedPreferences.getString("timer", null));
+		}
+		if(timer == 0) {
+			shouldTimerCount = false;
 		}
 		if(sharedPreferences.contains("bestTime")) {
 			this.bestTime = Double.parseDouble(sharedPreferences.getString("bestTime", null));
