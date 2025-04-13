@@ -167,12 +167,11 @@ public class RubiksCube extends Drawable {
 		this.undoStack = new Stack<>();
 		this.hasNoticedCubeSolved = false;
 		rotate(0.001, 0.001, 0.001);
-		controller.addTaskToDoWhenAccountIsLogged(this::updateRotationsFromDatabase);
-		controller.addTaskToDoWhenAccountIsLogged(account -> hasNoticedCubeSolved = false);
+		updateRotationsFromDatabase();
 	}
 
-	private void updateRotationsFromDatabase(Account account) {
-		List<RotationOperation> rotationOperations = account.getRotationOperationList();
+	private void updateRotationsFromDatabase() {
+		List<RotationOperation> rotationOperations = controller.getSavedRotationOperations();
 		for(RotationOperation rotationOperation : rotationOperations) {
 			Cube cubeToRotateAround = new Cube(
 				rotationOperation.getPointToRotateAround().getX(),
@@ -200,6 +199,11 @@ public class RubiksCube extends Drawable {
 					break;
 				}
 			}
+		}
+		if(checkIfCubeIsSolved()) {
+			hasNoticedCubeSolved = true;
+			controller.stopTimer(true);
+			controller.resetTimer();
 		}
 	}
 
@@ -287,6 +291,7 @@ public class RubiksCube extends Drawable {
 		lastPointOfClick = pointOfCLick.times(1/getScreenSizeRatio());
 		boolean isCubeSolved = checkIfCubeIsSolved();
 		if(isCubeSolved && !hasNoticedCubeSolved) {
+			Log.w("Rubik's Cube", "Noticed that the cube is solved");
 			hasNoticedCubeSolved = true;
 			controller.noticedCubeIsSolved();
 			undoStack.clear();

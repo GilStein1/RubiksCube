@@ -1,6 +1,7 @@
 package com.example.my3dproject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,7 +12,6 @@ import android.view.SurfaceView;
 import android.widget.TextView;
 
 import com.example.my3dproject.drawables.Drawable;
-import com.example.my3dproject.drawables.RubiksCube;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +29,7 @@ public class Controller extends SurfaceView implements Runnable {
 	private final int screenWidth, screenHeight;
 	private final TextView tvTimer, tvBestTime;
 	private double timer;
+	private double bestTime;
 	private boolean shouldTimerCount;
 	private boolean isGamePaused;
 	private final Paint background;
@@ -41,6 +42,7 @@ public class Controller extends SurfaceView implements Runnable {
 	private List<RotationOperation> rotationOperations;
 	private FirebaseAuth mAuth;
 	private DatabaseReference accountRef;
+	private final SharedPreferences sharedPreferences;
 	private Account currentAccount;
 	private List<Consumer<Account>> taskToDoWhenAccountIsLogged;
 
@@ -57,7 +59,8 @@ public class Controller extends SurfaceView implements Runnable {
 		this.tvTimer = tvTimer;
 		this.tvBestTime = tvBestTime;
 		this.timer = 0;
-		this.shouldTimerCount = false;
+		this.bestTime = Double.MAX_VALUE;
+		this.shouldTimerCount = true;
 		this.isGamePaused = false;
 		this.background = new Paint();
 		background.setColor(isDarkMode()? Color.BLACK : Color.WHITE);
@@ -69,8 +72,11 @@ public class Controller extends SurfaceView implements Runnable {
 		this.mAuth = FirebaseAuth.getInstance();
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
 		this.accountRef = database.getReference("accounts");
+		this.sharedPreferences = context.getSharedPreferences("user", 0);
+//		this.sharedPreferences.edit().putString("bestTime", "1000").apply();
 		this.taskToDoWhenAccountIsLogged = new ArrayList<>();
-		taskToDoWhenAccountIsLogged.add(account -> updateBestTime(account.getBestTime()));
+		animationManager.addLoopedAction(new LoopedAction(this::updateSavesInPreferences, 1.0));
+		getAllSavedValuesFromSharedPreferences();
 		findCurrentAccount();
 		initHelpers();
 		renderThread.start();
@@ -112,7 +118,6 @@ public class Controller extends SurfaceView implements Runnable {
 
 	private void updateTimer(double deltaTime) {
 		timer += deltaTime;
-		currentAccount.setTimer(timer);
 		String minutes = (int)(timer/60) < 10 ? "0" + (int)(timer/60) : "" + (int)(timer/60);
 		String seconds = (int)(timer % 60) < 10 ? "0" + (int)(timer % 60) : "" + (int)(timer % 60);
 		tvTimer.post(() -> tvTimer.setText("⏱ " + minutes + ":" + seconds));
@@ -120,9 +125,7 @@ public class Controller extends SurfaceView implements Runnable {
 
 	public void resetTimer() {
 		timer = 0;
-		currentAccount.setTimer(timer);
 		tvTimer.post(() -> tvTimer.setText("⏱ 00:00"));
-		updateSavedAccountInDatabase();
 	}
 
 	public void stopTimer(boolean stopTimer) {
@@ -130,8 +133,7 @@ public class Controller extends SurfaceView implements Runnable {
 	}
 
 	private void updateBestTime(double newBestTime) {
-		if(newBestTime != Double.MAX_VALUE) {
-			currentAccount.setBestTime(newBestTime);
+		if(newBestTime != Double.MAX_VALUE && newBestTime != 0.0) {
 			String minutes = (int)(newBestTime/60) < 10 ? "0" + (int)(newBestTime/60) : "" + (int)(newBestTime/60);
 			String seconds = (int)(newBestTime % 60) < 10 ? "0" + (int)(newBestTime % 60) : "" + (int)(newBestTime % 60);
 			tvBestTime.post(() -> tvBestTime.setText("\uD83C\uDFC6 Best Time: " + minutes + ":" + seconds));
@@ -139,13 +141,17 @@ public class Controller extends SurfaceView implements Runnable {
 	}
 
 	public void noticedCubeIsSolved() {
-		if(currentAccount != null) {
-			if(timer > 0) {
-				if(currentAccount.getBestTime() > timer) {
-					updateBestTime(timer);
+		if(timer > 0) {
+			if(bestTime > timer) {
+				bestTime = timer;
+				updateBestTime(timer);
+				if(currentAccount != null && currentAccount.getBestTime() > timer) {
+					currentAccount.setBestTime(timer);
+					updateSavedAccountInDatabase();
 				}
-				timer = 0;
+				updateSavesInPreferences();
 			}
+			timer = 0;
 		}
 	}
 
@@ -160,18 +166,49 @@ public class Controller extends SurfaceView implements Runnable {
 	public void saveAnotherRotation(RotationOperation rotationOperation) {
 		rotationOperations.add(rotationOperation);
 		Log.d("RotationOps", "Current list size: " + rotationOperations.size());
-		updateSavedAccountInDatabase();
 	}
 
 	public void clearAllSavedRotations() {
 		rotationOperations.clear();
-		updateSavedAccountInDatabase();
+	}
+
+	private void getAllSavedValuesFromSharedPreferences() {
+		if(sharedPreferences.contains("timer")) {
+			this.timer = Double.parseDouble(sharedPreferences.getString("timer", null));
+		}
+		Log.w("Timer is", "Timer is: " + timer);
+		if(sharedPreferences.contains("bestTime")) {
+			this.bestTime = Double.parseDouble(sharedPreferences.getString("bestTime", null));
+		}
+		Log.w("Best time is", "best time is: " + bestTime);
+		updateBestTime(bestTime);
+		if(sharedPreferences.contains("rotations")) {
+			this.rotationOperations = RotationOperation.valuesOf(sharedPreferences.getString("rotations", null));
+		}
+		else {
+			this.rotationOperations = new ArrayList<>();
+		}
 	}
 
 	private void updateSavedAccountInDatabase() {
-		currentAccount.setRotationOperationList(rotationOperations);
 		accountRef.child(mAuth.getCurrentUser().getUid()).setValue(currentAccount);
 		Log.w("Saved the account in database", "Saved the account in database");
+	}
+
+	private void updateSavesInPreferences() {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString("timer", String.valueOf(timer));
+		editor.putString("bestTime", String.valueOf(bestTime));
+		editor.putString("rotations", makeRotationOperationsAString(rotationOperations));
+		editor.apply();
+	}
+
+	private String makeRotationOperationsAString(List<RotationOperation> rotationOperations) {
+		StringBuilder output = new StringBuilder();
+		for(RotationOperation rotationOperation : rotationOperations) {
+			output.append(rotationOperation.toString()).append("~");
+		}
+		return output.toString();
 	}
 
 	public List<RotationOperation> getSavedRotationOperations() {
@@ -198,13 +235,15 @@ public class Controller extends SurfaceView implements Runnable {
 					Account account = data.getValue(Account.class);
 					if (mAuth.getCurrentUser() != null && account.getUserId().equals(mAuth.getCurrentUser().getUid())) {
 						currentAccount = account;
-						rotationOperations = account.getRotationOperationList();
-						timer = currentAccount.getTimer();
-						shouldTimerCount = timer > 0;
-						animationManager.addLoopedAction(new LoopedAction(() -> {
-							currentAccount.setTimer(timer);
+						if(account.getBestTime() < bestTime) {
+							bestTime = account.getBestTime();
 							updateSavedAccountInDatabase();
-						}, 1.0));
+							updateBestTime(bestTime);
+						}
+						else {
+							account.setBestTime(bestTime);
+							updateSavedAccountInDatabase();
+						}
 					}
 				}
 			}

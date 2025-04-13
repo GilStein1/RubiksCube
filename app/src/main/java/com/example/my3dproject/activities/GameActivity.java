@@ -59,7 +59,6 @@ public class GameActivity extends AppCompatActivity {
 //					startActivity(intent);
 				} else if (id == R.id.nav_reset) {
 					rubiksCube.solve();
-					// Placeholder – launch settings screen or show a dialog
 				} else if (id == R.id.nav_exit) {
 					finish();
 				}

@@ -1,8 +1,10 @@
 package com.example.my3dproject;
 
-import com.example.my3dproject.drawables.Cube;
 import com.example.my3dproject.math.geometry.Axis;
 import com.example.my3dproject.math.geometry.Point3d;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RotationOperation {
 
@@ -39,4 +41,28 @@ public class RotationOperation {
 	public double getAngleOfRotation() {
 		return angleOfRotation;
 	}
+
+	public static RotationOperation valueOf(String value) {
+		String[] parts = value.split("_");
+		return new RotationOperation(Point3d.valueOf(parts[0]), Axis.valueOf(parts[1]), Double.parseDouble(parts[2]));
+	}
+
+	public static List<RotationOperation> valuesOf(String value) {
+		if(value.isEmpty()) {
+			return new ArrayList<>();
+		}
+		List<RotationOperation> list = new ArrayList<>();
+		value = value.substring(0, value.length()-1);
+		String[] parts = value.split("~");
+		for(String part : parts) {
+			list.add(RotationOperation.valueOf(part));
+		}
+		return list;
+	}
+
+	@Override
+	public String toString() {
+		return pointToRotateAround.toString() + "_" + axisOfRotation.toString() + "_" + angleOfRotation;
+	}
+
 }

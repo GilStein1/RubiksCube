@@ -1,12 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/nav_reset"
-        android:title="Reset"
-        android:icon="@android:drawable/ic_menu_delete" />
-    <item
         android:id="@+id/nav_stats"
         android:title="Stats"
         android:icon="@android:drawable/ic_menu_info_details" />
+    <item
+        android:id="@+id/nav_reset"
+        android:title="Reset"
+        android:icon="@android:drawable/ic_menu_delete" />
     <item
         android:id="@+id/nav_exit"
         android:title="Exit to main menu"

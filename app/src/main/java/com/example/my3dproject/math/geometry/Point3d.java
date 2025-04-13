@@ -54,4 +54,15 @@ public class Point3d {
 		this.z = z;
 	}
 
+	public static Point3d valueOf(String value) {
+		value = value.substring(1, value.length() - 1);
+		String[] parts = value.split(",");
+		return new Point3d(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]), Double.parseDouble(parts[2]));
+	}
+
+	@Override
+	public String toString() {
+		return "(" + x + "," + y + "," + z + ")";
+	}
+
 }
