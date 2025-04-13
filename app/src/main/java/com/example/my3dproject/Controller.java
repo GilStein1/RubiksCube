@@ -178,18 +178,11 @@ public class Controller extends SurfaceView implements Runnable {
 		if(sharedPreferences.contains("timer")) {
 			this.timer = Double.parseDouble(sharedPreferences.getString("timer", null));
 		}
-		Log.w("Timer is", "Timer is: " + timer);
 		if(sharedPreferences.contains("bestTime")) {
 			this.bestTime = Double.parseDouble(sharedPreferences.getString("bestTime", null));
 		}
-		Log.w("Best time is", "best time is: " + bestTime);
 		updateBestTime(bestTime);
-		if(sharedPreferences.contains("rotations")) {
-			this.rotationOperations = RotationOperation.valuesOf(sharedPreferences.getString("rotations", null));
-		}
-		else {
-			this.rotationOperations = new ArrayList<>();
-		}
+		this.rotationOperations = RotationOperation.valuesOf(sharedPreferences.getString("rotations", ""));
 	}
 
 	private void updateSavedAccountInDatabase() {
@@ -226,7 +219,6 @@ public class Controller extends SurfaceView implements Runnable {
 			task.accept(currentAccount);
 		}
 		taskToDoWhenAccountIsLogged.clear();
-		Log.w("All tasks run", "the list size is " + rotationOperations.size());
 	}
 
 	public void findCurrentAccount() {

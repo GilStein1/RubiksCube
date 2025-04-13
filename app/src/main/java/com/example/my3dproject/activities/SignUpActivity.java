@@ -1,6 +1,7 @@
 package com.example.my3dproject.activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +36,7 @@ public class SignUpActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sign_up);
 		getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		initializeViews();
 		mAuth = FirebaseAuth.getInstance();
 		FirebaseDatabase database = FirebaseDatabase.getInstance();

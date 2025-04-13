@@ -1,6 +1,7 @@
 package com.example.my3dproject.activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +35,7 @@ public class GameActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game_activities);
 		getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		frameLayout = findViewById(R.id.frame);
 		frameLayout.setOnTouchListener(ScreenTouchListener.getInstance());
 		drawerLayout = findViewById(R.id.drawerLayout);
