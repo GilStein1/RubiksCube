@@ -34,7 +34,7 @@ public class Controller extends SurfaceView implements Runnable {
 	private boolean isGamePaused;
 	private final Paint background;
 	private final SurfaceHolder surfaceHolder;
-	private final Thread renderThread;
+	private Thread renderThread;
 	private volatile boolean isRenderThreadRunning;
 	private final List<Drawable> drawables;
 	private Canvas canvas;
@@ -265,6 +265,14 @@ public class Controller extends SurfaceView implements Runnable {
 
 	public void onDestroy() {
 		isRenderThreadRunning = false;
+	}
+
+	public void onResume() {
+		if(!isRenderThreadRunning) {
+			isRenderThreadRunning = true;
+			renderThread = new Thread(this);
+			renderThread.start();
+		}
 	}
 
 	@Override

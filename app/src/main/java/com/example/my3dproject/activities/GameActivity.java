@@ -49,10 +49,8 @@ public class GameActivity extends AppCompatActivity {
 		tvBestTime = findViewById(R.id.tvBestTime);
 	}
 
-	@Override
-	public void onWindowFocusChanged(boolean hasFocused) {
-		super.onWindowFocusChanged(hasFocused);
-		if (hasFocused && controller == null) {
+	private void initGame() {
+		if (controller == null) {
 			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight(), tvTimer, tvBestTime);
 			RubiksCube rubiksCube = new RubiksCube(0, 0, 0, 50, controller);
 			navView.setNavigationItemSelectedListener(item -> {
@@ -78,6 +76,14 @@ public class GameActivity extends AppCompatActivity {
 	}
 
 	@Override
+	public void onWindowFocusChanged(boolean hasFocused) {
+		super.onWindowFocusChanged(hasFocused);
+		if(hasFocused) {
+			initGame();
+		}
+	}
+
+	@Override
 	public void onPause() {
 		super.onPause();
 		if(controller != null) {
@@ -90,6 +96,14 @@ public class GameActivity extends AppCompatActivity {
 		super.onDestroy();
 		if(controller != null) {
 			controller.onDestroy();
+		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if(controller != null) {
+			controller.onResume();
 		}
 	}
 
