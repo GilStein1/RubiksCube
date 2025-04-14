@@ -141,6 +141,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 		if(!isCubeSolved && hasNoticedCubeSolved.get()) {
 			hasNoticedCubeSolved.set(false);
 		}
+		selectedPolygon.ifPresent(polygon -> polygon.setSelected(true));
 	}
 
 	private void updateByClickInput(Point2d pointOfCLick, int event) {
@@ -149,7 +150,6 @@ public class RubiksCubeManager implements UpdatableComponent{
 				isScreenPressed = true;
 				if (!selectedPolygon.isPresent()) {
 					selectedPolygon = searchForClickedPolygon(rubiksCube.drawnPolygons, pointOfCLick);
-					selectedPolygon.ifPresent(polygon -> polygon.setSelected(true));
 					selectedNotRotatedPolygon = searchForClickedPolygon(rubiksCube.notRotatedPolygons, pointOfCLick);
 				}
 				break;
