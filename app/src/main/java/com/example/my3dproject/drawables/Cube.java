@@ -30,7 +30,7 @@ public class Cube extends Drawable {
 		this.y = y;
 		this.z = z;
 		double halfOfSize = size / 2;
-		this.points3d = new Point[]{
+		this.points3d = new Point[] {
 			new Point(x + halfOfSize, y + halfOfSize, z + halfOfSize),
 			new Point(x + halfOfSize, y - halfOfSize, z + halfOfSize),
 			new Point(x - halfOfSize, y + halfOfSize, z + halfOfSize),
@@ -134,13 +134,6 @@ public class Cube extends Drawable {
 
 	public Vec3D getRightOrientationVector() {
 		return Vec3D.fromDifferenceInPos(points3d[0], points3d[2]).normalize();
-	}
-
-	@Override
-	public void update(double deltaTime, Point2d pointOfClick, int event) {
-		for (Polygon polygon : polygonsToDraw) {
-			polygon.update(deltaTime, pointOfClick, event);
-		}
 	}
 
 	@Override

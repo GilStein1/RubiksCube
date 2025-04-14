@@ -11,6 +11,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.my3dproject.Controller;
 import com.example.my3dproject.R;
+import com.example.my3dproject.RubiksCubeManager;
 import com.example.my3dproject.ScreenTouchListener;
 import com.example.my3dproject.drawables.RubiksCube;
 import com.google.android.material.navigation.NavigationView;
@@ -46,7 +47,8 @@ public class GameActivity extends AppCompatActivity {
 	private void initGame() {
 		if (controller == null) {
 			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight(), tvTimer, tvBestTime);
-			RubiksCube rubiksCube = new RubiksCube(0, 0, 0, 50, controller);
+			RubiksCube rubiksCube = new RubiksCube(0, 0, 0, 50);
+			RubiksCubeManager rubiksCubeManager = new RubiksCubeManager(rubiksCube, controller);
 			navView.setNavigationItemSelectedListener(item -> {
 				int id = item.getItemId();
 
@@ -55,7 +57,7 @@ public class GameActivity extends AppCompatActivity {
 
 
 				} else if (id == R.id.nav_reset) {
-					rubiksCube.solve();
+					rubiksCubeManager.solve();
 				} else if (id == R.id.nav_exit) {
 					finish();
 				}
@@ -63,8 +65,9 @@ public class GameActivity extends AppCompatActivity {
 				drawerLayout.closeDrawer(GravityCompat.START);
 				return true;
 			});
-			findViewById(R.id.btnShuffle).setOnClickListener(view -> rubiksCube.shuffle());
+			findViewById(R.id.btnShuffle).setOnClickListener(view -> rubiksCubeManager.shuffle());
 			controller.addDrawables(rubiksCube);
+			controller.addUpdatableComponents(rubiksCubeManager);
 			frameLayout.addView(controller, 0);
 		}
 	}

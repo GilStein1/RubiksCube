@@ -9,6 +9,7 @@ import androidx.annotation.ColorInt;
 
 import com.example.my3dproject.Constants;
 import com.example.my3dproject.ScreenGeometryManager;
+import com.example.my3dproject.UpdatableComponent;
 import com.example.my3dproject.math.Vec3D;
 import com.example.my3dproject.math.geometry.Point2d;
 import com.example.my3dproject.math.geometry.Point3d;
@@ -17,7 +18,7 @@ import com.example.my3dproject.math.geometry.PointUtils;
 import java.util.Arrays;
 import java.util.List;
 
-public class Polygon extends Drawable {
+public class Polygon extends Drawable implements UpdatableComponent {
 
 	private final Cube parentCube;
 	@ColorInt

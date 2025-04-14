@@ -69,13 +69,9 @@ public class Point extends Drawable {
 	}
 
 	@Override
-	public void update(double deltaTime, Point2d pointOfCLick, int event) {
+	public void render(Canvas canvas, boolean isDarkMode) {
 		drawX = screenGeometryManager.getProjectionTranslatedX(getPose());
 		drawY = screenGeometryManager.getProjectionTranslatedY(getPose());
-	}
-
-	@Override
-	public void render(Canvas canvas, boolean isDarkMode) {
 		Paint paint = new Paint();
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setColor(Color.BLACK);
