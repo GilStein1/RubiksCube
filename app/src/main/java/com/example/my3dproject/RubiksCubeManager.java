@@ -1,9 +1,7 @@
 package com.example.my3dproject;
 
-import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
-
 import com.example.my3dproject.drawables.Cube;
 import com.example.my3dproject.drawables.Polygon;
 import com.example.my3dproject.drawables.RubiksCube;
@@ -14,8 +12,6 @@ import com.example.my3dproject.math.geometry.Direction;
 import com.example.my3dproject.math.geometry.DirectionCross;
 import com.example.my3dproject.math.geometry.Point2d;
 import com.example.my3dproject.math.geometry.Point3d;
-import com.example.my3dproject.math.geometry.Quaternion;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
