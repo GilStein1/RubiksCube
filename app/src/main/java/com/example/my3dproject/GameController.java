@@ -46,7 +46,6 @@ public class GameController extends SurfaceView implements Runnable {
 	private DatabaseReference accountRef;
 	private final SharedPreferences sharedPreferences;
 	private Account currentAccount;
-	private List<Consumer<Account>> taskToDoWhenAccountIsLogged;
 
 	public GameController(
 		Context context,
@@ -78,7 +77,6 @@ public class GameController extends SurfaceView implements Runnable {
 		this.accountRef = database.getReference("accounts");
 		this.sharedPreferences = context.getSharedPreferences(findLastConnectedUser(), 0);
 //		this.sharedPreferences.edit().putString("bestTime", "1000").apply();
-		this.taskToDoWhenAccountIsLogged = new ArrayList<>();
 		animationManager.addLoopedAction(new LoopedAction(this::updateSavesInPreferences, 1.0));
 		getAllSavedValuesFromSharedPreferences();
 		findCurrentAccount();
@@ -230,17 +228,6 @@ public class GameController extends SurfaceView implements Runnable {
 		return rotationOperations;
 	}
 
-	public void addTaskToDoWhenAccountIsLogged(Consumer<Account> task) {
-		taskToDoWhenAccountIsLogged.add(task);
-	}
-
-	private void runTasksThatWaitForAccountLog() {
-		for(Consumer<Account> task : taskToDoWhenAccountIsLogged) {
-			task.accept(currentAccount);
-		}
-		taskToDoWhenAccountIsLogged.clear();
-	}
-
 	public void findCurrentAccount() {
 		accountRef.addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
@@ -297,9 +284,6 @@ public class GameController extends SurfaceView implements Runnable {
 			double currentTime = System.nanoTime() / 1e9;
 			if(shouldTimerCount && !isGamePaused) {
 				updateTimer(currentTime - lastTime);
-			}
-			if(!taskToDoWhenAccountIsLogged.isEmpty() && currentAccount != null) {
-				runTasksThatWaitForAccountLog();
 			}
 			animationManager.update(currentTime - lastTime);
 			drawSurface(currentTime - lastTime);
