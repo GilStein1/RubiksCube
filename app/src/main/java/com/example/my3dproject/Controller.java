@@ -37,6 +37,7 @@ public class Controller extends SurfaceView implements Runnable {
 	private Thread renderThread;
 	private volatile boolean isRenderThreadRunning;
 	private final List<Drawable> drawables;
+	private final List<UpdatableComponent> updatables;
 	private Canvas canvas;
 	private double lastTime;
 	private final TimedAnimationManager animationManager;
@@ -69,6 +70,7 @@ public class Controller extends SurfaceView implements Runnable {
 		this.renderThread = new Thread(this);
 		this.isRenderThreadRunning = true;
 		this.drawables = new ArrayList<>();
+		this.updatables = new ArrayList<>();
 		this.lastTime = System.nanoTime() / 1e9;
 		this.animationManager = new TimedAnimationManager();
 		this.mAuth = FirebaseAuth.getInstance();
@@ -93,16 +95,22 @@ public class Controller extends SurfaceView implements Runnable {
 		this.drawables.addAll(Arrays.asList(drawables));
 	}
 
+	public void addUpdatableComponents(UpdatableComponent... updatableComponents) {
+		this.updatables.addAll(Arrays.asList(updatableComponents));
+	}
+
 	private void drawSurface(double deltaTime) {
 		if (surfaceHolder.getSurface().isValid() && (canvas = surfaceHolder.lockCanvas()) != null) {
 			background.setColor(isDarkMode()? Color.BLACK : Color.WHITE);
 			canvas.drawPaint(background);
-			for (Drawable drawable : drawables) {
-				drawable.update(
+			for(UpdatableComponent updatableComponent : updatables) {
+				updatableComponent.update(
 					deltaTime,
 					ScreenTouchListener.getInstance().getPos(),
 					ScreenTouchListener.getInstance().getEvent()
 				);
+			}
+			for (Drawable drawable : drawables) {
 				drawable.render(canvas, isDarkMode());
 			}
 			surfaceHolder.unlockCanvasAndPost(canvas);

@@ -30,7 +30,7 @@ public class Cube extends Drawable {
 		this.y = y;
 		this.z = z;
 		double halfOfSize = size / 2;
-		this.points3d = new Point[]{
+		this.points3d = new Point[] {
 			new Point(x + halfOfSize, y + halfOfSize, z + halfOfSize),
 			new Point(x + halfOfSize, y - halfOfSize, z + halfOfSize),
 			new Point(x - halfOfSize, y + halfOfSize, z + halfOfSize),

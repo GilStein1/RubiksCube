@@ -65,6 +65,7 @@ public class GameActivity extends AppCompatActivity {
 			});
 			findViewById(R.id.btnShuffle).setOnClickListener(view -> rubiksCube.shuffle());
 			controller.addDrawables(rubiksCube);
+			controller.addUpdatableComponents(rubiksCube);
 			frameLayout.addView(controller, 0);
 		}
 	}
