@@ -41,7 +41,6 @@ public class SignUpActivity extends AppCompatActivity {
 		mAuth = FirebaseAuth.getInstance();
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
 		accountRef = database.getReference("accounts");
-		Log.w("somehow got to account creation", "somehow got to account creation");
 	}
 
 	@Override
