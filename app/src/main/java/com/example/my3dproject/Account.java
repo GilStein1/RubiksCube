@@ -6,12 +6,18 @@ public class Account {
 	public String userId;
 	public double bestTime;
 	public boolean resetBestScore;
+	public String savedRotations;
+	public double timer;
+	public long timestampOfSave;
 
 	public Account(String userId, String name) {
 		this.userId = userId;
 		this.name = name;
 		this.bestTime = Double.MAX_VALUE;
 		this.resetBestScore = false;
+		this.savedRotations = "";
+		this.timer = 0;
+		this.timestampOfSave = 0;
 	}
 
 	public Account() {
@@ -19,6 +25,9 @@ public class Account {
 		this.userId = "";
 		this.bestTime = Double.MAX_VALUE;
 		this.resetBestScore = false;
+		this.savedRotations = "";
+		this.timer = 0;
+		this.timestampOfSave = 0;
 	}
 
 	public String getName() {
@@ -52,4 +61,29 @@ public class Account {
 	public void setResetBestScore(boolean shouldResetBestScore) {
 		this.resetBestScore = shouldResetBestScore;
 	}
+
+	public String getSavedRotations() {
+		return savedRotations;
+	}
+
+	public void setSavedRotations(String savedRotations) {
+		this.savedRotations = savedRotations;
+	}
+
+	public long getTimestampOfSave() {
+		return timestampOfSave;
+	}
+
+	public void setTimestampOfSave(long timestampOfSave) {
+		this.timestampOfSave = timestampOfSave;
+	}
+
+	public double getTimer() {
+		return timer;
+	}
+
+	public void setTimer(double timer) {
+		this.timer = timer;
+	}
+
 }

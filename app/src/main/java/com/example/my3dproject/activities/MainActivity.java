@@ -11,6 +11,7 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -22,16 +23,28 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.example.my3dproject.Account;
 import com.example.my3dproject.DefaultController;
 import com.example.my3dproject.R;
 import com.example.my3dproject.RubiksCubeManagerForSimpleBackgroundRotation;
 import com.example.my3dproject.drawables.RubiksCube;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Optional;
 
 public class MainActivity extends AppCompatActivity {
 
 	private FirebaseAuth mAuth;
+	private DatabaseReference accountRef;
+	private String rotationsRetrievedFromFirebase;
+	private double timerRetrievedFromFirebase;
+	private long timestampOfSave;
 	private FrameLayout frameLayout;
 	private DefaultController controller;
 	private ActivityResultLauncher<Intent> signUpActivityLauncher;
@@ -47,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
 		getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		this.mAuth = FirebaseAuth.getInstance();
+		FirebaseDatabase database = FirebaseDatabase.getInstance();
+		this.accountRef = database.getReference("accounts");
+		this.rotationsRetrievedFromFirebase = "";
+		this.timerRetrievedFromFirebase = 0;
+		this.timestampOfSave = 0;
+		findCurrentAccount();
 		initViews();
 	}
 
@@ -152,6 +171,26 @@ public class MainActivity extends AppCompatActivity {
 		});
 	}
 
+	public void findCurrentAccount() {
+		accountRef.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				for (DataSnapshot data : dataSnapshot.getChildren()) {
+					Account account = data.getValue(Account.class);
+					if (mAuth.getCurrentUser() != null && account.getUserId().equals(mAuth.getCurrentUser().getUid())) {
+						rotationsRetrievedFromFirebase = account.getSavedRotations();
+						timestampOfSave = account.getTimestampOfSave();
+						Log.w("Gil2", "The firebase is: " + timestampOfSave);
+					}
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError ignored) {
+			}
+		});
+	}
+
 	public void logInByButton(View view) {
 		logInDialog.show();
 	}
@@ -160,6 +199,9 @@ public class MainActivity extends AppCompatActivity {
 		controller.onDestroy();
 		controller = null;
 		Intent intent = new Intent(this, GameActivity.class);
+		intent.putExtra("rotations", rotationsRetrievedFromFirebase);
+		intent.putExtra("timer", timerRetrievedFromFirebase);
+		intent.putExtra("timestampOfSave", timestampOfSave);
 		gameActivityLauncher.launch(intent);
 	}
 

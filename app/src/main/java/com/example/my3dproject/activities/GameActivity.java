@@ -1,5 +1,6 @@
 package com.example.my3dproject.activities;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
@@ -37,7 +38,6 @@ public class GameActivity extends AppCompatActivity {
 		navView = findViewById(R.id.navView);
 
 		menuButton = findViewById(R.id.btnMenu);
-
 		menuButton.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
 		tvTimer = findViewById(R.id.tvTimer);
@@ -46,15 +46,12 @@ public class GameActivity extends AppCompatActivity {
 
 	private void initGame() {
 		if (controller == null) {
-			this.controller = new GameController(this, frameLayout.getWidth(), frameLayout.getHeight(), tvTimer, tvBestTime);
+			this.controller = new GameController(this,getIntent(), frameLayout.getWidth(), frameLayout.getHeight(), tvTimer, tvBestTime);
 			RubiksCube rubiksCube = new RubiksCube(0, 0, 0, 50);
 			RubiksCubeManager rubiksCubeManager = new RubiksCubeManager(rubiksCube, controller);
 			navView.setNavigationItemSelectedListener(item -> {
 				int id = item.getItemId();
-
 				if (id == R.id.nav_stats) {
-
-
 
 				} else if (id == R.id.nav_reset) {
 					rubiksCubeManager.solve();

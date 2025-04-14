@@ -1,6 +1,7 @@
 package com.example.my3dproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
@@ -27,6 +28,7 @@ import java.util.function.Consumer;
 public class GameController extends SurfaceView implements Runnable {
 
 	private final int screenWidth, screenHeight;
+	private Intent intentFromMainMenu;
 	private final TextView tvTimer, tvBestTime;
 	private double timer;
 	private double bestTime;
@@ -49,12 +51,14 @@ public class GameController extends SurfaceView implements Runnable {
 
 	public GameController(
 		Context context,
+		Intent intentFromMainMenu,
 		int screenWidth,
 		int screenHeight,
 		TextView tvTimer,
 		TextView tvBestTime
 	) {
 		super(context);
+		this.intentFromMainMenu = intentFromMainMenu;
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
 		this.tvTimer = tvTimer;
@@ -78,6 +82,7 @@ public class GameController extends SurfaceView implements Runnable {
 		this.sharedPreferences = context.getSharedPreferences(findLastConnectedUser(), 0);
 //		this.sharedPreferences.edit().putString("bestTime", "1000").apply();
 		animationManager.addLoopedAction(new LoopedAction(this::updateSavesInPreferences, 1.0));
+		animationManager.addLoopedAction(new LoopedAction(this::updateSavesInAccount, 1.0));
 		getAllSavedValuesFromSharedPreferences();
 		findCurrentAccount();
 		initHelpers();
@@ -185,6 +190,13 @@ public class GameController extends SurfaceView implements Runnable {
 		if(sharedPreferences.contains("timer")) {
 			this.timer = Double.parseDouble(sharedPreferences.getString("timer", null));
 		}
+		long localTimestamp = Long.parseLong(sharedPreferences.getString("timestampOfSave", "0"));
+		long firebaseTimestamp = intentFromMainMenu.getExtras().getLong("timestampOfSave");
+		Log.w("Gil", "The local is: " + localTimestamp);
+		Log.w("Gil", "The firebase is: " + firebaseTimestamp);
+		if(firebaseTimestamp > localTimestamp) {
+			timer = intentFromMainMenu.getExtras().getDouble("timer");
+		}
 		if(timer == 0) {
 			shouldTimerCount = false;
 		}
@@ -192,7 +204,10 @@ public class GameController extends SurfaceView implements Runnable {
 			this.bestTime = Double.parseDouble(sharedPreferences.getString("bestTime", null));
 		}
 		updateBestTime(bestTime);
-		this.rotationOperations = RotationOperation.valuesOf(sharedPreferences.getString("rotations", ""));
+		String rotations = firebaseTimestamp > localTimestamp ?
+			intentFromMainMenu.getExtras().getString("rotations") :
+			sharedPreferences.getString("rotations", "");
+		this.rotationOperations = RotationOperation.valuesOf(rotations != null ? rotations : "");
 	}
 
 	private String findLastConnectedUser() {
@@ -205,7 +220,6 @@ public class GameController extends SurfaceView implements Runnable {
 
 	private void updateSavedAccountInDatabase() {
 		accountRef.child(mAuth.getCurrentUser().getUid()).setValue(currentAccount);
-		Log.w("Saved the account in database", "Saved the account in database");
 	}
 
 	private void updateSavesInPreferences() {
@@ -213,7 +227,17 @@ public class GameController extends SurfaceView implements Runnable {
 		editor.putString("timer", String.valueOf(timer));
 		editor.putString("bestTime", String.valueOf(bestTime));
 		editor.putString("rotations", makeRotationOperationsAString(rotationOperations));
+		editor.putString("timestampOfSave", String.valueOf(System.nanoTime()));
 		editor.apply();
+	}
+
+	private void updateSavesInAccount() {
+		if(currentAccount != null) {
+			currentAccount.setSavedRotations(makeRotationOperationsAString(rotationOperations));
+			currentAccount.setTimer(timer);
+			currentAccount.setTimestampOfSave(System.nanoTime());
+			updateSavedAccountInDatabase();
+		}
 	}
 
 	private String makeRotationOperationsAString(List<RotationOperation> rotationOperations) {
