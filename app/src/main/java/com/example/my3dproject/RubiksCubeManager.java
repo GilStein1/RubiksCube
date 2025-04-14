@@ -50,8 +50,8 @@ public class RubiksCubeManager implements UpdatableComponent{
 		this.controller = controller;
 		this.animationManager = controller.getAnimationManager();
 		this.rubiksCubeState = RubiksCubeState.IDLE;
-		this.rubiksCubeSize = rubiksCube.rubiksCubeSize;
-		this.smallCubesSize = rubiksCube.smallCubesSize;
+		this.rubiksCubeSize = rubiksCube.getRubiksCubeSize();
+		this.smallCubesSize = rubiksCube.getSmallCubesSize();
 		this.lastClicksQueue = new ArrayBlockingQueue<>(5);
 		this.isScreenPressed = false;
 		this.hasNoticedActionUp = false;
@@ -124,10 +124,10 @@ public class RubiksCubeManager implements UpdatableComponent{
 		}
 
 		rubiksCube.rotate(Math.toRadians(xRotation), Math.toRadians(yRotation), 0);
-		for (Polygon polygon : rubiksCube.drawnPolygons) {
+		for (Polygon polygon : rubiksCube.getAllDrawnPolygons()) {
 			polygon.update(deltaTime, pointOfClick.times(getScreenSizeRatio()), event);
 		}
-		for (Polygon polygon : rubiksCube.notRotatedPolygons) {
+		for (Polygon polygon : rubiksCube.getAllNotRotatedPolygons()) {
 			polygon.update(deltaTime, pointOfClick.times(getScreenSizeRatio()), event);
 		}
 		lastPointOfClick = pointOfClick.times(1/getScreenSizeRatio());
@@ -149,8 +149,8 @@ public class RubiksCubeManager implements UpdatableComponent{
 			case MotionEvent.ACTION_DOWN:
 				isScreenPressed = true;
 				if (!selectedPolygon.isPresent()) {
-					selectedPolygon = searchForClickedPolygon(rubiksCube.drawnPolygons, pointOfCLick);
-					selectedNotRotatedPolygon = searchForClickedPolygon(rubiksCube.notRotatedPolygons, pointOfCLick);
+					selectedPolygon = searchForClickedPolygon(rubiksCube.getAllDrawnPolygons(), pointOfCLick);
+					selectedNotRotatedPolygon = searchForClickedPolygon(rubiksCube.getAllNotRotatedPolygons(), pointOfCLick);
 				}
 				break;
 			case MotionEvent.ACTION_UP:
@@ -188,7 +188,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 		Cube selectedCube = selectedPolygon.get().getParentCube();
 		Polygon nonRotatedPolygon = selectedNotRotatedPolygon.get().getParentCube().getPolygonFromDrawPolygon(selectedNotRotatedPolygon.get());
 		DirectionCross directionCross = new DirectionCross();
-		directionCross.rotate(rubiksCube.currentRotation);
+		directionCross.rotate(rubiksCube.getCurrentRotation());
 		Vec3D swipeVector = new Vec3D(
 			lastPointOfClick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX(),
 			(lastPointOfClick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY()),
@@ -279,7 +279,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 	private void translateVectorToProjection(Vec3D vec3D) {
 		vec3D.normalize();
 		Point3d p1 = new Point3d(0, 0, 0);
-		Point3d p2 = new Point3d(vec3D.getX() * rubiksCube.rubiksCubeSize*2, vec3D.getY() * rubiksCube.rubiksCubeSize*2, vec3D.getZ() * rubiksCube.rubiksCubeSize*2);
+		Point3d p2 = new Point3d(vec3D.getX() * rubiksCubeSize*2, vec3D.getY() * rubiksCubeSize*2, vec3D.getZ() * rubiksCubeSize*2);
 		p1 = ScreenGeometryManager.getInstance().getProjectionTranslatedPoint3d(p1, Constants.FOCAL_LENGTH);
 		p2 = ScreenGeometryManager.getInstance().getProjectionTranslatedPoint3d(p2, Constants.FOCAL_LENGTH);
 		Vec3D finalVec = Vec3D.fromDifferenceInPos(p2, p1).normalize();

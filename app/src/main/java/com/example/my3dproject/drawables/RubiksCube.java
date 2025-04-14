@@ -44,11 +44,11 @@ public class RubiksCube extends Drawable {
 	private final List<Point> notRotatedPoints3d;
 	private final List<Point> points3dToDraw;
 	private final List<Point> notRotatedPointsToDraw;
-	public final List<Polygon> drawnPolygons;
-	public final List<Polygon> notRotatedPolygons;
-	public Quaternion currentRotation;
-	public final double rubiksCubeSize;
-	public final double smallCubesSize;
+	private final List<Polygon> drawnPolygons;
+	private final List<Polygon> notRotatedPolygons;
+	private Quaternion currentRotation;
+	private final double rubiksCubeSize;
+	private final double smallCubesSize;
 
 	public RubiksCube(double x, double y, double z, double size) {
 		this.x = x;
@@ -249,14 +249,26 @@ public class RubiksCube extends Drawable {
 				polygon.setSelected(false);
 			}
 		}
-
-		Paint paint = new Paint();
-		paint.setColor(Color.BLACK);
-		paint.setTextSize(100);
-
-//		for(Cube cube : cubes) {
-//			canvas.drawText(String.valueOf(cubes.indexOf(cube)), (float) ScreenGeometryManager.getInstance().getProjectionTranslatedX(cube.getDrawnPose()), (float) ScreenGeometryManager.getInstance().getProjectionTranslatedY(cube.getDrawnPose()), paint);
-//		}
-
 	}
+
+	public List<Polygon> getAllDrawnPolygons() {
+		return drawnPolygons;
+	}
+
+	public List<Polygon> getAllNotRotatedPolygons() {
+		return notRotatedPolygons;
+	}
+
+	public Quaternion getCurrentRotation() {
+		return currentRotation;
+	}
+
+	public double getRubiksCubeSize() {
+		return rubiksCubeSize;
+	}
+
+	public double getSmallCubesSize() {
+		return smallCubesSize;
+	}
+
 }
