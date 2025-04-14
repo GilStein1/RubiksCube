@@ -192,8 +192,6 @@ public class GameController extends SurfaceView implements Runnable {
 		}
 		long localTimestamp = Long.parseLong(sharedPreferences.getString("timestampOfSave", "0"));
 		long firebaseTimestamp = intentFromMainMenu.getExtras().getLong("timestampOfSave");
-		Log.w("Gil", "The local is: " + localTimestamp);
-		Log.w("Gil", "The firebase is: " + firebaseTimestamp);
 		if(firebaseTimestamp > localTimestamp) {
 			timer = intentFromMainMenu.getExtras().getDouble("timer");
 		}

@@ -180,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
 					if (mAuth.getCurrentUser() != null && account.getUserId().equals(mAuth.getCurrentUser().getUid())) {
 						rotationsRetrievedFromFirebase = account.getSavedRotations();
 						timestampOfSave = account.getTimestampOfSave();
-						Log.w("Gil2", "The firebase is: " + timestampOfSave);
 					}
 				}
 			}
