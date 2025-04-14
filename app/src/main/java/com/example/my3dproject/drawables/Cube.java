@@ -137,13 +137,6 @@ public class Cube extends Drawable {
 	}
 
 	@Override
-	public void update(double deltaTime, Point2d pointOfClick, int event) {
-		for (Polygon polygon : polygonsToDraw) {
-			polygon.update(deltaTime, pointOfClick, event);
-		}
-	}
-
-	@Override
 	public void render(Canvas canvas, boolean isDarkMode) {
 		Paint paint = new Paint();
 		paint.setColor(Color.BLACK);

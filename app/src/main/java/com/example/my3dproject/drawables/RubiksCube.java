@@ -15,6 +15,7 @@ import com.example.my3dproject.TimedAction;
 import com.example.my3dproject.Constants;
 import com.example.my3dproject.RotationOperation;
 import com.example.my3dproject.TimedAnimationManager;
+import com.example.my3dproject.UpdatableComponent;
 import com.example.my3dproject.math.MathUtil;
 import com.example.my3dproject.math.Vec3D;
 import com.example.my3dproject.math.geometry.Axis;
@@ -34,7 +35,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-public class RubiksCube extends Drawable {
+public class RubiksCube extends Drawable implements UpdatableComponent {
 
 	private final ArrayBlockingQueue<Point2d> lastClicksQueue;
 	private final Controller controller;
@@ -282,12 +283,11 @@ public class RubiksCube extends Drawable {
 		}
 
 		rotate(Math.toRadians(xRotation), Math.toRadians(yRotation), 0);
-		updateAllDots(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
-		for (Cube cube : cubes) {
-			cube.update(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
+		for (Polygon polygon : drawnPolygons) {
+			polygon.update(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
 		}
-		for (Cube cube : cubesThatDoNotRotate) {
-			cube.update(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
+		for (Polygon polygon : notRotatedPolygons) {
+			polygon.update(deltaTime, pointOfCLick.times(getScreenSizeRatio()), event);
 		}
 		lastPointOfClick = pointOfCLick.times(1/getScreenSizeRatio());
 		boolean isCubeSolved = checkIfCubeIsSolved();
@@ -429,15 +429,6 @@ public class RubiksCube extends Drawable {
 	private void translateVectorsToProjections(Vec3D... vectors) {
 		for (Vec3D vector : vectors) {
 			translateVectorToProjection(vector);
-		}
-	}
-
-	private void updateAllDots(double deltaTime, Point2d pointOfCLick, int event) {
-		for (int i = 0; i < points3dToDraw.size(); i++) {
-			points3dToDraw.get(i).update(deltaTime, pointOfCLick, event);
-		}
-		for (int i = 0; i < notRotatedPointsToDraw.size(); i++) {
-			notRotatedPointsToDraw.get(i).update(deltaTime, pointOfCLick, event);
 		}
 	}
 
