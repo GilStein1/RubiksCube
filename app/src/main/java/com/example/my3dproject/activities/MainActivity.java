@@ -1,37 +1,23 @@
 package com.example.my3dproject.activities;
-import android.content.Intent;
+
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.FrameLayout;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.my3dproject.Account;
+import com.example.my3dproject.DefaultController;
 import com.example.my3dproject.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.my3dproject.RubiksCubeManager;
+import com.example.my3dproject.RubiksCubeManagerForSimpleBackgroundRotation;
+import com.example.my3dproject.ScreenTouchListener;
+import com.example.my3dproject.drawables.RubiksCube;
 
 public class MainActivity extends AppCompatActivity {
 
-	private FirebaseAuth mAuth;
-	private EditText etEmail, etPassword;
-	private ActivityResultLauncher<Intent> signUpActivityLauncher;
-	private ActivityResultLauncher<Intent> gameActivityLauncher;
+	private FrameLayout frameLayout;
+	private DefaultController controller;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,73 +25,50 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		initializeViews();
-		this.mAuth = FirebaseAuth.getInstance();
-		this.signUpActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::atReturnFromSignUp);
-		this.gameActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::atReturnFromGame);
-		findTheConnectedUser();
+		frameLayout = findViewById(R.id.flBackgroundCube);
 	}
 
-	private void initializeViews() {
-		etEmail = findViewById(R.id.etEmail);
-		etPassword = findViewById(R.id.etPassword);
-	}
-
-	public void findTheConnectedUser() {
-		FirebaseUser currentUser = mAuth.getCurrentUser();
-		if (currentUser != null) {
-			Intent intent = new Intent(this, GameActivity.class);
-			gameActivityLauncher.launch(intent);
+	private void initBackgroundAnimation() {
+		if (controller == null) {
+			this.controller = new DefaultController(this, frameLayout.getWidth(), frameLayout.getHeight());
+			RubiksCube rubiksCube = new RubiksCube(0, 0, 0, 80);
+			RubiksCubeManagerForSimpleBackgroundRotation rubiksCubeManager = new RubiksCubeManagerForSimpleBackgroundRotation(rubiksCube, controller);
+			controller.addDrawables(rubiksCube);
+			controller.addUpdatableComponents(rubiksCubeManager);
+			frameLayout.addView(controller, 0);
 		}
 	}
 
-	private void atReturnFromGame(ActivityResult result) {
-		mAuth.signOut();
-	}
-
-	private void atReturnFromSignUp(ActivityResult result) {
-		switch (result.getResultCode()) {
-			case RESULT_OK:
-				getNewUserFromSignUpPage(result.getData());
-				break;
-			case RESULT_CANCELED:
-				signUpCanceled();
-				break;
+	@Override
+	public void onWindowFocusChanged(boolean hasFocused) {
+		super.onWindowFocusChanged(hasFocused);
+		if(hasFocused) {
+			initBackgroundAnimation();
 		}
 	}
 
-	private void signUpCanceled() {
-		Toast.makeText(MainActivity.this, "sign up was canceled", Toast.LENGTH_SHORT).show();
+	@Override
+	public void onPause() {
+		super.onPause();
+		if(controller != null) {
+			controller.onPause();
+		}
 	}
 
-	private void getNewUserFromSignUpPage(Intent returnedIntent) {
-		String email = returnedIntent.getExtras().getString("userEmail");
-		String password = returnedIntent.getExtras().getString("userPassword");
-		etEmail.setText(email);
-		etPassword.setText(password);
-		findTheConnectedUser();
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if(controller != null) {
+			controller.onDestroy();
+		}
 	}
 
-	private void logUserIn(String email, String password) {
-		mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
-			if (task.isSuccessful()) {
-				Toast.makeText(MainActivity.this, "Successfully logged in!", Toast.LENGTH_SHORT).show();
-				findTheConnectedUser();
-			} else {
-				Toast.makeText(MainActivity.this, "Error while logging in", Toast.LENGTH_SHORT).show();
-			}
-		});
-	}
-
-	public void signUpByButton(View view) {
-		Intent intent = new Intent(this, SignUpActivity.class);
-		signUpActivityLauncher.launch(intent);
-	}
-
-	public void logInByButton(View view) {
-		String email = etEmail.getText().toString();
-		String password = etPassword.getText().toString();
-		logUserIn(email, password);
+	@Override
+	public void onResume() {
+		super.onResume();
+		if(controller != null) {
+			controller.onResume();
+		}
 	}
 
 }
