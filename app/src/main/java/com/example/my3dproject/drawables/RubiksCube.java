@@ -46,7 +46,7 @@ public class RubiksCube extends Drawable {
 	private final List<Point> notRotatedPointsToDraw;
 	public final List<Polygon> drawnPolygons;
 	public final List<Polygon> notRotatedPolygons;
-	private Quaternion currentRotation;
+	public Quaternion currentRotation;
 	public final double rubiksCubeSize;
 	public final double smallCubesSize;
 

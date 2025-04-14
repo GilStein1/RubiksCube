@@ -39,7 +39,6 @@ public class RubiksCubeManager implements UpdatableComponent{
 	private final double smallCubesSize;
 	private final float rotationScale = 0.3f;
 	private final float rotationalVelocityScale = 0.25f;
-	private Quaternion currentRotation;
 	private Point2d lastPointOfClick;
 	private Optional<Polygon> selectedPolygon;
 	private Optional<Polygon> selectedNotRotatedPolygon;
@@ -60,7 +59,6 @@ public class RubiksCubeManager implements UpdatableComponent{
 		this.yRotationalVelocity = 0;
 		this.xRotation = 0;
 		this.yRotation = 0;
-		this.currentRotation = new Quaternion(1, 0, 0, 0);
 		this.lastPointOfClick = new Point2d(0, 0);
 		this.selectedPolygon = Optional.empty();
 		this.selectedNotRotatedPolygon = Optional.empty();
@@ -76,7 +74,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 			Cube cubeToRotateAround = new Cube(
 				rotationOperation.getPointToRotateAround().getX(),
 				rotationOperation.getPointToRotateAround().getY(),
-				rotationOperation.getPointToRotateAround().getZ(), 10
+				rotationOperation.getPointToRotateAround().getZ(), smallCubesSize
 			);
 			double angle = rotationOperation.getAngleOfRotation();
 			switch (rotationOperation.getAxisOfRotation()) {
@@ -190,7 +188,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 		Cube selectedCube = selectedPolygon.get().getParentCube();
 		Polygon nonRotatedPolygon = selectedNotRotatedPolygon.get().getParentCube().getPolygonFromDrawPolygon(selectedNotRotatedPolygon.get());
 		DirectionCross directionCross = new DirectionCross();
-		directionCross.rotate(currentRotation);
+		directionCross.rotate(rubiksCube.currentRotation);
 		Vec3D swipeVector = new Vec3D(
 			lastPointOfClick.times(1/getScreenSizeRatio()).getX() - lastClicksQueue.peek().getX(),
 			(lastPointOfClick.times(1/getScreenSizeRatio()).getY() - lastClicksQueue.peek().getY()),
