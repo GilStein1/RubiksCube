@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import com.example.my3dproject.Controller;
+import com.example.my3dproject.GameController;
 import com.example.my3dproject.R;
 import com.example.my3dproject.RubiksCubeManager;
 import com.example.my3dproject.ScreenTouchListener;
@@ -23,7 +23,7 @@ public class GameActivity extends AppCompatActivity {
 	private NavigationView navView;
 	private ImageButton menuButton;
 	private TextView tvTimer, tvBestTime;
-	private Controller controller;
+	private GameController controller;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class GameActivity extends AppCompatActivity {
 
 	private void initGame() {
 		if (controller == null) {
-			this.controller = new Controller(this, frameLayout.getWidth(), frameLayout.getHeight(), tvTimer, tvBestTime);
+			this.controller = new GameController(this, frameLayout.getWidth(), frameLayout.getHeight(), tvTimer, tvBestTime);
 			RubiksCube rubiksCube = new RubiksCube(0, 0, 0, 50);
 			RubiksCubeManager rubiksCubeManager = new RubiksCubeManager(rubiksCube, controller);
 			navView.setNavigationItemSelectedListener(item -> {

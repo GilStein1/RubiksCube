@@ -1,27 +1,9 @@
 package com.example.my3dproject.drawables;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.util.Log;
-import android.util.Pair;
-import android.view.MotionEvent;
 
-import com.example.my3dproject.Account;
-import com.example.my3dproject.Controller;
-import com.example.my3dproject.RubiksCubeState;
-import com.example.my3dproject.ScreenGeometryManager;
-import com.example.my3dproject.TimedAction;
-import com.example.my3dproject.Constants;
 import com.example.my3dproject.RotationOperation;
-import com.example.my3dproject.TimedAnimationManager;
-import com.example.my3dproject.UpdatableComponent;
-import com.example.my3dproject.math.MathUtil;
 import com.example.my3dproject.math.Vec3D;
-import com.example.my3dproject.math.geometry.Axis;
-import com.example.my3dproject.math.geometry.Direction;
-import com.example.my3dproject.math.geometry.DirectionCross;
-import com.example.my3dproject.math.geometry.Point2d;
 import com.example.my3dproject.math.geometry.Point3d;
 import com.example.my3dproject.math.geometry.Quaternion;
 
@@ -29,11 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.Stack;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 public class RubiksCube extends Drawable {
 

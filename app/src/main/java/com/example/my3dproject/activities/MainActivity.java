@@ -2,6 +2,7 @@ package com.example.my3dproject.activities;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -140,6 +141,9 @@ public class MainActivity extends AppCompatActivity {
 	private void logUserIn(String email, String password) {
 		mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
 			if (task.isSuccessful()) {
+				SharedPreferences.Editor editor = getSharedPreferences("connectedUser", 0).edit();
+				editor.putString("userId", mAuth.getCurrentUser().getUid());
+				editor.apply();
 				logInDialog.cancel();
 				Toast.makeText(MainActivity.this, "Successfully logged in!", Toast.LENGTH_SHORT).show();
 			} else {
