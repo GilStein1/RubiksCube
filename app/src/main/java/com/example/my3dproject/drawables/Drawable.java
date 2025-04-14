@@ -8,7 +8,7 @@ import com.example.my3dproject.math.geometry.Point2d;
 
 public abstract class Drawable {
 
-	protected double screenWidth, screenHeight;
+	public double screenWidth, screenHeight;
 
 	public Drawable() {
 		this.screenWidth = ScreenGeometryManager.getInstance().getScreenWidth();

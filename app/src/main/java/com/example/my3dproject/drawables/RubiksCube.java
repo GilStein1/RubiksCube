@@ -47,8 +47,8 @@ public class RubiksCube extends Drawable implements UpdatableComponent {
 	private final List<Point> notRotatedPoints3d;
 	private final List<Point> points3dToDraw;
 	private final List<Point> notRotatedPointsToDraw;
-	private final List<Polygon> drawnPolygons;
-	private final List<Polygon> notRotatedPolygons;
+	public final List<Polygon> drawnPolygons;
+	public final List<Polygon> notRotatedPolygons;
 	private Optional<Polygon> selectedPolygon;
 	private Optional<Polygon> selectedNotRotatedPolygon;
 	private Quaternion currentRotation;
@@ -62,8 +62,8 @@ public class RubiksCube extends Drawable implements UpdatableComponent {
 	private boolean hasNoticedActionUp;
 	private RubiksCubeState rubiksCubeState;
 	private final Stack<Pair<Consumer<Double>, Double>> undoStack;
-	private final double rubiksCubeSize;
-	private final double smallCubesSize;
+	public final double rubiksCubeSize;
+	public final double smallCubesSize;
 	private AtomicBoolean hasNoticedCubeSolved;
 
 	public RubiksCube(double x, double y, double z, double size, Controller controller) {
@@ -209,7 +209,7 @@ public class RubiksCube extends Drawable implements UpdatableComponent {
 		}
 	}
 
-	private void rotate(double xAngle, double yAngle, double zAngle) {
+	public void rotate(double xAngle, double yAngle, double zAngle) {
 		Quaternion xRotation = Quaternion.fromAxisAngle(xAngle, 1, 0, 0);
 		Quaternion yRotation = Quaternion.fromAxisAngle(yAngle, 0, 1, 0);
 		Quaternion zRotation = Quaternion.fromAxisAngle(zAngle, 0, 0, 1);
@@ -292,7 +292,6 @@ public class RubiksCube extends Drawable implements UpdatableComponent {
 		lastPointOfClick = pointOfCLick.times(1/getScreenSizeRatio());
 		boolean isCubeSolved = checkIfCubeIsSolved();
 		if(isCubeSolved && !hasNoticedCubeSolved.get()) {
-			Log.w("Rubik's Cube", "Noticed that the cube is solved");
 			hasNoticedCubeSolved.set(true);
 			controller.noticedCubeIsSolved();
 			undoStack.clear();
@@ -303,18 +302,15 @@ public class RubiksCube extends Drawable implements UpdatableComponent {
 		}
 	}
 
-	private boolean checkIfCubeIsSolved() {
+	public boolean checkIfCubeIsSolved() {
 		Vec3D initialUpVec = cubes.get(0).getUpOrientationVector();
 		Vec3D initialRightVec = cubes.get(0).getRightOrientationVector();
 		for(int i = 0; i < cubes.size(); i++) {
-//			Log.w("upVectorSimilarity", "" + initialUpVec.cosineSimilarity(cubes.get(i).getUpOrientationVector()));
-//			Log.w("rightVectorSimilarity", "" + initialRightVec.cosineSimilarity(cubes.get(i).getRightOrientationVector()));
 			boolean upIsGood = initialUpVec.cosineSimilarity(cubes.get(i).getUpOrientationVector()) > 0.999;
 			boolean rightIsGood = initialRightVec.cosineSimilarity(cubes.get(i).getRightOrientationVector()) > 0.999;
 			if(
 				!((i == 4 || i == 12 || i == 10 || i == 14 || i == 22 || i == 16 || i == 13) || (upIsGood && rightIsGood))
 			) {
-//				Log.w("Problematic Cube", "cube is: " + i);
 				return false;
 			}
 		}
