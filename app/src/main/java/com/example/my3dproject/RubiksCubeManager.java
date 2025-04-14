@@ -66,6 +66,8 @@ public class RubiksCubeManager implements UpdatableComponent{
 		this.selectedNotRotatedPolygon = Optional.empty();
 		this.undoStack = new Stack<>();
 		this.hasNoticedCubeSolved = new AtomicBoolean(false);
+		rubiksCube.rotate(0.001, 0.001, 0.001);
+		updateRotationsFromDatabase();
 	}
 
 	private void updateRotationsFromDatabase() {
@@ -149,6 +151,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 				isScreenPressed = true;
 				if (!selectedPolygon.isPresent()) {
 					selectedPolygon = searchForClickedPolygon(rubiksCube.drawnPolygons, pointOfCLick);
+					selectedPolygon.ifPresent(polygon -> polygon.setSelected(true));
 					selectedNotRotatedPolygon = searchForClickedPolygon(rubiksCube.notRotatedPolygons, pointOfCLick);
 				}
 				break;
