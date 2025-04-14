@@ -1,23 +1,17 @@
 package com.example.my3dproject.activities;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import com.example.my3dproject.Controller;
 import com.example.my3dproject.R;
 import com.example.my3dproject.ScreenTouchListener;
-import com.example.my3dproject.TimedAction;
 import com.example.my3dproject.drawables.RubiksCube;
 import com.google.android.material.navigation.NavigationView;
 
