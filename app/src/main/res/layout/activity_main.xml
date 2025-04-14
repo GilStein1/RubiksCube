@@ -5,83 +5,66 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MainActivity"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:screenOrientation="portrait">
+    tools:context=".activities.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Rubik's Cube"
-        android:textSize="30sp"
-        android:layout_marginTop="40dp"/>
-
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/flBackgroundCube"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="#111">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:layout_marginLeft="40dp"
-            android:text="Email:"/>
+            android:layout_gravity="top|center_horizontal"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/etEmail"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rubik's Cube - The Game"
+                android:textSize="25sp"
+                android:textColor="@color/white"
+                android:layout_marginTop="20dp"
+                android:shadowColor="#000000"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="3"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="40dp"
-            android:hint="your Email address"/>
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="40dp"
-            android:text="Password:"/>
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Log In"
+                android:textSize="30sp"
+                android:onClick="logInByButton"/>
 
-        <EditText
-            android:id="@+id/etPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="40dp"
-            android:hint="your password"/>
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="60dp"
+                android:layout_gravity="center"
+                android:text="Start Game"
+                android:textSize="20sp"
+                android:onClick="startGameByButton"/>
 
-    </LinearLayout>
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp">
 
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:text="login"
-            android:layout_marginRight="10dp"
-            android:textSize="20sp"
-            android:onClick="logInByButton"/>
 
-        <Button
-            android:id="@+id/btnSignUp"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:text="sign up"
-            android:layout_marginLeft="10sp"
-            android:textSize="20sp"
-            android:onClick="signUpByButton"/>
 
-    </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

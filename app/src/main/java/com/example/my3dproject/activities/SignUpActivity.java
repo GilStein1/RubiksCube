@@ -1,6 +1,7 @@
 package com.example.my3dproject.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,7 +42,6 @@ public class SignUpActivity extends AppCompatActivity {
 		mAuth = FirebaseAuth.getInstance();
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
 		accountRef = database.getReference("accounts");
-		Log.w("somehow got to account creation", "somehow got to account creation");
 	}
 
 	@Override
@@ -74,6 +74,9 @@ public class SignUpActivity extends AppCompatActivity {
 		mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
 			if (task.isSuccessful()) {
 				Toast.makeText(this, "Authentication success.", Toast.LENGTH_SHORT).show();
+				SharedPreferences.Editor editor = getSharedPreferences("connectedUser", 0).edit();
+				editor.putString("userId", mAuth.getCurrentUser().getUid());
+				editor.apply();
 				createAccount();
 				Intent intent = getIntent();
 				intent.putExtra("userEmail", etEmail.getText().toString());

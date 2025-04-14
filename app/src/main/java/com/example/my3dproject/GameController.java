@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class Controller extends SurfaceView implements Runnable {
+public class GameController extends SurfaceView implements Runnable {
 
 	private final int screenWidth, screenHeight;
 	private final TextView tvTimer, tvBestTime;
@@ -48,7 +48,7 @@ public class Controller extends SurfaceView implements Runnable {
 	private Account currentAccount;
 	private List<Consumer<Account>> taskToDoWhenAccountIsLogged;
 
-	public Controller(
+	public GameController(
 		Context context,
 		int screenWidth,
 		int screenHeight,
@@ -76,7 +76,7 @@ public class Controller extends SurfaceView implements Runnable {
 		this.mAuth = FirebaseAuth.getInstance();
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
 		this.accountRef = database.getReference("accounts");
-		this.sharedPreferences = context.getSharedPreferences(mAuth.getCurrentUser().getUid(), 0);
+		this.sharedPreferences = context.getSharedPreferences(findLastConnectedUser(), 0);
 //		this.sharedPreferences.edit().putString("bestTime", "1000").apply();
 		this.taskToDoWhenAccountIsLogged = new ArrayList<>();
 		animationManager.addLoopedAction(new LoopedAction(this::updateSavesInPreferences, 1.0));
@@ -195,6 +195,14 @@ public class Controller extends SurfaceView implements Runnable {
 		}
 		updateBestTime(bestTime);
 		this.rotationOperations = RotationOperation.valuesOf(sharedPreferences.getString("rotations", ""));
+	}
+
+	private String findLastConnectedUser() {
+		if(mAuth.getCurrentUser() != null) {
+			return mAuth.getCurrentUser().getUid();
+		}
+		SharedPreferences sharedPreferences = getContext().getSharedPreferences("connectedUser", 0);
+		return sharedPreferences.getString("userId", "anonymous");
 	}
 
 	private void updateSavedAccountInDatabase() {

@@ -23,7 +23,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 
 	private final RubiksCube rubiksCube;
 	private RubiksCubeState rubiksCubeState;
-	private final Controller controller;
+	private final GameController controller;
 	private final TimedAnimationManager animationManager;
 	private final ArrayBlockingQueue<Point2d> lastClicksQueue;
 	private boolean isScreenPressed;
@@ -41,7 +41,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 	private final Stack<Pair<Consumer<Double>, Double>> undoStack;
 	private AtomicBoolean hasNoticedCubeSolved;
 
-	public RubiksCubeManager(RubiksCube rubiksCube, Controller controller) {
+	public RubiksCubeManager(RubiksCube rubiksCube, GameController controller) {
 		this.rubiksCube = rubiksCube;
 		this.controller = controller;
 		this.animationManager = controller.getAnimationManager();
