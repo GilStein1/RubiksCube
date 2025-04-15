@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
 					Account account = data.getValue(Account.class);
 					if (mAuth.getCurrentUser() != null && account.getUserId().equals(mAuth.getCurrentUser().getUid())) {
 						rotationsRetrievedFromFirebase = account.getSavedRotations();
+						timerRetrievedFromFirebase = account.getTimer();
 						timestampOfSave = account.getTimestampOfSave();
 					}
 				}

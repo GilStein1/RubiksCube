@@ -225,7 +225,7 @@ public class GameController extends SurfaceView implements Runnable {
 		editor.putString("timer", String.valueOf(timer));
 		editor.putString("bestTime", String.valueOf(bestTime));
 		editor.putString("rotations", makeRotationOperationsAString(rotationOperations));
-		editor.putString("timestampOfSave", String.valueOf(System.nanoTime()));
+		editor.putString("timestampOfSave", String.valueOf(System.currentTimeMillis()));
 		editor.apply();
 	}
 
@@ -233,7 +233,7 @@ public class GameController extends SurfaceView implements Runnable {
 		if(currentAccount != null) {
 			currentAccount.setSavedRotations(makeRotationOperationsAString(rotationOperations));
 			currentAccount.setTimer(timer);
-			currentAccount.setTimestampOfSave(System.nanoTime());
+			currentAccount.setTimestampOfSave(System.currentTimeMillis());
 			updateSavedAccountInDatabase();
 		}
 	}
