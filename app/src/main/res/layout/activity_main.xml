@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.MainActivity"
+    android:screenOrientation="portrait">
 
     <FrameLayout
         android:id="@+id/flBackgroundCube"
