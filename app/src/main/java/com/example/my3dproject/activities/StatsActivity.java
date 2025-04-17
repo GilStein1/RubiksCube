@@ -47,7 +47,7 @@ public class StatsActivity extends AppCompatActivity {
 
 	public void getAllAccounts() {
 		accounts.clear();
-		accountRef.addValueEventListener(new ValueEventListener() {
+		accountRef.addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
 				for (DataSnapshot data : dataSnapshot.getChildren()) {
