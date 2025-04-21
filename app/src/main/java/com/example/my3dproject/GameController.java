@@ -80,7 +80,6 @@ public class GameController extends SurfaceView implements Runnable {
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
 		this.accountRef = database.getReference("accounts");
 		this.sharedPreferences = context.getSharedPreferences(findLastConnectedUser(), 0);
-//		this.sharedPreferences.edit().putString("bestTime", "1000").apply();
 		animationManager.addLoopedAction(new LoopedAction(this::updateSavesInPreferences, 1.0));
 		animationManager.addLoopedAction(new LoopedAction(this::updateSavesInAccount, 1.0));
 		getAllSavedValuesFromSharedPreferences();

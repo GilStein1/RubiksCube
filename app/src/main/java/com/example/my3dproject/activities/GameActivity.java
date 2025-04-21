@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -19,12 +22,13 @@ import com.google.android.material.navigation.NavigationView;
 
 public class GameActivity extends AppCompatActivity {
 
+	private GameController controller;
 	private FrameLayout frameLayout;
 	private DrawerLayout drawerLayout;
 	private NavigationView navView;
 	private ImageButton menuButton;
 	private TextView tvTimer, tvBestTime;
-	private GameController controller;
+	private ActivityResultLauncher<Intent> statsLauncher;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +36,19 @@ public class GameActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_game_activities);
 		getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		initViews();
+	}
+
+	private void initViews() {
 		frameLayout = findViewById(R.id.frame);
 		frameLayout.setOnTouchListener(ScreenTouchListener.getInstance());
 		drawerLayout = findViewById(R.id.drawerLayout);
 		navView = findViewById(R.id.navView);
-
 		menuButton = findViewById(R.id.btnMenu);
 		menuButton.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
-
 		tvTimer = findViewById(R.id.tvTimer);
 		tvBestTime = findViewById(R.id.tvBestTime);
+		statsLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {});
 	}
 
 	private void initGame() {
@@ -52,7 +59,8 @@ public class GameActivity extends AppCompatActivity {
 			navView.setNavigationItemSelectedListener(item -> {
 				int id = item.getItemId();
 				if (id == R.id.nav_stats) {
-
+					Intent intent = new Intent(this, StatsActivity.class);
+					statsLauncher.launch(intent);
 				} else if (id == R.id.nav_reset) {
 					rubiksCubeManager.solve();
 				} else if (id == R.id.nav_exit) {

@@ -44,19 +44,19 @@ public class RubiksCubeManagerForSimpleBackgroundRotation implements UpdatableCo
 		int side = (int)(Math.random()*3) - 1;
 		if(axis == 0) {
 			animateRotatingAroundX(
-				40, 0.28, Math.toRadians(90),
+				15, 0.28, Math.toRadians(90),
 				new Cube(side* rubiksCube.getSmallCubesSize(), 0, 0, rubiksCube.getSmallCubesSize())
 			);
 		}
 		else if(axis == 1) {
 			animateRotatingAroundY(
-				40, 0.28, Math.toRadians(90),
+				15, 0.28, Math.toRadians(90),
 				new Cube(0, side* rubiksCube.getSmallCubesSize(), 0, rubiksCube.getSmallCubesSize())
 			);
 		}
 		else {
 			animateRotatingAroundZ(
-				40, 0.28, Math.toRadians(90),
+				15, 0.28, Math.toRadians(90),
 				new Cube(0, 0, side* rubiksCube.getSmallCubesSize(), rubiksCube.getSmallCubesSize())
 			);
 		}

@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 	private FrameLayout frameLayout;
 	private DefaultController controller;
 	private ActivityResultLauncher<Intent> signUpActivityLauncher;
+	private ActivityResultLauncher<Intent> statisticsActivityLauncher;
 	private ActivityResultLauncher<Intent> gameActivityLauncher;
 	private Dialog logInDialog;
 	private EditText etEmail, etPassword;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 	private void initViews() {
 		frameLayout = findViewById(R.id.flBackgroundCube);
 		this.signUpActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {});
+		this.statisticsActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {});
 		this.gameActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {});
 		initDialog();
 	}
@@ -193,6 +195,11 @@ public class MainActivity extends AppCompatActivity {
 
 	public void logInByButton(View view) {
 		logInDialog.show();
+	}
+
+	public void openStatsByButton(View view) {
+		Intent intent = new Intent(this, StatsActivity.class);
+		statisticsActivityLauncher.launch(intent);
 	}
 
 	public void startGameByButton(View view) {
