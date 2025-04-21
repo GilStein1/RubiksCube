@@ -47,7 +47,7 @@
                 android:id="@+id/tvBestTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🏆 Best Time: ??:??"
+                android:text="🏆 ??:??"
                 android:textSize="18sp"
                 android:layout_marginEnd="16dp" />
 
@@ -78,11 +78,12 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnShuffle"
-                android:layout_width="wrap_content"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:textColor="?android:textColorPrimary"
                 android:background="@drawable/cube_button"
                 android:fontFamily="sans-serif-medium"
+                android:textSize="17sp"
                 android:text="🎲 Shuffle" />
         </LinearLayout>
 

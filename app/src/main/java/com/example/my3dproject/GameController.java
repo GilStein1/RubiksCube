@@ -148,7 +148,7 @@ public class GameController extends SurfaceView implements Runnable {
 		if(newBestTime != Double.MAX_VALUE && newBestTime != 0.0) {
 			String minutes = (int)(newBestTime/60) < 10 ? "0" + (int)(newBestTime/60) : "" + (int)(newBestTime/60);
 			String seconds = (int)(newBestTime % 60) < 10 ? "0" + (int)(newBestTime % 60) : "" + (int)(newBestTime % 60);
-			tvBestTime.post(() -> tvBestTime.setText("\uD83C\uDFC6 Best Time: " + minutes + ":" + seconds));
+			tvBestTime.post(() -> tvBestTime.setText("\uD83C\uDFC6 " + minutes + ":" + seconds));
 		}
 	}
 
