@@ -1,7 +1,9 @@
 package com.example.my3dproject.activities;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +29,8 @@ public class StatsActivity extends AppCompatActivity {
 
 	private FirebaseAuth mAuth;
 	private DatabaseReference accountRef;
+	private TextView tvUserPlace;
+	private Account connectedAccount;
 	private List<Account> accounts;
 	private ListView lvScore;
 	private ScoresAdapter adapter;
@@ -38,6 +42,7 @@ public class StatsActivity extends AppCompatActivity {
 		this.mAuth = FirebaseAuth.getInstance();
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
 		this.accountRef = database.getReference("accounts");
+		this.tvUserPlace = findViewById(R.id.tvUserPlace);
 		this.accounts = new ArrayList<>();
 		this.lvScore = findViewById(R.id.lvScore);
 		this.adapter = new ScoresAdapter(this, 0, 0, accounts);
@@ -52,16 +57,31 @@ public class StatsActivity extends AppCompatActivity {
 			public void onDataChange(DataSnapshot dataSnapshot) {
 				for (DataSnapshot data : dataSnapshot.getChildren()) {
 					Account account = data.getValue(Account.class);
+					if(account.getUserId().equals(mAuth.getCurrentUser().getUid())) {
+						connectedAccount = account;
+					}
 					accounts.add(account);
 					accounts.sort(Comparator.comparingDouble(Account::getBestTime));
 					adapter.notifyDataSetChanged();
 				}
+				updateConnectedUsersPlace();
 			}
-
 			@Override
 			public void onCancelled(DatabaseError ignored) {
 			}
 		});
+	}
+
+	private void updateConnectedUsersPlace() {
+		if(connectedAccount != null) {
+			int place = (accounts.indexOf(connectedAccount) + 1);
+			String placeText = place + (place == 1 ? "st" : (place == 2) ? "nd" : (place == 3) ? "rd" : "th");
+			tvUserPlace.setText("You are at " + placeText + " place!");
+		}
+	}
+
+	public void closeActivityByButton(View view) {
+		finish();
 	}
 
 }
