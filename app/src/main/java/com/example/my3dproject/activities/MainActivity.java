@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 		logInDialog = new Dialog(this);
 		logInDialog.setContentView(R.layout.login_dialog);
 		logInDialog.setTitle("Log In");
-		logInDialog.setCancelable(false);
+		logInDialog.setCancelable(true);
 		etEmail = logInDialog.findViewById(R.id.etEmail);
 		etPassword = logInDialog.findViewById(R.id.etPassword);
 		tvSignUp = logInDialog.findViewById(R.id.tvSignUp);

@@ -24,11 +24,14 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="Back"
         android:layout_gravity="center_horizontal"
+        android:textColor="?android:textColorPrimary"
+        android:background="@drawable/cube_button"
+        android:fontFamily="sans-serif-medium"
         android:onClick="closeActivityByButton"/>
 </LinearLayout>

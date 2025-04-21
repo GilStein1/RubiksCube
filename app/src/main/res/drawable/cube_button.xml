@@ -1,0 +1,23 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Pressed state -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <gradient android:startColor="#B388FF"/>  <!-- Lighter purple -->
+            <gradient android:endColor="#7C4DFF"/>    <!-- Rich purple -->
+            <gradient android:angle="45"/>
+            <corners android:radius="25dp"/>
+            <stroke android:width="2dp" android:color="#9575CD"/> <!-- Border -->
+        </shape>
+    </item>
+
+    <!-- Default state -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient android:startColor="#EECCF2"/>  <!-- Soft pastel lavender -->
+            <gradient android:endColor="#AD8FE6"/>    <!-- Gentle purple-gray -->
+            <gradient android:angle="45"/>
+            <corners android:radius="25dp"/>
+            <stroke android:width="2dp" android:color="#AF96DE"/>
+        </shape>
+    </item>
+</selector>
