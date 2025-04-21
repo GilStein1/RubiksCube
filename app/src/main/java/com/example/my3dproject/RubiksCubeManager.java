@@ -401,7 +401,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 		}
 		rubiksCubeState = RubiksCubeState.SOLVING;
 		controller.stopTimer(true);
-		int animationSteps = 20;
+		int animationSteps = 10;
 		double timeToTurn = 0.05;
 		double index = 0;
 		int stackSize = undoStack.size();
