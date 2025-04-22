@@ -28,7 +28,7 @@ public class BigPolygon extends Polygon implements UpdatableComponent {
 	public BigPolygon(Cube cube, @ColorInt int color, Point... points) {
 		super(cube, color, points);
 		this.smallPolygons = new ArrayList<>();
-		this.pointsOfSmallPolygons = new Point[5][5];
+		this.pointsOfSmallPolygons = new Point[3][3];
 		this.isSelected = false;
 
 		if(points.length == 4) {
