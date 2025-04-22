@@ -21,8 +21,9 @@ public class RubiksCube extends Drawable {
 	private final List<Point> notRotatedPoints3d;
 	private final List<Point> points3dToDraw;
 	private final List<Point> notRotatedPointsToDraw;
-	private final List<Polygon> drawnPolygons;
-	private final List<Polygon> notRotatedPolygons;
+	private final List<BigPolygon> drawnPolygons;
+	private final List<Polygon> smallPolygons;
+	private final List<BigPolygon> notRotatedPolygons;
 	private Quaternion currentRotation;
 	private final double rubiksCubeSize;
 	private final double smallCubesSize;
@@ -37,6 +38,7 @@ public class RubiksCube extends Drawable {
 		this.points3dToDraw = new ArrayList<>();
 		this.notRotatedPointsToDraw = new ArrayList<>();
 		this.drawnPolygons = new ArrayList<>();
+		this.smallPolygons = new ArrayList<>();
 		this.notRotatedPolygons = new ArrayList<>();
 		this.cubes = new ArrayList<>();
 		this.cubesThatDoNotRotate = new ArrayList<>();
@@ -107,6 +109,10 @@ public class RubiksCube extends Drawable {
 			points3d.addAll(Arrays.asList(cube.getAll3dPoints()));
 			points3dToDraw.addAll(Arrays.asList(cube.getAll3dPointsToDraw()));
 			drawnPolygons.addAll(cube.getAllPolygons());
+		}
+
+		for(BigPolygon bigPolygon : drawnPolygons) {
+			smallPolygons.addAll(bigPolygon.getAllSmallPolygons());
 		}
 
 		for(Cube cube : cubesThatDoNotRotate) {
@@ -215,25 +221,33 @@ public class RubiksCube extends Drawable {
 	@Override
 	public void render(Canvas canvas, boolean isDarkMode) {
 //		Log.w("Rubik's Cube", "render");
-		drawnPolygons.sort(Comparator.comparingDouble(Polygon::getDistanceFromPlayer));
-		notRotatedPolygons.sort(Comparator.comparingDouble(Polygon::getDistanceFromPlayer));
-		for (Polygon polygon : drawnPolygons) {
+		drawnPolygons.sort(Comparator.comparingDouble(BigPolygon::getDistanceFromPlayer));
+		smallPolygons.sort(Comparator.comparingDouble(Polygon::getDistanceFromPlayer));
+		notRotatedPolygons.sort(Comparator.comparingDouble(BigPolygon::getDistanceFromPlayer));
+//		Log.w("Gil", String.valueOf(smallPolygons.size()));
+		for (Polygon polygon : smallPolygons) {
+			if (polygon.isPointingToPlayer()) {
+//				polygon.updatePoints();
+				polygon.render(canvas, isDarkMode);
+			}
+		}
+		for (BigPolygon polygon : drawnPolygons) {
 			if (polygon.isPointingToPlayer()) {
 				polygon.render(canvas, isDarkMode);
 			}
 		}
-		for (Polygon polygon : notRotatedPolygons) {
+		for (BigPolygon polygon : notRotatedPolygons) {
 			if (polygon.isPointingToPlayer()) {
 				polygon.setSelected(false);
 			}
 		}
 	}
 
-	public List<Polygon> getAllDrawnPolygons() {
+	public List<BigPolygon> getAllDrawnBigPolygons() {
 		return drawnPolygons;
 	}
 
-	public List<Polygon> getAllNotRotatedPolygons() {
+	public List<BigPolygon> getAllNotRotatedPolygons() {
 		return notRotatedPolygons;
 	}
 

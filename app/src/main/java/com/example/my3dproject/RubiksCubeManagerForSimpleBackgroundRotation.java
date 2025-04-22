@@ -1,11 +1,8 @@
 package com.example.my3dproject;
 
-import android.util.Pair;
-
 import com.example.my3dproject.drawables.Cube;
-import com.example.my3dproject.drawables.Polygon;
+import com.example.my3dproject.drawables.BigPolygon;
 import com.example.my3dproject.drawables.RubiksCube;
-import com.example.my3dproject.math.geometry.Axis;
 import com.example.my3dproject.math.geometry.Point2d;
 
 public class RubiksCubeManagerForSimpleBackgroundRotation implements UpdatableComponent {
@@ -31,10 +28,10 @@ public class RubiksCubeManagerForSimpleBackgroundRotation implements UpdatableCo
 			randomlyRotateSide();
 		}
 		rubiksCube.rotate(-deltaTime*0.2, deltaTime*0.3, 0);
-		for(Polygon polygon : rubiksCube.getAllDrawnPolygons()) {
+		for(BigPolygon polygon : rubiksCube.getAllDrawnBigPolygons()) {
 			polygon.update(deltaTime, pointOfClick, event);
 		}
-		for(Polygon polygon : rubiksCube.getAllNotRotatedPolygons()) {
+		for(BigPolygon polygon : rubiksCube.getAllNotRotatedPolygons()) {
 			polygon.update(deltaTime, pointOfClick, event);
 		}
 	}

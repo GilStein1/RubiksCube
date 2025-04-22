@@ -20,18 +20,17 @@ import java.util.List;
 
 public class Polygon extends Drawable implements UpdatableComponent {
 
-	private final Cube parentCube;
+	protected final Cube parentCube;
 	@ColorInt
-	private final int color;
+	protected final int color;
 	@ColorInt
-	private int calculatedColor;
-	private final List<Point> points;
-	private final ScreenGeometryManager screenGeometryManager;
-	private Path pathOfPolygon;
-	private Path pathOfLines;
-	private Paint paintOfFilledShape;
-	private Vec3D normalVector;
-	private boolean isSelected;
+	protected int calculatedColor;
+	protected final List<Point> points;
+	protected final ScreenGeometryManager screenGeometryManager;
+	protected Path pathOfPolygon;
+	protected Path pathOfLines;
+	protected Paint paintOfFilledShape;
+	protected Vec3D normalVector;
 
 	public Polygon(Cube cube, @ColorInt int color, Point... points) {
 		super();
@@ -44,7 +43,6 @@ public class Polygon extends Drawable implements UpdatableComponent {
 		this.pathOfLines = new Path();
 		this.paintOfFilledShape = new Paint();
 		this.normalVector = updateNormalVector();
-		this.isSelected = false;
 	}
 
 	public Cube getParentCube() {
@@ -64,10 +62,6 @@ public class Polygon extends Drawable implements UpdatableComponent {
 	public boolean isPointingToZ() {
 		Vec3D normal = updateNormalVector();
 		return Math.abs(normal.getZ()) > Math.max(Math.abs(normal.getX()), Math.abs(normal.getY()));
-	}
-
-	public void setSelected(boolean isSelected) {
-		this.isSelected = isSelected;
 	}
 
 	public boolean isPointingToPlayer() {
@@ -155,8 +149,7 @@ public class Polygon extends Drawable implements UpdatableComponent {
 		return vector;
 	}
 
-	@Override
-	public void update(double deltaTime, Point2d pointOfClick, int event) {
+	public void updatePoints() {
 		normalVector = updateNormalVector();
 		calculatedColor = calculateColorWithShade(color);
 		pathOfPolygon = new Path();
@@ -183,7 +176,12 @@ public class Polygon extends Drawable implements UpdatableComponent {
 		pathOfLines.close();
 	}
 
-	private int calculateColorWithShade(int color) {
+	@Override
+	public void update(double deltaTime, Point2d pointOfClick, int event) {
+		updatePoints();
+	}
+
+	protected int calculateColorWithShade(int color) {
 		int red = (color >> 16) & 0xFF;
 		int green = (color >> 8) & 0xFF;
 		int blue = color & 0xFF;
@@ -202,7 +200,7 @@ public class Polygon extends Drawable implements UpdatableComponent {
 		);
 	}
 
-	private int getInverseOfColor(int color) {
+	protected int getInverseOfColor(int color) {
 		if(color == Color.YELLOW) {
 			return Color.rgb(255, 255, 71);
 		}
@@ -225,14 +223,7 @@ public class Polygon extends Drawable implements UpdatableComponent {
 	public void render(Canvas canvas, boolean isDarkMode) {
 		paintOfFilledShape.setColor(isDarkMode ? calculateColorWithShade(getInverseOfColor(color)) : calculatedColor);
 		paintOfFilledShape.setStyle(Paint.Style.FILL);
-		Paint paintOfLines = new Paint();
-		paintOfLines.setColor(isSelected? Color.LTGRAY : Color.BLACK);
-		paintOfLines.setStrokeWidth((float) (3*ScreenGeometryManager.getInstance().getScreenSizeRatio()));
-		paintOfLines.setAntiAlias(false);
-		paintOfLines.setStyle(Paint.Style.STROKE);
-		isSelected = false;
 		canvas.drawPath(pathOfPolygon, paintOfFilledShape);
-		canvas.drawPath(pathOfLines, paintOfLines);
 	}
 
 }

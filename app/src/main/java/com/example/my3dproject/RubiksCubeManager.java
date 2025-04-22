@@ -3,6 +3,7 @@ package com.example.my3dproject;
 import android.util.Pair;
 import android.view.MotionEvent;
 import com.example.my3dproject.drawables.Cube;
+import com.example.my3dproject.drawables.BigPolygon;
 import com.example.my3dproject.drawables.Polygon;
 import com.example.my3dproject.drawables.RubiksCube;
 import com.example.my3dproject.math.MathUtil;
@@ -36,8 +37,8 @@ public class RubiksCubeManager implements UpdatableComponent{
 	private final float rotationScale = 0.3f;
 	private final float rotationalVelocityScale = 0.25f;
 	private Point2d lastPointOfClick;
-	private Optional<Polygon> selectedPolygon;
-	private Optional<Polygon> selectedNotRotatedPolygon;
+	private Optional<BigPolygon> selectedPolygon;
+	private Optional<BigPolygon> selectedNotRotatedPolygon;
 	private final Stack<Pair<Consumer<Double>, Double>> undoStack;
 	private AtomicBoolean hasNoticedCubeSolved;
 
@@ -120,10 +121,10 @@ public class RubiksCubeManager implements UpdatableComponent{
 		}
 
 		rubiksCube.rotate(Math.toRadians(xRotation), Math.toRadians(yRotation), 0);
-		for (Polygon polygon : rubiksCube.getAllDrawnPolygons()) {
+		for (BigPolygon polygon : rubiksCube.getAllDrawnBigPolygons()) {
 			polygon.update(deltaTime, pointOfClick.times(getScreenSizeRatio()), event);
 		}
-		for (Polygon polygon : rubiksCube.getAllNotRotatedPolygons()) {
+		for (BigPolygon polygon : rubiksCube.getAllNotRotatedPolygons()) {
 			polygon.update(deltaTime, pointOfClick.times(getScreenSizeRatio()), event);
 		}
 		lastPointOfClick = pointOfClick.times(1/getScreenSizeRatio());
@@ -145,7 +146,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 			case MotionEvent.ACTION_DOWN:
 				isScreenPressed = true;
 				if (!selectedPolygon.isPresent()) {
-					selectedPolygon = searchForClickedPolygon(rubiksCube.getAllDrawnPolygons(), pointOfCLick);
+					selectedPolygon = searchForClickedPolygon(rubiksCube.getAllDrawnBigPolygons(), pointOfCLick);
 					selectedNotRotatedPolygon = searchForClickedPolygon(rubiksCube.getAllNotRotatedPolygons(), pointOfCLick);
 				}
 				break;
@@ -182,7 +183,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 	private void detectCubeRotationByPlayer(Point2d lastPointOfClick) {
 		rubiksCubeState = RubiksCubeState.ROTATED_BY_PLAYER;
 		Cube selectedCube = selectedPolygon.get().getParentCube();
-		Polygon nonRotatedPolygon = selectedNotRotatedPolygon.get().getParentCube().getPolygonFromDrawPolygon(selectedNotRotatedPolygon.get());
+		BigPolygon nonRotatedPolygon = selectedNotRotatedPolygon.get().getParentCube().getPolygonFromDrawPolygon(selectedNotRotatedPolygon.get());
 		DirectionCross directionCross = new DirectionCross();
 		directionCross.rotate(rubiksCube.getCurrentRotation());
 		Vec3D swipeVector = new Vec3D(
@@ -300,7 +301,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 		yRotation = yRotationalVelocity;
 	}
 
-	private Optional<Polygon> searchForClickedPolygon(List<Polygon> polygons, Point2d pointOfClick) {
+	private Optional<BigPolygon> searchForClickedPolygon(List<BigPolygon> polygons, Point2d pointOfClick) {
 		for (int i = polygons.size() - 1; i >= 0; i--) {
 			if (polygons.get(i).isPointingToPlayer()) {
 				if (polygons.get(i).isPointInPolygon(pointOfClick)) {
