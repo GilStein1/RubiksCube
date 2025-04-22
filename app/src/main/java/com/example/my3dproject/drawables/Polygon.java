@@ -100,8 +100,8 @@ public class Polygon extends Drawable implements UpdatableComponent {
 	}
 
 	public double getDistanceFromPlayer() {
-		Point3d middle = getMiddleOfPolygon();
 		Point3d player = Constants.EnvironmentConstants.PLAYER_POSITION;
+		Point3d middle = getMiddleOfPolygon();
 		return PointUtils.distance(middle, player);
 	}
 
@@ -118,6 +118,32 @@ public class Polygon extends Drawable implements UpdatableComponent {
 		yAvg /= points.size();
 		zAvg /= points.size();
 		return new Point3d(xAvg, yAvg, zAvg);
+	}
+
+	private Point3d getFurthestPointFromPoint(Point3d point) {
+		Point3d mostDistant = points.get(0).getPose();
+		double maxDistance = mostDistant.getDistanceFrom(point);
+		for(Point p : points) {
+			double distance = p.getPose().getDistanceFrom(point);
+			if(distance > maxDistance) {
+				maxDistance = distance;
+				mostDistant = p.getPose();
+			}
+		}
+		return mostDistant;
+	}
+
+	private Point3d getClosestPointFromPoint(Point3d point) {
+		Point3d leastDistant = points.get(0).getPose();
+		double minDistance = leastDistant.getDistanceFrom(point);
+		for(Point p : points) {
+			double distance = p.getPose().getDistanceFrom(point);
+			if(distance < minDistance) {
+				minDistance = distance;
+				leastDistant = p.getPose();
+			}
+		}
+		return leastDistant;
 	}
 
 	public Vec3D updateNormalVector() {
