@@ -168,6 +168,11 @@ public class RubiksCube extends Drawable {
 			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
 			cube.updateDrawnPos(newX + x, newY + y, newZ + z);
 		}
+
+		for(BigPolygon polygon : drawnPolygons) {
+			polygon.updatePoints();
+		}
+
 	}
 
 	public boolean checkIfCubeIsSolved() {

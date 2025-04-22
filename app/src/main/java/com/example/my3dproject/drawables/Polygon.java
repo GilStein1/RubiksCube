@@ -49,6 +49,10 @@ public class Polygon extends Drawable implements UpdatableComponent {
 		return parentCube;
 	}
 
+	public List<Point> getPoints() {
+		return points;
+	}
+
 	public boolean isPointingToX() {
 		Vec3D normal = updateNormalVector();
 		return Math.abs(normal.getX()) > Math.max(Math.abs(normal.getY()), Math.abs(normal.getZ()));

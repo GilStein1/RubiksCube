@@ -88,12 +88,6 @@ public class BigPolygon extends Polygon implements UpdatableComponent {
 		for(Polygon polygon : smallPolygons) {
 			polygon.updatePoints();
 		}
-	}
-
-	@Override
-	public void update(double deltaTime, Point2d pointOfClick, int event) {
-		super.update(deltaTime, pointOfClick, event);
-		updatePoints();
 		if(points.size() == 4) {
 
 			Vec3D dir = Vec3D.fromDifferenceInPos(pointsOfSmallPolygons[pointsOfSmallPolygons.length-1][0], pointsOfSmallPolygons[0][0]).normalize();
@@ -124,6 +118,12 @@ public class BigPolygon extends Polygon implements UpdatableComponent {
 			}
 
 		}
+	}
+
+	@Override
+	public void update(double deltaTime, Point2d pointOfClick, int event) {
+//		super.update(deltaTime, pointOfClick, event);
+		updatePoints();
 	}
 
 	@Override
