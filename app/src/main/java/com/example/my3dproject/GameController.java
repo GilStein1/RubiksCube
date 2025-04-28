@@ -178,7 +178,6 @@ public class GameController extends SurfaceView implements Runnable {
 
 	public void saveAnotherRotation(RotationOperation rotationOperation) {
 		rotationOperations.add(rotationOperation);
-		Log.d("RotationOps", "Current list size: " + rotationOperations.size());
 	}
 
 	public void clearAllSavedRotations() {
