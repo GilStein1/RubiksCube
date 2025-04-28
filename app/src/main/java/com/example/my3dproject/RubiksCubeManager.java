@@ -132,6 +132,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 			hasNoticedCubeSolved.set(true);
 			controller.noticedCubeIsSolved();
 			undoStack.clear();
+			controller.clearAllSavedRotations();
 			controller.stopTimer(true);
 		}
 		if(!isCubeSolved && hasNoticedCubeSolved.get()) {
