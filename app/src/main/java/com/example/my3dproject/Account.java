@@ -3,6 +3,7 @@ package com.example.my3dproject;
 public class Account {
 
 	public String name;
+	public String profilePicture;
 	public String userId;
 	public double bestTime;
 	public boolean resetBestScore;
@@ -13,6 +14,7 @@ public class Account {
 	public Account(String userId, String name) {
 		this.userId = userId;
 		this.name = name;
+		this.profilePicture = "";
 		this.bestTime = Double.MAX_VALUE;
 		this.resetBestScore = false;
 		this.savedRotations = "";
@@ -22,6 +24,7 @@ public class Account {
 
 	public Account() {
 		this.name = "";
+		this.profilePicture = "";
 		this.userId = "";
 		this.bestTime = Double.MAX_VALUE;
 		this.resetBestScore = false;
@@ -36,6 +39,18 @@ public class Account {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(String profilePicture) {
+		this.profilePicture = profilePicture;
+	}
+
+	public boolean isResetBestScore() {
+		return resetBestScore;
 	}
 
 	public String getUserId() {

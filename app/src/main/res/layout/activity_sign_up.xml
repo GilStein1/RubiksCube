@@ -29,7 +29,8 @@
             android:contentDescription="Profile Picture"
             android:scaleType="centerCrop"
             android:clickable="true"
-            android:focusable="true" />
+            android:focusable="true"
+            android:onClick="setImageByButton"/>
 
         <!-- Title -->
         <TextView

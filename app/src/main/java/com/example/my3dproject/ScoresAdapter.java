@@ -2,10 +2,19 @@ package com.example.my3dproject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Shader;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,9 +43,15 @@ public class ScoresAdapter extends ArrayAdapter<Account> {
 
         Account currentAccount = accountsList.get(position);
 
+        ImageView ivProfilePicture = v.findViewById(R.id.ivProfilePicture);
         TextView tvPlace = v.findViewById(R.id.tvPlace);
         TextView tvUsername = v.findViewById(R.id.tvUsername);
         TextView tvBestTime = v.findViewById(R.id.tvBestTime);
+
+        if(!currentAccount.getProfilePicture().isEmpty()) {
+            byte[] decodedBytes = Base64.decode(currentAccount.getProfilePicture(), Base64.DEFAULT);
+            ivProfilePicture.setImageBitmap(BitmapUtil.getCircularBitmap(BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length)));
+        }
 
         int place = (accountsList.indexOf(currentAccount) + 1);
 
