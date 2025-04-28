@@ -214,7 +214,6 @@ public class RubiksCube extends Drawable {
 
 	@Override
 	public void render(Canvas canvas, boolean isDarkMode) {
-//		Log.w("Rubik's Cube", "render");
 		drawnPolygons.sort(Comparator.comparingDouble(Polygon::getDistanceFromPlayer));
 		notRotatedPolygons.sort(Comparator.comparingDouble(Polygon::getDistanceFromPlayer));
 		for (Polygon polygon : drawnPolygons) {
