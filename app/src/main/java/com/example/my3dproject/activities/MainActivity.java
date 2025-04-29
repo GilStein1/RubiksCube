@@ -73,7 +73,11 @@ public class MainActivity extends AppCompatActivity {
 
 	private void initViews() {
 		frameLayout = findViewById(R.id.flBackgroundCube);
-		this.signUpActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {});
+		this.signUpActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+			if(result.getResultCode() == RESULT_CANCELED) {
+				Toast.makeText(MainActivity.this, "sign up was canceled", Toast.LENGTH_SHORT).show();
+			}
+		});
 		this.statisticsActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {});
 		this.gameActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {});
 		initDialog();
@@ -221,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
 	public void cancelLoginDialogByButton(View view) {
 		logInDialog.cancel();
-		Toast.makeText(MainActivity.this, "sign up was canceled", Toast.LENGTH_SHORT).show();
+		Toast.makeText(MainActivity.this, "log in was canceled", Toast.LENGTH_SHORT).show();
 	}
 
 }
