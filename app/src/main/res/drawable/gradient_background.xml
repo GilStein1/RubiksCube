@@ -2,22 +2,20 @@
     <!-- Pressed state -->
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <gradient android:startColor="#C1DEDE"/>
-            <gradient android:endColor="#72877D"/>
-            <gradient android:angle="45"/>
+            <solid android:color="#424242"/>
             <corners android:radius="25dp"/>
-            <stroke android:width="2dp" android:color="#858585"/>
+            <stroke android:width="2dp" android:color="#616161"/>
         </shape>
     </item>
 
     <!-- Default state -->
     <item>
         <shape android:shape="rectangle">
-            <gradient android:startColor="#ECFFFF"/>
-            <gradient android:endColor="#98A8A1"/>
+            <gradient android:startColor="#333333"/>
+            <gradient android:endColor="#0F0F0F"/>
             <gradient android:angle="45"/>
             <corners android:radius="25dp"/>
-            <stroke android:width="2dp" android:color="#858585"/>
+            <stroke android:width="2dp" android:color="#616161"/>
         </shape>
     </item>
 </selector>

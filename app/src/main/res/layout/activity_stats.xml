@@ -1,37 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.StatsActivity"
-    android:orientation="vertical">
+    android:background="@drawable/background_image">
 
-    <TextView
-        android:id="@+id/tvUserPlace"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:text="Please log in to get your score shared"
-        android:textSize="20sp"
-        android:textStyle="bold"/>
-
-    <ListView
-        android:id="@+id/lvScore"
+    <!-- Semi-transparent overlay for readability -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#AA000000"
+        android:padding="16dp">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="Back"
-        android:layout_gravity="center_horizontal"
-        android:textColor="?android:textColorPrimary"
-        android:background="@drawable/cube_button"
-        android:fontFamily="sans-serif-medium"
-        android:onClick="closeActivityByButton"/>
-</LinearLayout>
+        <!-- Info banner -->
+        <TextView
+            android:id="@+id/tvUserPlace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:padding="12dp"
+            android:gravity="center"
+            android:background="@drawable/semi_transparent_banner"
+            android:text="Please log in to get your score shared"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Score list container -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:background="@android:color/white">
+
+            <ListView
+                android:id="@+id/lvScore"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="1dp" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- Back button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/cube_button"
+            android:text="Back"
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif-medium"
+            android:onClick="closeActivityByButton" />
+    </LinearLayout>
+</FrameLayout>

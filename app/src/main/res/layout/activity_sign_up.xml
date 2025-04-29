@@ -1,120 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.SignUpActivity"
-    android:background="?android:attr/windowBackground">
+    android:background="@drawable/background_image">
 
-    <LinearLayout
+    <!-- Overlay for contrast -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp"
-        android:gravity="center_horizontal">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <!-- Profile Picture -->
-        <ImageView
-            android:id="@+id/ivProfilePicture"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="16dp"
-            android:textSize="18sp"
-            android:textColor="@android:color/white"
-            android:background="@drawable/gradient_background"
-            android:fontFamily="sans-serif-medium"
-            android:src="@android:drawable/ic_menu_camera"
-            android:contentDescription="Profile Picture"
-            android:scaleType="centerCrop"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="setImageByButton"/>
-
-        <!-- Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Create Account"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="24dp"
-            android:textColor="?android:textColorPrimary"/>
-
-        <!-- Name -->
-        <EditText
-            android:id="@+id/etName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Full Name"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:backgroundTint="?attr/colorControlNormal"
-            android:textColor="?android:textColorPrimary"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Email -->
-        <EditText
-            android:id="@+id/etEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Email Address"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:backgroundTint="?attr/colorControlNormal"
-            android:textColor="?android:textColorPrimary"
-            android:inputType="textEmailAddress"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Password -->
-        <EditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Password"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:backgroundTint="?attr/colorControlNormal"
-            android:textColor="?android:textColorPrimary"
-            android:inputType="textPassword"
-            android:layout_marginBottom="24dp"/>
-
-        <!-- Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="8dp">
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center_horizontal"
+            android:background="#AA000000">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnSignUp"
-                android:layout_width="0dp"
+            <ImageView
+                android:id="@+id/ivProfilePicture"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/gradient_background"
+                android:src="@android:drawable/ic_menu_camera"
+                android:scaleType="centerCrop"
+                android:contentDescription="Profile Picture"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="setImageByButton" />
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Sign Up"
-                android:textSize="18sp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/cube_button"
-                android:fontFamily="sans-serif-medium"
-                android:layout_marginEnd="8dp"
-                android:onClick="signUpByButtonInSignUp"/>
+                android:text="Create Account"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="24dp"
+                android:textColor="@android:color/white" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnCancel"
-                android:layout_width="0dp"
+            <!-- Full Name -->
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Cancel"
-                android:textSize="18sp"
+                android:hint="Full Name"
+                android:textColorHint="@color/white"
+                android:textSize="16sp"
+                android:padding="12dp"
                 android:textColor="@android:color/white"
-                android:background="@drawable/cube_button"
-                android:fontFamily="sans-serif-medium"
-                android:layout_marginStart="8dp"
-                android:onClick="cancelByButton"/>
+                android:backgroundTint="@android:color/white"
+                android:layout_marginBottom="16dp" />
 
+            <!-- Email Address -->
+            <EditText
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email Address"
+                android:textColorHint="@color/white"
+                android:textSize="16sp"
+                android:padding="12dp"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@android:color/white"
+                android:inputType="textEmailAddress"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Password -->
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:textColorHint="@color/white"
+                android:textSize="16sp"
+                android:padding="12dp"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@android:color/white"
+                android:inputType="textPassword"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Button Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="8dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnSignUp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sign Up"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/gradient_background"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginEnd="8dp"
+                    android:onClick="signUpByButtonInSignUp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cancel"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/gradient_background"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginStart="8dp"
+                    android:onClick="cancelByButton" />
+            </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</FrameLayout>
