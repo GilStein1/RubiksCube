@@ -6,9 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,8 +27,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +81,7 @@ public class SignUpActivity extends AppCompatActivity {
 			Uri imageUri = result.getData().getData();
 			if(imageUri != null) {
 				try {
-					Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+					Bitmap bitmap = BitmapUtil.getBitmapOutOfImageUri(imageUri, getContentResolver());
 					ivProfilePicture.setImageBitmap(bitmap);
 					profilePicture = BitmapUtil.convertTo64Base(bitmap);
 				} catch (IOException e) {
