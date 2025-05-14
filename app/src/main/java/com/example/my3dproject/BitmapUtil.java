@@ -18,6 +18,9 @@ import java.io.InputStream;
 
 public class BitmapUtil {
 
+	public static final int PROFILE_PICTURE_WIDTH = 128;
+	public static final int PROFILE_PICTURE_HEIGHT = 128;
+
 	public static Bitmap getCircularBitmap(Bitmap bitmap) {
 		int size = Math.min(bitmap.getWidth(), bitmap.getHeight());
 		Bitmap output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);

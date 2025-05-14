@@ -83,6 +83,7 @@ public class SignUpActivity extends AppCompatActivity {
 			if(imageUri != null) {
 				try {
 					Bitmap bitmap = BitmapUtil.getBitmapOutOfImageUri(imageUri, getContentResolver());
+					bitmap = Bitmap.createScaledBitmap(bitmap, BitmapUtil.PROFILE_PICTURE_WIDTH, BitmapUtil.PROFILE_PICTURE_HEIGHT, true);
 					ivProfilePicture.setImageBitmap(bitmap);
 					profilePicture = BitmapUtil.convertTo64Base(bitmap);
 				} catch (IOException e) {
