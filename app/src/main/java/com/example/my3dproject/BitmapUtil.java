@@ -27,7 +27,6 @@ public class BitmapUtil {
 
 		Canvas canvas = new Canvas(output);
 		final Paint paint = new Paint();
-		final Rect rect = new Rect(0, 0, size, size);
 
 		paint.setAntiAlias(true);
 		paint.setShader(new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));

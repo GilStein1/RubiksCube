@@ -1,7 +1,5 @@
 package com.example.my3dproject;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
