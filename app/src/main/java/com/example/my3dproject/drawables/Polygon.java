@@ -13,7 +13,7 @@ import com.example.my3dproject.UpdatableComponent;
 import com.example.my3dproject.math.Vec3D;
 import com.example.my3dproject.math.geometry.Point2d;
 import com.example.my3dproject.math.geometry.Point3d;
-import com.example.my3dproject.math.geometry.PointUtils;
+import com.example.my3dproject.math.geometry.PointUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -102,7 +102,7 @@ public class Polygon extends Drawable implements UpdatableComponent {
 	public double getDistanceFromPlayer() {
 		Point3d player = Constants.EnvironmentConstants.PLAYER_POSITION;
 		Point3d middle = getMiddleOfPolygon();
-		return PointUtils.distance(middle, player);
+		return PointUtil.distance(middle, player);
 	}
 
 	private Point3d getMiddleOfPolygon() {

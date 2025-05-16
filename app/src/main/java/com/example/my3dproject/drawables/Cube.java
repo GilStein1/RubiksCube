@@ -7,9 +7,8 @@ import android.graphics.Paint;
 import com.example.my3dproject.ScreenGeometryManager;
 import com.example.my3dproject.math.Vec3D;
 import com.example.my3dproject.math.geometry.CubeColors;
-import com.example.my3dproject.math.geometry.Point2d;
 import com.example.my3dproject.math.geometry.Point3d;
-import com.example.my3dproject.math.geometry.PointUtils;
+import com.example.my3dproject.math.geometry.PointUtil;
 import com.example.my3dproject.math.geometry.Quaternion;
 
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class Cube extends Drawable {
 			new Point(x - halfOfSize, y + halfOfSize, z - halfOfSize),
 			new Point(x - halfOfSize, y - halfOfSize, z - halfOfSize)
 		};
-		this.points3dToDraw = PointUtils.copyArrayOfPoints(points3d);
+		this.points3dToDraw = PointUtil.copyArrayOfPoints(points3d);
 		this.polygons = new ArrayList<>();
 		this.polygonsToDraw = new ArrayList<>();
 		CubeColors colors = CubeColors.getColorsFromPos(x, y, z);

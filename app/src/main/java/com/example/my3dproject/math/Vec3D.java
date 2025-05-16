@@ -3,6 +3,9 @@ package com.example.my3dproject.math;
 import com.example.my3dproject.drawables.Point;
 import com.example.my3dproject.math.geometry.Point3d;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 public class Vec3D {
 
 	private double x, y, z;
@@ -84,6 +87,10 @@ public class Vec3D {
 	@Override
 	public String toString() {
 		return "(" + x + "," + y + "," + z + ")";
+	}
+
+	public static void sortVectorsByMostSimilarity(Vec3D vectorToCompareTo, Vec3D... vectors) {
+		Arrays.sort(vectors, Comparator.comparingDouble(vec -> (vectorToCompareTo.cosineSimilarity(vec) + 1)/2.0));
 	}
 
 }

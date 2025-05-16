@@ -5,7 +5,7 @@ import com.example.my3dproject.drawables.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PointUtils {
+public class PointUtil {
 
 	public static Point[] copyArrayOfPoints(Point[] arrOfPoints) {
 		Point[] ret = new Point[arrOfPoints.length];

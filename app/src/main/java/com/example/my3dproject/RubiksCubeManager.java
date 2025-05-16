@@ -5,7 +5,6 @@ import android.view.MotionEvent;
 import com.example.my3dproject.drawables.Cube;
 import com.example.my3dproject.drawables.Polygon;
 import com.example.my3dproject.drawables.RubiksCube;
-import com.example.my3dproject.math.MathUtil;
 import com.example.my3dproject.math.Vec3D;
 import com.example.my3dproject.math.geometry.Axis;
 import com.example.my3dproject.math.geometry.Direction;
@@ -220,7 +219,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 				vecRight, vecLeft, vecUp, vecDown
 			};
 		}
-		MathUtil.sortVectorsByMostSimilarity(swipeVector, directionVectors);
+		Vec3D.sortVectorsByMostSimilarity(swipeVector, directionVectors);
 		Vec3D mostSimilarVec = directionVectors[directionVectors.length - 1];
 		if(mostSimilarVec == vecRight) {
 			if(directionOfNormalOfPolygon.getAxis() == Axis.Z) {
