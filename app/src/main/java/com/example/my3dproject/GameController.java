@@ -28,12 +28,11 @@ import java.util.function.Consumer;
 public class GameController extends SurfaceView implements Runnable {
 
 	private final int screenWidth, screenHeight;
-	private Intent intentFromMainMenu;
+	private final Intent intentFromMainMenu;
 	private final TextView tvTimer, tvBestTime;
 	private double timer;
 	private double bestTime;
 	private boolean shouldTimerCount;
-	private boolean isGamePaused;
 	private final Paint background;
 	private final SurfaceHolder surfaceHolder;
 	private Thread renderThread;
@@ -44,8 +43,8 @@ public class GameController extends SurfaceView implements Runnable {
 	private double lastTime;
 	private final TimedAnimationManager animationManager;
 	private List<RotationOperation> rotationOperations;
-	private FirebaseAuth mAuth;
-	private DatabaseReference accountRef;
+	private final FirebaseAuth mAuth;
+	private final DatabaseReference accountRef;
 	private final SharedPreferences sharedPreferences;
 	private Account currentAccount;
 
@@ -66,7 +65,6 @@ public class GameController extends SurfaceView implements Runnable {
 		this.timer = 0;
 		this.bestTime = Double.MAX_VALUE;
 		this.shouldTimerCount = true;
-		this.isGamePaused = false;
 		this.background = new Paint();
 		background.setColor(isDarkMode()? Color.BLACK : Color.WHITE);
 		this.surfaceHolder = getHolder();
@@ -166,14 +164,6 @@ public class GameController extends SurfaceView implements Runnable {
 			}
 			timer = 0;
 		}
-	}
-
-	public void pauseGame(boolean pauseGame) {
-		this.isGamePaused = pauseGame;
-	}
-
-	public boolean isGamePaused() {
-		return isGamePaused;
 	}
 
 	public void saveAnotherRotation(RotationOperation rotationOperation) {
@@ -302,7 +292,7 @@ public class GameController extends SurfaceView implements Runnable {
 	public void run() {
 		while (isRenderThreadRunning) {
 			double currentTime = System.nanoTime() / 1e9;
-			if(shouldTimerCount && !isGamePaused) {
+			if(shouldTimerCount) {
 				updateTimer(currentTime - lastTime);
 			}
 			animationManager.update(currentTime - lastTime);

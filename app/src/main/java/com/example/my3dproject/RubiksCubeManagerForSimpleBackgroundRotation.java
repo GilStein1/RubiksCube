@@ -1,23 +1,18 @@
 package com.example.my3dproject;
 
-import android.util.Pair;
-
 import com.example.my3dproject.drawables.Cube;
 import com.example.my3dproject.drawables.Polygon;
 import com.example.my3dproject.drawables.RubiksCube;
-import com.example.my3dproject.math.geometry.Axis;
 import com.example.my3dproject.math.geometry.Point2d;
 
 public class RubiksCubeManagerForSimpleBackgroundRotation implements UpdatableComponent {
 
 	private final RubiksCube rubiksCube;
-	private final DefaultController controller;
 	private final TimedAnimationManager animationManager;
 	private double timeCount;
 
 	public RubiksCubeManagerForSimpleBackgroundRotation(RubiksCube rubiksCube, DefaultController controller) {
 		this.rubiksCube = rubiksCube;
-		this.controller = controller;
 		this.animationManager = controller.getAnimationManager();
 		this.timeCount = 0;
 		rubiksCube.rotate(0.001, 0.001, Math.toRadians(45));

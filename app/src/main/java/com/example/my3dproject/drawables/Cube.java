@@ -18,8 +18,8 @@ public class Cube extends Drawable {
 
 	private double x, y, z;
 	private double drawnX, drawnY, drawnZ;
-	private final Point[] points3d;
-	private final Point[] points3dToDraw;
+	private final Point[] points;
+	private final Point[] pointsToDraw;
 	private final List<Polygon> polygons;
 	private final List<Polygon> polygonsToDraw;
 
@@ -29,7 +29,7 @@ public class Cube extends Drawable {
 		this.y = y;
 		this.z = z;
 		double halfOfSize = size / 2;
-		this.points3d = new Point[] {
+		this.points = new Point[] {
 			new Point(x + halfOfSize, y + halfOfSize, z + halfOfSize),
 			new Point(x + halfOfSize, y - halfOfSize, z + halfOfSize),
 			new Point(x - halfOfSize, y + halfOfSize, z + halfOfSize),
@@ -39,36 +39,36 @@ public class Cube extends Drawable {
 			new Point(x - halfOfSize, y + halfOfSize, z - halfOfSize),
 			new Point(x - halfOfSize, y - halfOfSize, z - halfOfSize)
 		};
-		this.points3dToDraw = PointUtil.copyArrayOfPoints(points3d);
+		this.pointsToDraw = PointUtil.copyArrayOfPoints(points);
 		this.polygons = new ArrayList<>();
 		this.polygonsToDraw = new ArrayList<>();
 		CubeColors colors = CubeColors.getColorsFromPos(x, y, z);
 
-		polygons.add(new Polygon(this, colors.getColors()[5], points3d[0], points3d[1], points3d[3], points3d[2]));
-		polygons.add(new Polygon(this, colors.getColors()[3], points3d[5], points3d[4], points3d[6], points3d[7]));
-		polygons.add(new Polygon(this, colors.getColors()[2], points3d[0], points3d[4], points3d[5], points3d[1]));
-		polygons.add(new Polygon(this, colors.getColors()[4], points3d[3], points3d[7], points3d[6], points3d[2]));
-		polygons.add(new Polygon(this, colors.getColors()[1], points3d[1], points3d[5], points3d[7], points3d[3]));
-		polygons.add(new Polygon(this, colors.getColors()[0], points3d[2], points3d[6], points3d[4], points3d[0]));
+		polygons.add(new Polygon(this, colors.getColors()[5], points[0], points[1], points[3], points[2]));
+		polygons.add(new Polygon(this, colors.getColors()[3], points[5], points[4], points[6], points[7]));
+		polygons.add(new Polygon(this, colors.getColors()[2], points[0], points[4], points[5], points[1]));
+		polygons.add(new Polygon(this, colors.getColors()[4], points[3], points[7], points[6], points[2]));
+		polygons.add(new Polygon(this, colors.getColors()[1], points[1], points[5], points[7], points[3]));
+		polygons.add(new Polygon(this, colors.getColors()[0], points[2], points[6], points[4], points[0]));
 
-		polygonsToDraw.add(new Polygon(this, colors.getColors()[5], points3dToDraw[0], points3dToDraw[1], points3dToDraw[3], points3dToDraw[2]));
-		polygonsToDraw.add(new Polygon(this, colors.getColors()[3], points3dToDraw[5], points3dToDraw[4], points3dToDraw[6], points3dToDraw[7]));
-		polygonsToDraw.add(new Polygon(this, colors.getColors()[2], points3dToDraw[0], points3dToDraw[4], points3dToDraw[5], points3dToDraw[1]));
-		polygonsToDraw.add(new Polygon(this, colors.getColors()[4], points3dToDraw[3], points3dToDraw[7], points3dToDraw[6], points3dToDraw[2]));
-		polygonsToDraw.add(new Polygon(this, colors.getColors()[1], points3dToDraw[1], points3dToDraw[5], points3dToDraw[7], points3dToDraw[3]));
-		polygonsToDraw.add(new Polygon(this, colors.getColors()[0], points3dToDraw[2], points3dToDraw[6], points3dToDraw[4], points3dToDraw[0]));
+		polygonsToDraw.add(new Polygon(this, colors.getColors()[5], pointsToDraw[0], pointsToDraw[1], pointsToDraw[3], pointsToDraw[2]));
+		polygonsToDraw.add(new Polygon(this, colors.getColors()[3], pointsToDraw[5], pointsToDraw[4], pointsToDraw[6], pointsToDraw[7]));
+		polygonsToDraw.add(new Polygon(this, colors.getColors()[2], pointsToDraw[0], pointsToDraw[4], pointsToDraw[5], pointsToDraw[1]));
+		polygonsToDraw.add(new Polygon(this, colors.getColors()[4], pointsToDraw[3], pointsToDraw[7], pointsToDraw[6], pointsToDraw[2]));
+		polygonsToDraw.add(new Polygon(this, colors.getColors()[1], pointsToDraw[1], pointsToDraw[5], pointsToDraw[7], pointsToDraw[3]));
+		polygonsToDraw.add(new Polygon(this, colors.getColors()[0], pointsToDraw[2], pointsToDraw[6], pointsToDraw[4], pointsToDraw[0]));
 	}
 
 	public void rotateWithMatrix(double[][] matrix, Point3d centerOfRotation) {
-		for (int i = 0; i < points3d.length; i++) {
-			Point p = points3d[i];
+		for (int i = 0; i < points.length; i++) {
+			Point p = points[i];
 			double tx = p.getX() - centerOfRotation.getX();
 			double ty = p.getY() - centerOfRotation.getY();
 			double tz = p.getZ() - centerOfRotation.getZ();
 			double finalX = matrix[0][0] * tx + matrix[0][1] * ty + matrix[0][2] * tz + centerOfRotation.getX();
 			double finalY = matrix[1][0] * tx + matrix[1][1] * ty + matrix[1][2] * tz + centerOfRotation.getY();
 			double finalZ = matrix[2][0] * tx + matrix[2][1] * ty + matrix[2][2] * tz + centerOfRotation.getZ();
-			points3d[i].moveTo(finalX, finalY, finalZ);
+			points[i].moveTo(finalX, finalY, finalZ);
 		}
 		double tx = x - centerOfRotation.getX();
 		double ty = y - centerOfRotation.getY();
@@ -94,11 +94,11 @@ public class Cube extends Drawable {
 	}
 
 	public Point[] getAll3dPoints() {
-		return points3d;
+		return points;
 	}
 
 	public Point[] getAll3dPointsToDraw() {
-		return points3dToDraw;
+		return pointsToDraw;
 	}
 
 	public List<Polygon> getAllPolygons() {
@@ -128,11 +128,11 @@ public class Cube extends Drawable {
 	}
 
 	public Vec3D getUpOrientationVector() {
-		return Vec3D.fromDifferenceInPos(points3d[0], points3d[1]).normalize();
+		return Vec3D.fromDifferenceInPos(points[0], points[1]).normalize();
 	}
 
 	public Vec3D getRightOrientationVector() {
-		return Vec3D.fromDifferenceInPos(points3d[0], points3d[2]).normalize();
+		return Vec3D.fromDifferenceInPos(points[0], points[2]).normalize();
 	}
 
 	@Override

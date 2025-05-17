@@ -17,9 +17,9 @@ public class RubiksCube extends Drawable {
 	private final double x, y, z;
 	private final List<Cube> cubes;
 	private final List<Cube> cubesThatDoNotRotate;
-	private final List<Point> points3d;
-	private final List<Point> notRotatedPoints3d;
-	private final List<Point> points3dToDraw;
+	private final List<Point> points;
+	private final List<Point> notRotatedPoints;
+	private final List<Point> pointsToDraw;
 	private final List<Point> notRotatedPointsToDraw;
 	private final List<Polygon> drawnPolygons;
 	private final List<Polygon> notRotatedPolygons;
@@ -32,9 +32,9 @@ public class RubiksCube extends Drawable {
 		this.y = y;
 		this.z = z;
 		this.rubiksCubeSize = size;
-		this.points3d = new ArrayList<>();
-		this.notRotatedPoints3d = new ArrayList<>();
-		this.points3dToDraw = new ArrayList<>();
+		this.points = new ArrayList<>();
+		this.notRotatedPoints = new ArrayList<>();
+		this.pointsToDraw = new ArrayList<>();
 		this.notRotatedPointsToDraw = new ArrayList<>();
 		this.drawnPolygons = new ArrayList<>();
 		this.notRotatedPolygons = new ArrayList<>();
@@ -104,14 +104,14 @@ public class RubiksCube extends Drawable {
 		cubesThatDoNotRotate.add(new Cube(x + sizeOfSmallCubes * 1, y + sizeOfSmallCubes * 1, z + sizeOfSmallCubes * 1, sizeOfSmallCubes));
 
 		for (Cube cube : cubes) {
-			points3d.addAll(Arrays.asList(cube.getAll3dPoints()));
-			points3dToDraw.addAll(Arrays.asList(cube.getAll3dPointsToDraw()));
+			points.addAll(Arrays.asList(cube.getAll3dPoints()));
+			pointsToDraw.addAll(Arrays.asList(cube.getAll3dPointsToDraw()));
 			drawnPolygons.addAll(cube.getAllPolygons());
 		}
 
 		for(Cube cube : cubesThatDoNotRotate) {
 			notRotatedPolygons.addAll(cube.getAllPolygons());
-			notRotatedPoints3d.addAll(Arrays.asList(cube.getAll3dPoints()));
+			notRotatedPoints.addAll(Arrays.asList(cube.getAll3dPoints()));
 			notRotatedPointsToDraw.addAll(Arrays.asList(cube.getAll3dPointsToDraw()));
 		}
 	}
@@ -122,18 +122,18 @@ public class RubiksCube extends Drawable {
 		Quaternion zRotation = Quaternion.fromAxisAngle(zAngle, 0, 0, 1);
 		currentRotation = xRotation.multiply(yRotation).multiply(zRotation).multiply(currentRotation);
 		double[][] rotationMatrix = currentRotation.toRotationMatrix();
-		for (int i = 0; i < points3d.size(); i++) {
-			Point p = points3d.get(i);
+		for (int i = 0; i < points.size(); i++) {
+			Point p = points.get(i);
 			double tx = p.getX() - x;
 			double ty = p.getY() - y;
 			double tz = p.getZ() - z;
 			double newX = rotationMatrix[0][0] * tx + rotationMatrix[0][1] * ty + rotationMatrix[0][2] * tz;
 			double newY = rotationMatrix[1][0] * tx + rotationMatrix[1][1] * ty + rotationMatrix[1][2] * tz;
 			double newZ = rotationMatrix[2][0] * tx + rotationMatrix[2][1] * ty + rotationMatrix[2][2] * tz;
-			points3dToDraw.get(i).moveTo(newX + x, newY + y, newZ + z);
+			pointsToDraw.get(i).moveTo(newX + x, newY + y, newZ + z);
 		}
-		for (int i = 0; i < notRotatedPoints3d.size(); i++) {
-			Point p = notRotatedPoints3d.get(i);
+		for (int i = 0; i < notRotatedPoints.size(); i++) {
+			Point p = notRotatedPoints.get(i);
 			double tx = p.getX() - x;
 			double ty = p.getY() - y;
 			double tz = p.getZ() - z;
