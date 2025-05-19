@@ -142,6 +142,10 @@ public class GameController extends SurfaceView implements Runnable {
 		this.shouldTimerCount = !stopTimer;
 	}
 
+	public double getTimer() {
+		return timer;
+	}
+
 	private void updateBestTime(double newBestTime) {
 		if(newBestTime != Double.MAX_VALUE && newBestTime != 0.0) {
 			String minutes = (int)(newBestTime/60) < 10 ? "0" + (int)(newBestTime/60) : "" + (int)(newBestTime/60);

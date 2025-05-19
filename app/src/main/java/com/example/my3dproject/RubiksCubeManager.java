@@ -2,6 +2,9 @@ package com.example.my3dproject;
 
 import android.util.Pair;
 import android.view.MotionEvent;
+import android.widget.Toast;
+
+import com.example.my3dproject.activities.MainActivity;
 import com.example.my3dproject.drawables.Cube;
 import com.example.my3dproject.drawables.Polygon;
 import com.example.my3dproject.drawables.RubiksCube;
@@ -133,6 +136,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 			undoStack.clear();
 			controller.clearAllSavedRotations();
 			controller.stopTimer(true);
+			controller.post(() -> Toast.makeText(controller.getContext(), "The cube is solved!", Toast.LENGTH_SHORT).show());
 		}
 		if(!isCubeSolved && hasNoticedCubeSolved.get()) {
 			hasNoticedCubeSolved.set(false);
