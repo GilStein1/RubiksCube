@@ -27,7 +27,6 @@ import java.util.function.Consumer;
 
 public class GameController extends SurfaceView implements Runnable {
 
-	private final int screenWidth, screenHeight;
 	private final Intent intentFromMainMenu;
 	private final TextView tvTimer, tvBestTime;
 	private double timer;
@@ -58,8 +57,6 @@ public class GameController extends SurfaceView implements Runnable {
 	) {
 		super(context);
 		this.intentFromMainMenu = intentFromMainMenu;
-		this.screenWidth = screenWidth;
-		this.screenHeight = screenHeight;
 		this.tvTimer = tvTimer;
 		this.tvBestTime = tvBestTime;
 		this.timer = 0;
@@ -82,13 +79,9 @@ public class GameController extends SurfaceView implements Runnable {
 		animationManager.addLoopedAction(new LoopedAction(this::updateSavesInAccount, 1.0));
 		getAllSavedValuesFromSharedPreferences();
 		findCurrentAccount();
-		initHelpers();
-		renderThread.start();
-	}
-
-	private void initHelpers() {
 		ScreenGeometryManager.getInstance().setScreenSize(screenWidth, screenHeight);
 		ScreenGeometryManager.getInstance().setFocalLength(Constants.FOCAL_LENGTH);
+		renderThread.start();
 	}
 
 	public void addDrawables(Drawable... drawables) {
@@ -140,10 +133,6 @@ public class GameController extends SurfaceView implements Runnable {
 
 	public void stopTimer(boolean stopTimer) {
 		this.shouldTimerCount = !stopTimer;
-	}
-
-	public double getTimer() {
-		return timer;
 	}
 
 	private void updateBestTime(double newBestTime) {
