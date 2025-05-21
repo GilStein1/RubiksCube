@@ -32,7 +32,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 	private double xRotationalVelocity;
 	private double yRotationalVelocity;
 	private double xRotation, yRotation;
-	public final double rubiksCubeSize;
+	private final double rubiksCubeSize;
 	private final double smallCubesSize;
 	private final float rotationScale = 0.3f;
 	private final float rotationalVelocityScale = 0.25f;
@@ -62,10 +62,10 @@ public class RubiksCubeManager implements UpdatableComponent{
 		this.undoStack = new Stack<>();
 		this.hasNoticedCubeSolved = new AtomicBoolean(false);
 		rubiksCube.rotate(0.001, 0.001, 0.001);
-		updateRotationsFromDatabase();
+		retrieveRotationsFromDatabase();
 	}
 
-	private void updateRotationsFromDatabase() {
+	private void retrieveRotationsFromDatabase() {
 		List<RotationOperation> rotationOperations = controller.getSavedRotationOperations();
 		for(RotationOperation rotationOperation : rotationOperations) {
 			Cube cubeToRotateAround = new Cube(
