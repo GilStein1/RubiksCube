@@ -59,7 +59,7 @@ public class Cube extends Drawable {
 		polygonsToDraw.add(new Polygon(this, colors.getColors()[0], pointsToDraw[2], pointsToDraw[6], pointsToDraw[4], pointsToDraw[0]));
 	}
 
-	public void rotateWithMatrix(double[][] matrix, Point3d centerOfRotation) {
+	private void rotateWithMatrix(double[][] matrix, Point3d centerOfRotation) {
 		for (int i = 0; i < points.length; i++) {
 			Point p = points[i];
 			double tx = p.getX() - centerOfRotation.getX();
@@ -109,11 +109,7 @@ public class Cube extends Drawable {
 		return new Point3d(x, y, z);
 	}
 
-	public Point3d getDrawnPose() {
-		return new Point3d(drawnX, drawnY, drawnZ);
-	}
-
-	public Polygon getPolygonFromDrawPolygon(Polygon drawPolygon) {
+	public Polygon getNotRotatedPolygonFromDrawnPolygon(Polygon drawPolygon) {
 		return polygons.get(polygonsToDraw.indexOf(drawPolygon));
 	}
 
@@ -121,10 +117,6 @@ public class Cube extends Drawable {
 		this.drawnX = x;
 		this.drawnY = y;
 		this.drawnZ = z;
-	}
-
-	public void updateDrawnPos(Point3d pos) {
-		updateDrawnPos(pos.getX(), pos.getY(), pos.getZ());
 	}
 
 	public Vec3D getUpOrientationVector() {

@@ -8,11 +8,20 @@ import com.example.my3dproject.math.geometry.Point2d;
 
 public abstract class Drawable {
 
-	public double screenWidth, screenHeight;
+	private final double screenWidth;
+	private final double screenHeight;
 
 	public Drawable() {
 		this.screenWidth = ScreenGeometryManager.getInstance().getScreenWidth();
 		this.screenHeight = ScreenGeometryManager.getInstance().getScreenHeight();
+	}
+
+	public double getScreenWidth() {
+		return screenWidth;
+	}
+
+	public double getScreenHeight() {
+		return screenHeight;
 	}
 
 	public abstract void render(Canvas canvas, boolean isDarkMode);

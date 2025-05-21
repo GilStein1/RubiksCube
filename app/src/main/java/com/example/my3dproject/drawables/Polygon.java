@@ -23,23 +23,18 @@ public class Polygon extends Drawable implements UpdatableComponent {
 	private final Cube parentCube;
 	@ColorInt
 	private final int color;
-	@ColorInt
-	private int calculatedColor;
 	private final List<Point> points;
-	private final ScreenGeometryManager screenGeometryManager;
 	private Path pathOfPolygon;
 	private Path pathOfLines;
 	private Paint paintOfFilledShape;
 	private Vec3D normalVector;
 	private boolean isSelected;
 
-	public Polygon(Cube cube, @ColorInt int color, Point... points) {
+	public Polygon(Cube parentCube, @ColorInt int color, Point... points) {
 		super();
-		this.parentCube = cube;
+		this.parentCube = parentCube;
 		this.color = color;
-		this.calculatedColor = color;
 		this.points = Arrays.asList(points);
-		this.screenGeometryManager = ScreenGeometryManager.getInstance();
 		this.pathOfPolygon = new Path();
 		this.pathOfLines = new Path();
 		this.paintOfFilledShape = new Paint();
@@ -49,21 +44,6 @@ public class Polygon extends Drawable implements UpdatableComponent {
 
 	public Cube getParentCube() {
 		return parentCube;
-	}
-
-	public boolean isPointingToX() {
-		Vec3D normal = updateNormalVector();
-		return Math.abs(normal.getX()) > Math.max(Math.abs(normal.getY()), Math.abs(normal.getZ()));
-	}
-
-	public boolean isPointingToY() {
-		Vec3D normal = updateNormalVector();
-		return Math.abs(normal.getY()) > Math.max(Math.abs(normal.getX()), Math.abs(normal.getZ()));
-	}
-
-	public boolean isPointingToZ() {
-		Vec3D normal = updateNormalVector();
-		return Math.abs(normal.getZ()) > Math.max(Math.abs(normal.getX()), Math.abs(normal.getY()));
 	}
 
 	public void setSelected(boolean isSelected) {
@@ -120,32 +100,6 @@ public class Polygon extends Drawable implements UpdatableComponent {
 		return new Point3d(xAvg, yAvg, zAvg);
 	}
 
-	private Point3d getFurthestPointFromPoint(Point3d point) {
-		Point3d mostDistant = points.get(0).getPose();
-		double maxDistance = mostDistant.getDistanceFrom(point);
-		for(Point p : points) {
-			double distance = p.getPose().getDistanceFrom(point);
-			if(distance > maxDistance) {
-				maxDistance = distance;
-				mostDistant = p.getPose();
-			}
-		}
-		return mostDistant;
-	}
-
-	private Point3d getClosestPointFromPoint(Point3d point) {
-		Point3d leastDistant = points.get(0).getPose();
-		double minDistance = leastDistant.getDistanceFrom(point);
-		for(Point p : points) {
-			double distance = p.getPose().getDistanceFrom(point);
-			if(distance < minDistance) {
-				minDistance = distance;
-				leastDistant = p.getPose();
-			}
-		}
-		return leastDistant;
-	}
-
 	public Vec3D updateNormalVector() {
 		Vec3D vector = new Vec3D(0, 0, 0);
 		vector.setX((points.get(0).getY() - points.get(1).getY()) * (points.get(0).getZ() - points.get(2).getZ()) - (points.get(0).getZ() - points.get(1).getZ()) * (points.get(0).getY() - points.get(2).getY()));
@@ -158,36 +112,34 @@ public class Polygon extends Drawable implements UpdatableComponent {
 	@Override
 	public void update(double deltaTime, Point2d pointOfClick, int event) {
 		normalVector = updateNormalVector();
-		calculatedColor = calculateColorWithShade(color);
 		pathOfPolygon = new Path();
 		pathOfLines = new Path();
 		pathOfPolygon.moveTo(
-			(float) screenGeometryManager.getProjectionTranslatedX(points.get(0).getPose()),
-			(float) screenGeometryManager.getProjectionTranslatedY(points.get(0).getPose())
+			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedX(points.get(0).getPose()),
+			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedY(points.get(0).getPose())
 		);
 		pathOfLines.moveTo(
-			(float) screenGeometryManager.getProjectionTranslatedX(points.get(0).getPose()),
-			(float) screenGeometryManager.getProjectionTranslatedY(points.get(0).getPose())
+			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedX(points.get(0).getPose()),
+			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedY(points.get(0).getPose())
 		);
 		for (Point dot : points) {
 			pathOfPolygon.lineTo(
-				(float) screenGeometryManager.getProjectionTranslatedX(dot.getPose()),
-				(float) screenGeometryManager.getProjectionTranslatedY(dot.getPose())
+				(float) ScreenGeometryManager.getInstance().getProjectionTranslatedX(dot.getPose()),
+				(float) ScreenGeometryManager.getInstance().getProjectionTranslatedY(dot.getPose())
 			);
 			pathOfLines.lineTo(
-				(float) screenGeometryManager.getProjectionTranslatedX(dot.getPose()),
-				(float) screenGeometryManager.getProjectionTranslatedY(dot.getPose())
+				(float) ScreenGeometryManager.getInstance().getProjectionTranslatedX(dot.getPose()),
+				(float) ScreenGeometryManager.getInstance().getProjectionTranslatedY(dot.getPose())
 			);
 		}
 		pathOfPolygon.close();
 		pathOfLines.close();
 	}
 
-	private int calculateColorWithShade(int color) {
+	private int calculateColorWithShade(int color, Vec3D lightDirection, Vec3D normalVector) {
 		int red = (color >> 16) & 0xFF;
 		int green = (color >> 8) & 0xFF;
 		int blue = color & 0xFF;
-		Vec3D lightDirection = Constants.EnvironmentConstants.LIGHT_DIRECTION;
 		double dotProduct =
 			normalVector.getX() * lightDirection.getX() +
 				normalVector.getY() * lightDirection.getY() +
@@ -202,7 +154,7 @@ public class Polygon extends Drawable implements UpdatableComponent {
 		);
 	}
 
-	private int getInverseOfColor(int color) {
+	private int getDarkModeColor(int color) {
 		if(color == Color.YELLOW) {
 			return Color.rgb(255, 255, 71);
 		}
@@ -223,7 +175,8 @@ public class Polygon extends Drawable implements UpdatableComponent {
 
 	@Override
 	public void render(Canvas canvas, boolean isDarkMode) {
-		paintOfFilledShape.setColor(isDarkMode ? calculateColorWithShade(getInverseOfColor(color)) : calculatedColor);
+		paintOfFilledShape.setColor(isDarkMode ? calculateColorWithShade(getDarkModeColor(color), Constants.EnvironmentConstants.LIGHT_DIRECTION, normalVector)
+			: calculateColorWithShade(color, Constants.EnvironmentConstants.LIGHT_DIRECTION, normalVector));
 		paintOfFilledShape.setStyle(Paint.Style.FILL);
 		Paint paintOfLines = new Paint();
 		paintOfLines.setColor(isSelected? Color.LTGRAY : Color.BLACK);

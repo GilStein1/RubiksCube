@@ -4,7 +4,6 @@ import android.util.Pair;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-import com.example.my3dproject.activities.MainActivity;
 import com.example.my3dproject.drawables.Cube;
 import com.example.my3dproject.drawables.Polygon;
 import com.example.my3dproject.drawables.RubiksCube;
@@ -186,7 +185,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 	private void detectCubeRotationByPlayer(Point2d lastPointOfClick) {
 		rubiksCubeState = RubiksCubeState.ROTATED_BY_PLAYER;
 		Cube selectedCube = selectedPolygon.get().getParentCube();
-		Polygon nonRotatedPolygon = selectedNotRotatedPolygon.get().getParentCube().getPolygonFromDrawPolygon(selectedNotRotatedPolygon.get());
+		Polygon nonRotatedPolygon = selectedNotRotatedPolygon.get().getParentCube().getNotRotatedPolygonFromDrawnPolygon(selectedNotRotatedPolygon.get());
 		DirectionCross directionCross = new DirectionCross();
 		directionCross.rotate(rubiksCube.getCurrentRotation());
 		Vec3D swipeVector = new Vec3D(
@@ -322,7 +321,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 	}
 
 	private double getScreenSizeRatio() {
-		return Math.min(rubiksCube.screenWidth, rubiksCube.screenHeight) / Constants.IDEAL_SCREEN_WIDTH;
+		return Math.min(rubiksCube.getScreenWidth(), rubiksCube.getScreenHeight()) / Constants.IDEAL_SCREEN_WIDTH;
 	}
 
 	private static int getSignOf(double value) {
