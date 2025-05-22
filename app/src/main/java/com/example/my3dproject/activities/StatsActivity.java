@@ -61,9 +61,9 @@ public class StatsActivity extends AppCompatActivity {
 						connectedAccount = account;
 					}
 					accounts.add(account);
-					accounts.sort(Comparator.comparingDouble(Account::getBestTime));
-					adapter.notifyDataSetChanged();
 				}
+				accounts.sort(Comparator.comparingDouble(Account::getBestTime));
+				adapter.notifyDataSetChanged();
 				updateConnectedUsersPlace();
 			}
 			@Override
