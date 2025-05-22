@@ -137,9 +137,5 @@ public class Cube extends Drawable {
 			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedY(new Point3d(drawnX, drawnY, drawnZ)),
 			paint
 		);
-//		canvas.drawCircle(
-//			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedX(new Point3d(drawnX, drawnY, drawnZ)),
-//			(float) ScreenGeometryManager.getInstance().getProjectionTranslatedY(new Point3d(drawnX, drawnY, drawnZ)),
-//			10, paint);
 	}
 }
