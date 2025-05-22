@@ -56,14 +56,6 @@ public class ScreenGeometryManager {
 		return (point.getY() / (point.getZ() + Constants.EnvironmentConstants.PLAYER_POSITION.getZ())) * focalLength * getScreenSizeRatio();
 	}
 
-	public double getProjectedX(Point3d point) {
-		return getProjectedX(point, focalLength);
-	}
-
-	public double getProjectedY(Point3d point) {
-		return getProjectedY(point, focalLength);
-	}
-
 	public double getProjectionTranslatedX(Point3d point, double focalLength) {
 		return centerX(getProjectedX(point, focalLength));
 	}

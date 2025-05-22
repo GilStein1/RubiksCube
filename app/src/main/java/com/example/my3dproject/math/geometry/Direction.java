@@ -21,16 +21,8 @@ public enum Direction {
 		return axis;
 	}
 
-	public boolean isPositiveInAxis() {
-		return isPositiveInAxis;
-	}
-
 	public int getSignInAxis() {
 		return isPositiveInAxis ? 1 : -1;
-	}
-
-	public boolean isNegativeInAxis() {
-		return !isPositiveInAxis;
 	}
 
 }

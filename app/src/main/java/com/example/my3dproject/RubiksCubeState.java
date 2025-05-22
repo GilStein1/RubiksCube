@@ -3,7 +3,6 @@ package com.example.my3dproject;
 public enum RubiksCubeState {
 
 	IDLE(true),
-	PAUSED(false),
 	SOLVING(false),
 	ROTATED_BY_PLAYER(false),
 	SHUFFLE(false);

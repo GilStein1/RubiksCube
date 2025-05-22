@@ -41,7 +41,6 @@ public class SignUpActivity extends AppCompatActivity {
 	private FirebaseAuth mAuth;
 	private DatabaseReference accountRef;
 	private ActivityResultLauncher<Intent> profilePictureActivityLauncher;
-	private List<Account> accounts;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +56,6 @@ public class SignUpActivity extends AppCompatActivity {
 		this.profilePictureActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::atReturnFromCamera);
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		getAllAccounts();
-	}
-
 	private void initializeViews() {
 		etName = findViewById(R.id.etName);
 		etEmail = findViewById(R.id.etEmail);
@@ -70,7 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
 		ivProfilePicture = findViewById(R.id.ivProfilePicture);
 	}
 
-	public void createAccount() {
+	private void createAccount() {
 		String name = etName.getText().toString();
 		Account account = new Account(mAuth.getCurrentUser().getUid(), name);
 		account.setProfilePicture(profilePicture);
@@ -94,14 +87,10 @@ public class SignUpActivity extends AppCompatActivity {
 	}
 
 	public void signUpByButtonInSignUp(View view) {
-		boolean successfulSignUp = createAccount(etEmail.getText().toString(), etPassword.getText().toString());
-		if (successfulSignUp) {
-			onStart();
-		}
+		createAccount(etEmail.getText().toString(), etPassword.getText().toString());
 	}
 
-	private boolean createAccount(String email, String password) {
-		AtomicBoolean success = new AtomicBoolean(true);
+	private void createAccount(String email, String password) {
 		mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
 			if (task.isSuccessful()) {
 				Toast.makeText(this, "Authentication success.", Toast.LENGTH_SHORT).show();
@@ -114,10 +103,8 @@ public class SignUpActivity extends AppCompatActivity {
 				finish();
 			} else {
 				Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-				success.set(false);
 			}
 		});
-		return success.get();
 	}
 
 	public void setImageByButton(View view) {
@@ -129,27 +116,6 @@ public class SignUpActivity extends AppCompatActivity {
 	public void cancelByButton(View view) {
 		setResult(RESULT_CANCELED);
 		finish();
-	}
-
-	public void getAllAccounts() {
-		accounts = new ArrayList<>();
-		accountRef.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(DataSnapshot dataSnapshot) {
-				for (DataSnapshot data : dataSnapshot.getChildren()) {
-					try {
-						Account a = data.getValue(Account.class);
-						accounts.add(a);
-					} catch (DatabaseException ignored) {
-
-					}
-				}
-			}
-
-			@Override
-			public void onCancelled(DatabaseError ignored) {
-			}
-		});
 	}
 
 }

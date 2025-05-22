@@ -8,7 +8,7 @@ public class CubeColors {
 
 	private @ColorInt int[] colors;
 
-	public CubeColors(@ColorInt int... colors) {
+	private CubeColors(@ColorInt int... colors) {
 		this.colors = new int[6];
 		for(int i = 0; i < colors.length && i < this.colors.length; i++) {
 			this.colors[i] = colors[i];

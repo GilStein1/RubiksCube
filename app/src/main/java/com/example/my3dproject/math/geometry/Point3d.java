@@ -1,7 +1,5 @@
 package com.example.my3dproject.math.geometry;
 
-import com.example.my3dproject.drawables.Point;
-
 public class Point3d {
 
 	private double x, y, z;
@@ -20,10 +18,6 @@ public class Point3d {
 
 	public Point3d(Point3d other) {
 		this(other.x, other.y, other.z);
-	}
-
-	public Point3d times(double scalar) {
-		return new Point3d(x * scalar, y * scalar, z * scalar);
 	}
 
 	public double getX() {
@@ -54,10 +48,6 @@ public class Point3d {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-	}
-
-	public double getDistanceFrom(Point3d other) {
-		return Math.sqrt(Math.pow(x - other.x, 2) + Math.pow(y - other.y, 2) + Math.pow(z - other.z, 2));
 	}
 
 	public static Point3d valueOf(String value) {

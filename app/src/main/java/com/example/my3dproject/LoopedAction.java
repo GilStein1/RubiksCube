@@ -1,6 +1,6 @@
 package com.example.my3dproject;
 
-public class LoopedAction extends TimedAction{
+public class LoopedAction extends TimedAction {
 
 	private double timeCount;
 

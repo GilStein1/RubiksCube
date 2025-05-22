@@ -16,14 +16,13 @@ import java.util.List;
 
 public class DefaultController extends SurfaceView implements Runnable {
 
-	protected final int screenWidth, screenHeight;
-	protected final TimedAnimationManager animationManager;
-	protected final Paint background;
-	protected final SurfaceHolder surfaceHolder;
-	protected volatile boolean isRenderThreadRunning;
-	protected final List<Drawable> drawables;
-	protected final List<UpdatableComponent> updatables;
-	protected double lastTime;
+	private final TimedAnimationManager animationManager;
+	private final Paint background;
+	private final SurfaceHolder surfaceHolder;
+	private volatile boolean isRenderThreadRunning;
+	private final List<Drawable> drawables;
+	private final List<UpdatableComponent> updatables;
+	private double lastTime;
 
 	public DefaultController(
 		Context context,
@@ -31,8 +30,6 @@ public class DefaultController extends SurfaceView implements Runnable {
 		int screenHeight
 	) {
 		super(context);
-		this.screenWidth = screenWidth;
-		this.screenHeight = screenHeight;
 		this.animationManager = new TimedAnimationManager();
 		this.background = new Paint();
 		background.setColor(isDarkMode()? Color.BLACK : Color.WHITE);
@@ -41,12 +38,9 @@ public class DefaultController extends SurfaceView implements Runnable {
 		this.drawables = new ArrayList<>();
 		this.updatables = new ArrayList<>();
 		this.lastTime = System.nanoTime() / 1e9;
-		initHelpers();
-		new Thread(this).start();
-	}
-	private void initHelpers() {
 		ScreenGeometryManager.getInstance().setScreenSize(screenWidth, screenHeight);
 		ScreenGeometryManager.getInstance().setFocalLength(Constants.FOCAL_LENGTH);
+		new Thread(this).start();
 	}
 
 	public void addDrawables(Drawable... drawables) {
@@ -72,9 +66,6 @@ public class DefaultController extends SurfaceView implements Runnable {
 			for (Drawable drawable : drawables) {
 				drawable.render(canvas, isDarkMode());
 			}
-//			Paint paint = new Paint();
-//			paint.setColor(Color.YELLOW);
-//			canvas.drawCircle(100.0f, 100.0f, 100, paint);
 			surfaceHolder.unlockCanvasAndPost(canvas);
 		}
 	}

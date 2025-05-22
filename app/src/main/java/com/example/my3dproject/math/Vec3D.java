@@ -48,18 +48,6 @@ public class Vec3D {
 		return new Vec3D(p1.getX() - p2.getX(), p1.getY() - p2.getY(), p1.getZ() - p2.getZ());
 	}
 
-	public double getValueInMainAxis() {
-		if(Math.abs(x) > Math.max(Math.abs(y), Math.abs(z))) {
-			return x;
-		}
-		else {
-			if(Math.abs(y) > Math.abs(z)) {
-				return y;
-			}
-		}
-		return z;
-	}
-
 	public double getX() {
 		return x;
 	}

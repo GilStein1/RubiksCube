@@ -181,7 +181,7 @@ public class RubiksCube extends Drawable {
 
 	public void rotateXAroundCube(Cube cubeToRotateAround, double angle) {
 		for (Cube cube : cubes) {
-			if (Math.abs(cube.getPos().getX() - cubeToRotateAround.getPos().getX()) < RotationOperation.CUBE_ROTATION_TOLERANCE) {
+			if (Math.abs(cube.getPos().getX() - cubeToRotateAround.getPos().getX()) < RotationOperation.CUBE_POSITION_TOLERANCE_FOR_ROTATION) {
 				cube.rotateX(
 					(angle),
 					new Point3d(cubeToRotateAround.getPos().getX(), 0,  0)
@@ -192,7 +192,7 @@ public class RubiksCube extends Drawable {
 
 	public void rotateYAroundCube(Cube cubeToRotateAround, double angle) {
 		for (Cube cube : cubes) {
-			if (Math.abs(cube.getPos().getY() - cubeToRotateAround.getPos().getY()) < RotationOperation.CUBE_ROTATION_TOLERANCE) {
+			if (Math.abs(cube.getPos().getY() - cubeToRotateAround.getPos().getY()) < RotationOperation.CUBE_POSITION_TOLERANCE_FOR_ROTATION) {
 				cube.rotateY(
 					(angle),
 					new Point3d(0, cubeToRotateAround.getPos().getY(),  0)
@@ -203,7 +203,7 @@ public class RubiksCube extends Drawable {
 
 	public void rotateZAroundCube(Cube cubeToRotateAround, double angle) {
 		for (Cube cube : cubes) {
-			if (Math.abs(cube.getPos().getZ() - cubeToRotateAround.getPos().getZ()) < RotationOperation.CUBE_ROTATION_TOLERANCE) {
+			if (Math.abs(cube.getPos().getZ() - cubeToRotateAround.getPos().getZ()) < RotationOperation.CUBE_POSITION_TOLERANCE_FOR_ROTATION) {
 				cube.rotateZ(
 					(angle),
 					new Point3d(0, 0, cubeToRotateAround.getPos().getZ())

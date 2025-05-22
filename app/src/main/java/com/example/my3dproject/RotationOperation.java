@@ -12,7 +12,7 @@ public class RotationOperation {
 	private final Axis axisOfRotation;
 	private final double angleOfRotation;
 
-	public static final double CUBE_ROTATION_TOLERANCE = 0.1;
+	public static final double CUBE_POSITION_TOLERANCE_FOR_ROTATION = 0.1;
 
 	public RotationOperation(Point3d pointToRotateAround, Axis axisOfRotation, double angleOfRotation) {
 		this.pointToRotateAround = pointToRotateAround;
