@@ -504,7 +504,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 		rubiksCubeState = RubiksCubeState.SHUFFLE; // Sets the Rubik's Cube state to SHUFFLE
 		controller.stopTimer(true); // Stops the timer
 		int amountOfTurns = 50; // Amount of random rotations
-		int animationSteps = 25; // Steps of rotation (the more steps, the smoother the animation is)
+		int animationSteps = 15; // Steps of rotation (the more steps, the smoother the animation is)
 		double timeToTurn = 0.12; // Amount of seconds a rotation would take
 
 		int lastAxis = (int)(Math.random()*3); // The last axis that was rotated
@@ -527,7 +527,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 				for(int j = 0; j < animationSteps; j++) {
 					animationManager.addAction(new TimedAction(() -> rubiksCube.rotateXAroundCube(
 						new Cube(side * smallCubesSize, 0, 0, smallCubesSize), Math.toRadians(90.0/animationSteps*directionOfRotation)
-					),j*timeToTurn/animationSteps + i*timeToTurn));
+					),j*(timeToTurn-0.0001)/animationSteps + i*timeToTurn));
 				}
 				animationManager.addAction(new TimedAction(
 					() -> controller.saveAnotherRotation(new RotationOperation(side * smallCubesSize, 0, 0, Axis.X, Math.toRadians(90.0*directionOfRotation))),
@@ -539,7 +539,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 				for(int j = 0; j < animationSteps; j++) {
 					animationManager.addAction(new TimedAction(() -> rubiksCube.rotateYAroundCube(
 						new Cube(0, side * smallCubesSize, 0, smallCubesSize), Math.toRadians(90.0/animationSteps*directionOfRotation)
-					),j*timeToTurn/animationSteps + i*timeToTurn));
+					),j*(timeToTurn-0.0001)/animationSteps + i*timeToTurn));
 				}
 				animationManager.addAction(new TimedAction(
 					() -> controller.saveAnotherRotation(new RotationOperation(0, side * smallCubesSize, 0, Axis.Y, Math.toRadians(90.0*directionOfRotation))),
@@ -552,7 +552,7 @@ public class RubiksCubeManager implements UpdatableComponent{
 				for(int j = 0; j < animationSteps; j++) {
 					animationManager.addAction(new TimedAction(() -> rubiksCube.rotateZAroundCube(
 						new Cube(0, 0, side * smallCubesSize, smallCubesSize), Math.toRadians(90.0/animationSteps*directionOfRotation)
-					),j*timeToTurn/animationSteps + i*timeToTurn));
+					),j*(timeToTurn-0.0001)/animationSteps + i*timeToTurn));
 				}
 				animationManager.addAction(new TimedAction(
 					() -> controller.saveAnotherRotation(new RotationOperation(0.0, 0.0, side * smallCubesSize, Axis.Z, Math.toRadians(90.0*directionOfRotation))),
