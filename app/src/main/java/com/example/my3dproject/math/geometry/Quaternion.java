@@ -1,8 +1,5 @@
 package com.example.my3dproject.math.geometry;
 
-/**
- * Represents a quaternion
- */
 public class Quaternion {
 	// Quaternion components: w is the scalar part, x/y/z form the vector part
 	private double w, x, y, z;
