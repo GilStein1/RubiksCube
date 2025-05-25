@@ -10,7 +10,7 @@
     tools:context=".activities.MainActivity"
     android:background="#111">
 
-    <!-- FrameLayout hosts animated background -->
+    <!-- FrameLayout for animated background -->
     <FrameLayout
         android:id="@+id/flBackgroundCube"
         android:layout_width="match_parent"
