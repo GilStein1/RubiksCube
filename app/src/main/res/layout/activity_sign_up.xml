@@ -7,7 +7,7 @@
     tools:context=".activities.SignUpActivity"
     android:background="@drawable/background_image">
 
-    <!-- Overlay for contrast -->
+    <!-- A scroll view because not always all buttons are visible -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,6 +21,7 @@
             android:gravity="center_horizontal"
             android:background="#AA000000">
 
+            <!-- Profile picture -->
             <ImageView
                 android:id="@+id/ivProfilePicture"
                 android:layout_width="120dp"

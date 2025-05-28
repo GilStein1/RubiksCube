@@ -8,7 +8,6 @@
     tools:context=".activities.StatsActivity"
     android:background="@drawable/background_image">
 
-    <!-- Semi-transparent overlay for readability -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,7 +15,7 @@
         android:background="#AA000000"
         android:padding="16dp">
 
-        <!-- Info banner -->
+        <!-- Player's place -->
         <TextView
             android:id="@+id/tvUserPlace"
             android:layout_width="match_parent"
@@ -30,7 +29,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- Score list container -->
+        <!-- Score list -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="0dp"

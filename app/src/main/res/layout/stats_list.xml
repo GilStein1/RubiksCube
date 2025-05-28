@@ -17,14 +17,14 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_marginEnd="12dp" />
 
-    <!-- Text content vertical column -->
+    <!-- Text and info -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <!-- Top row: Place and Username -->
+        <!-- Place and Username -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
